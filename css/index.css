@@ -1,0 +1,14 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  /* background-color: #000; */
+  margin: 0 auto;
+  position: relative;
+}
+
+.container canvas {
+  position: absolute;
+}

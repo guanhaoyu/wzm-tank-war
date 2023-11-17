@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="favicon.svg" type="image/x-icon" />
+    <title>Tank War</title>
+		<link rel="stylesheet" type="text/css" href="css/index.css" />
+  </head>
+  <body>
+    <div>
+      <!-- <h3>操作说明：玩家1：wasd上左下右，space射击；玩家2：方向键，enter射击。n下一关，p上一关。</h3> -->
+      <div class="container">
+        <canvas id="wallCanvas" ></canvas> 
+        <canvas id="tankCanvas"></canvas>
+        <canvas id="grassCanvas"></canvas>
+        <canvas id="overCanvas"></canvas>
+        <canvas id="stageCanvas"></canvas>
+      </div>
+    </div>
+    <script type="module" src="js/main.js"></script>
+    <script>
+      const t = new Image()
+      t.src = 'images/menu.gif'
+      t.onload = () => {
+        const cvs = document.querySelector('#stageCanvas')
+        const ctx = cvs.getContext('2d')
+        ctx.drawImage(t, 0, 500)
+      }
+    </script>
+  </body>
+</html>
