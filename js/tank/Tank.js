@@ -1,5 +1,5 @@
 import { UP } from '../const/WORLD.js'
-import Spirits from '../spirits/Spirit.js'
+import Spirits from '../spirit/Spirit.js'
 
 // 坦克的大小 ? 不同型号的size应该不一样
 

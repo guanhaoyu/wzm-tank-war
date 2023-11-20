@@ -1,32 +1,30 @@
-import { SCREEN_HEIGHT, SCREEN_WIDTH } from './const/SCREEN.js'
-import { MENU_IMAGE } from './const/IMAGE.js'
-import SelectTank from './tank/SelectTank.js'
-import KEYBOARD, { keyDirectionMap } from './const/KEYBOARD.js'
+import { SCREEN_HEIGHT, SCREEN_WIDTH } from '../const/SCREEN.js'
+import { MENU_IMAGE } from '../const/IMAGE.js'
+import SelectTank from '../tank/SelectTank.js'
+import KEYBOARD, { keyDirectionMap } from '../const/KEYBOARD.js'
+import { GAME_STATE_MENU } from '../const/GAMESTATE.js'
 
 // 游戏开始菜单
 export default class Menu {
   constructor(context) {
-    // super(context)
     this.ctx = context
     this.x = 0
     this.y = SCREEN_HEIGHT
     this.selectTank = new SelectTank(context)
     // 选择游戏人数
     this.numberOfPlayers = 1
-    // ?
-    this.times = 0
+  }
+
+  /**
+   * 
+   * @param {Set<string>} keys 
+   */
+  subscribe(keys) {
+    this.keys = keys
   }
 
   // 画菜单
   draw() {
-    this.times ++ ;
-		var temp = 0;
-		if( parseInt(this.times / 6) % 2 == 0){
-			temp = 0;
-		}else{
-			temp = this.selectTank.size;
-		}
-
     // 从下往上飞入动效
     if (this.y <= 0) {
       this.y = 0
@@ -40,6 +38,14 @@ export default class Menu {
 
     if (this.y === 0) {
       this.selectTank.draw()
+    }
+
+    if (this.keys.has(KEYBOARD.DOWN)) {
+      this.next(KEYBOARD.DOWN)
+    }
+
+    if (this.keys.has(KEYBOARD.UP)) {
+      this.next(KEYBOARD.UP)
     }
   }
 

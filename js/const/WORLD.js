@@ -8,6 +8,12 @@ const HOME = 9
 const ANOTHREHOME = 8
 
 /********************运动的四个方向********************/
+const DIRECTION = {
+  UP: 0,
+  DOWN: 1,
+  LEFT: 2,
+  RIGHT: 3
+}
 const UP = 0
 const DOWN = 1
 const LEFT = 2
@@ -22,4 +28,4 @@ const BULLET_TYPE_ENEMY = 2
 const CRACK_TYPE_TANK = 'tank'
 const CRACK_TYPE_BULLET = 'bullet'
 
-export { UP, DOWN, LEFT, RIGHT }
+export { UP, DOWN, LEFT, RIGHT, DIRECTION }

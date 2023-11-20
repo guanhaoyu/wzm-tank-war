@@ -1,13 +1,12 @@
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from './const/SCREEN.js'
-import Menu from './Menu.js'
+import Menu from './layer/Menu.js'
 import { GAME_STATE_INIT, GAME_STATE_MENU } from './const/GAMESTATE.js'
 import KEYBOARD from './const/KEYBOARD.js'
+import Game from './Game.js'
 
 document.addEventListener('DOMContentLoaded', function () {
-  initScreen(SCREEN_WIDTH, SCREEN_HEIGHT)
-  initObject()
-  loop()
-  bindEvents()
+  const game = new Game()
+  game.run()
 })
 
 // 画笔
@@ -98,10 +97,12 @@ function initObject() {
   // propTime = 1000;
 }
 
+const game = new Game()
+
 function loop() {
   switch (gameState) {
     case GAME_STATE_MENU:
-      menu.draw()
+      // menu.draw()
       break
     case GAME_STATE_INIT:
       stage.draw()
@@ -111,17 +112,17 @@ function loop() {
   // setTimeout(loop, 20);
 }
 
-function bindEvents() {
-  window.addEventListener('keydown', e => {
-    const { keyCode } = e
-    switch (gameState) {
-      case GAME_STATE_MENU:
-        if (keyCode === KEYBOARD.ENTER) {
-          gameState = GAME_STATE_INIT
-          // 判断玩家数量
-        } else {
-          menu.next(keyCode)
-        }
-    }
-  })
-}
+// function bindEvents() {
+//   window.addEventListener('keydown', e => {
+//     const { keyCode } = e
+//     switch (gameState) {
+//       case GAME_STATE_MENU:
+//         if (keyCode === KEYBOARD.ENTER) {
+//           gameState = GAME_STATE_INIT
+//           // 判断玩家数量
+//         } else {
+//           menu.next(keyCode)
+//         }
+//     }
+//   })
+// }
