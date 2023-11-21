@@ -6,7 +6,7 @@ const RESOURCE_IMAGE = new Image()
 RESOURCE_IMAGE.src = 'images/tankAll.gif'
 
 /********************各个图块在图片中的位置********************/
-const POS = new Array()
+const POS = {}
 POS['selectTank'] = [128, 96]
 POS['stageLevel'] = [396, 96]
 POS['num'] = [256, 96]

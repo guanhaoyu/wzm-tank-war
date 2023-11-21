@@ -1,4 +1,6 @@
-import { UP, DOWN, RIGHT, LEFT } from '../const/WORLD.js'
+import { DIRECTION } from '../const/WORLD.js'
+
+const { UP, DOWN, RIGHT, LEFT } = DIRECTION
 
 /**
  * 位移一次

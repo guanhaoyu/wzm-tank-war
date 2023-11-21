@@ -1,6 +1,8 @@
 import Tank from './Tank.js'
-import { RIGHT } from '../const/WORLD.js'
+import { DIRECTION } from '../const/WORLD.js'
 import { POS } from '../const/IMAGE.js'
+
+const { UP, DOWN, RIGHT, LEFT } = DIRECTION
 
 // 菜单选择坦克
 export default class SelectTank extends Tank {

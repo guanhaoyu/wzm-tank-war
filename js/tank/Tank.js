@@ -1,5 +1,7 @@
-import { UP } from '../const/WORLD.js'
+import { DIRECTION } from '../const/WORLD.js'
 import Spirit from '../spirit/Spirit.js'
+
+const { UP, DOWN, RIGHT, LEFT } = DIRECTION
 
 // 坦克的大小 ? 不同型号的size应该不一样
 
@@ -27,14 +29,10 @@ export default class Tank extends Spirit {
   }
 
   // 是否被击中
-  isShotted() {
-
-  }
+  isShotted() {}
 
   // 射击
-  shoot() {
-
-  }
+  shoot() {}
 
   destroy() {}
 }

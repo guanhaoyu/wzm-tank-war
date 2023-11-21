@@ -7,6 +7,16 @@ const ICE = 5
 const HOME = 9
 const ANOTHREHOME = 8
 
+const TILE_TYPE = {
+  WALL,
+  GRID,
+  GRASS,
+  WATER,
+  ICE,
+  HOME,
+  ANOTHREHOME
+}
+
 /********************运动的四个方向********************/
 const DIRECTION = {
   UP: 0,
@@ -28,4 +38,4 @@ const BULLET_TYPE_ENEMY = 2
 const CRACK_TYPE_TANK = 'tank'
 const CRACK_TYPE_BULLET = 'bullet'
 
-export { UP, DOWN, LEFT, RIGHT, DIRECTION }
+export { DIRECTION, TILE_TYPE }

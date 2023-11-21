@@ -10,6 +10,7 @@ import KEYBOARD from './const/KEYBOARD.js'
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from './const/SCREEN.js'
 import { DIRECTION } from './const/WORLD.js'
 import Menu from './layer/Menu.js'
+import BattleField from './BattleField.js'
 
 /**
  * 设置元素宽高尺寸
@@ -30,12 +31,9 @@ function setCanvasSize(elements, { width, height }) {
 export default class Game {
   gameState = GAME_STATE_MENU
 
-  menu = null
-  curtain = null
-
   isPause = false
 
-  level = 21
+  level = 1
 
   constructor() {
     this.prepare()
@@ -63,6 +61,7 @@ export default class Game {
     const overCtx = overCanvas.getContext('2d')
     this.menu = new Menu(stageCtx)
     this.curtain = new Curtain(stageCtx)
+    this.battleField = new BattleField(wallCtx, grassCtx)
   }
 
   handleKeyboardEvent() {
@@ -98,10 +97,13 @@ export default class Game {
           this.menu.draw()
           break
         case GAME_STATE_INIT:
-          this.curtain.draw(this.level)
-          // if (this.stage.isReady) {
-          //   this.gameState = GAME_STATE_START
-          // }
+          this.curtain.fold(this.level, () => {
+            this.battleField.draw(this.level)
+            this.gameState = GAME_STATE_START
+          })
+          break
+        case GAME_STATE_START:
+          this.curtain.unfold()
           break
       }
     }

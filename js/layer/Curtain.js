@@ -8,9 +8,6 @@ const OUTSIDE = 0
 export default class Curtain {
   ctx = null
 
-  // 幕布运动方向：朝画布外或朝画布内
-  trend = INSIDE
-
   step = 16
 
   alreadyDrawHeight = 0
@@ -21,9 +18,51 @@ export default class Curtain {
   // 已停留的帧数
   frame = 0
 
+  // 幕布运动方向：朝画布外或朝画布内
+  trend = INSIDE
+
   constructor(context) {
     this.ctx = context
     this.ctx.fillStyle = '#7f7f7f'
+  }
+
+  fold(level, cb) {
+    if (this.alreadyDrawHeight === SCREEN_HEIGHT) {
+      const label = new Label(this.ctx)
+      label.draw()
+      const digital = new Digital(this.ctx, level)
+      digital.draw(308, 208)
+      // 停留
+      if (this.frame < this.stayFrames) {
+        this.frame ++
+      } else {
+        cb()
+        this.frame = 0
+      }
+    } else {
+      this.alreadyDrawHeight += this.step
+      this.ctx.fillRect(0, 0, SCREEN_WIDTH, this.alreadyDrawHeight)
+      this.ctx.fillRect(
+        0,
+        SCREEN_HEIGHT - this.alreadyDrawHeight,
+        SCREEN_WIDTH,
+        this.alreadyDrawHeight
+      )
+    }
+  }
+
+  unfold() {
+    if (this.alreadyDrawHeight > 0) {
+      this.alreadyDrawHeight -= this.step
+      this.ctx.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
+      this.ctx.fillRect(0, 0, SCREEN_WIDTH, this.alreadyDrawHeight)
+      this.ctx.fillRect(
+        0,
+        SCREEN_HEIGHT - this.alreadyDrawHeight,
+        SCREEN_WIDTH,
+        this.alreadyDrawHeight
+      )
+    }
   }
 
   draw(level) {
