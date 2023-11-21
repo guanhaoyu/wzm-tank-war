@@ -8,7 +8,7 @@ import { UP } from '../const/WORLD.js'
 /**
  * 默认都是刚体
  */
-export default class Spirits {
+export default class Spirit {
   constructor(
     context,
     type,
@@ -22,10 +22,11 @@ export default class Spirits {
     this.type = type
     // 速度
     this.speed = speed
-    // 大小
     this.x = x
     this.y = y
+    // 大小
     this.size = size
+    // 运动方向
     this.direction = direction
 
     this.isDestroyed = false

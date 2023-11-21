@@ -15,14 +15,6 @@ export default class Menu {
     this.numberOfPlayers = 1
   }
 
-  /**
-   * 
-   * @param {Set<string>} keys 
-   */
-  subscribe(keys) {
-    this.keys = keys
-  }
-
   // 画菜单
   draw() {
     // 从下往上飞入动效
@@ -31,22 +23,14 @@ export default class Menu {
     } else {
       this.y -= 5
     }
-
-    this.ctx.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-    //画背景
+    this.ctx.save()
+    this.ctx.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
     this.ctx.drawImage(MENU_IMAGE, this.x, this.y)
 
     if (this.y === 0) {
       this.selectTank.draw()
     }
-
-    if (this.keys.has(KEYBOARD.DOWN)) {
-      this.next(KEYBOARD.DOWN)
-    }
-
-    if (this.keys.has(KEYBOARD.UP)) {
-      this.next(KEYBOARD.UP)
-    }
+    this.ctx.restore()
   }
 
   /**

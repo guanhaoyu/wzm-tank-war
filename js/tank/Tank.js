@@ -1,9 +1,9 @@
 import { UP } from '../const/WORLD.js'
-import Spirits from '../spirit/Spirit.js'
+import Spirit from '../spirit/Spirit.js'
 
 // 坦克的大小 ? 不同型号的size应该不一样
 
-export default class Tank extends Spirits {
+export default class Tank extends Spirit {
   constructor(context, type = 'player', x = 0, y = 0, size = 32, speed = 1, direction = UP) {
     super(context, type, x, y, size, speed, direction)
     // 敌方坦克切换方向的时间？

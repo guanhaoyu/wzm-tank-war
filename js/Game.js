@@ -1,5 +1,12 @@
-import lifecycle from './Lifecycle.js'
-import { GAME_STATE_MENU, GAME_STATE_INIT, GAME_STATE_START, GAME_STATE_OVER, GAME_STATE_WIN } from './const/GAMESTATE.js'
+import Curtain from './layer/Curtain.js'
+import {
+  GAME_STATE_MENU,
+  GAME_STATE_INIT,
+  GAME_STATE_START,
+  GAME_STATE_OVER,
+  GAME_STATE_WIN,
+} from './const/GAMESTATE.js'
+import KEYBOARD from './const/KEYBOARD.js'
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from './const/SCREEN.js'
 import { DIRECTION } from './const/WORLD.js'
 import Menu from './layer/Menu.js'
@@ -11,12 +18,10 @@ import Menu from './layer/Menu.js'
  */
 function setCanvasSize(elements, { width, height }) {
   elements.forEach(element => {
-    element.setAttribute('width', width)
-    element.setAttribute('height', height)
+    element.width = width
+    element.height = height
   })
 }
-
-lifecycle.init([GAME_STATE_MENU, GAME_STATE_INIT, GAME_STATE_START, GAME_STATE_OVER, GAME_STATE_WIN])
 
 /**
  * 调度
@@ -26,54 +31,88 @@ export default class Game {
   gameState = GAME_STATE_MENU
 
   menu = null
-  stage = null
+  curtain = null
+
+  isPause = false
+
+  level = 21
 
   constructor() {
     this.prepare()
     this.handleKeyboardEvent()
   }
 
-  prepare(width = SCREEN_WIDTH, height = SCREEN_HEIGHT) {
+  prepare() {
     const container = document.querySelector('.container')
-    container.style.width = `${width}px`
-    container.style.height = `${height}px`
+    container.style.width = `${SCREEN_WIDTH}px`
+    container.style.height = `${SCREEN_HEIGHT}px`
 
     const stageCanvas = document.querySelector('#stageCanvas')
-    const stageCtx = stageCanvas.getContext('2d')
-    this.menu = new Menu(stageCtx)
-
     const wallCanvas = document.querySelector('#wallCanvas')
-    const wallCtx = wallCanvas.getContext('2d')
     const grassCanvas = document.querySelector('#grassCanvas')
-    const grassCtx = grassCanvas.getContext('2d')
     const tankCanvas = document.querySelector('#tankCanvas')
-    const tankCtx = tankCanvas.getContext('2d')
     const overCanvas = document.querySelector('#overCanvas')
-    const overCtx = overCanvas.getContext('2d')
     setCanvasSize([stageCanvas, wallCanvas, grassCanvas, tankCanvas, overCanvas], {
-      width,
-      height,
+      width: SCREEN_WIDTH,
+      height: SCREEN_HEIGHT,
+    })
+    const stageCtx = stageCanvas.getContext('2d')
+    const wallCtx = wallCanvas.getContext('2d')
+    const grassCtx = grassCanvas.getContext('2d')
+    const tankCtx = tankCanvas.getContext('2d')
+    const overCtx = overCanvas.getContext('2d')
+    this.menu = new Menu(stageCtx)
+    this.curtain = new Curtain(stageCtx)
+  }
+
+  handleKeyboardEvent() {
+    const codes = new Set()
+    document.addEventListener('keydown', ({ code }) => {
+      codes.add(code)
+      switch (this.gameState) {
+        case GAME_STATE_MENU:
+          this.onMenu(code)
+          break
+      }
+    })
+    document.addEventListener('keyup', ({ code }) => {
+      codes.delete(code)
     })
   }
-  handleKeyboardEvent() {
-    const keys = new Set()
-    this.menu.subscribe(keys)
-    document.addEventListener('keydown', ({code}) => {
-      keys.add(code)
-    })
-    document.addEventListener('keyup', ({code}) => {
-      keys.delete(code)
-    })
+
+  onMenu(code) {
+    if (code == KEYBOARD.ENTER) {
+      this.gameState = GAME_STATE_INIT
+      //只有一个玩家
+      if (this.menu.numberOfPlayers == 1) {
+      }
+    } else {
+      this.menu.next(code)
+    }
   }
 
   run() {
-    switch (this.gameState) {
-      case GAME_STATE_MENU:
-        this.menu.draw()
-        break
-      case GAME_STATE_INIT:
+    if (!this.isPause) {
+      switch (this.gameState) {
+        case GAME_STATE_MENU:
+          this.menu.draw()
+          break
+        case GAME_STATE_INIT:
+          this.curtain.draw(this.level)
+          // if (this.stage.isReady) {
+          //   this.gameState = GAME_STATE_START
+          // }
+          break
+      }
     }
-  
     requestAnimationFrame(this.run.bind(this))
+  }
+
+  pause() {
+    this.isPause = true
+  }
+
+  resume() {
+    this.isPause = false
   }
 }
