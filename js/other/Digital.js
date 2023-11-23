@@ -1,43 +1,44 @@
 import { POS, RESOURCE_IMAGE } from '../const/IMAGE.js'
 
-// 在图片中的位置
-const TYPE = 'num'
-// 文字大小
-const SIZE = 14
-
 export default class Digital {
-  constructor(context, level) {
+  constructor(context) {
     this.ctx = context
-    this.level = level
+    // 文字大小
+    this.size = 14
+    // 在图片中的位置
+    this.type = 'num'
   }
 
   /**
-   * 
-   * @param {number} x 
-   * @param {number} y 
+   *
+   * @param {Integer} num
+   * @param {number} x
+   * @param {number} y
    */
-  draw(x, y) {
-    let l = this.level
+  draw(num, x, y) {
+    let n = num
+    const type = this.type
+    const size = this.size
     const arr = []
-    if (l === 0) {
+    if (n === 0) {
       arr.push(0)
     } else {
-      while (l > 0) {
-        arr.push(l % 10)
-        l = parseInt(l / 10)
+      while (n > 0) {
+        arr.push(n % 10)
+        n = parseInt(n / 10)
       }
     }
     for (let i = arr.length - 1; i >= 0; i--) {
       this.ctx.drawImage(
         RESOURCE_IMAGE,
-        POS[TYPE][0] + arr[i] * SIZE,
-        POS[TYPE][1],
-        SIZE,
-        SIZE,
-        x + (arr.length - i - 1) * SIZE,
+        POS[type][0] + arr[i] * size,
+        POS[type][1],
+        size,
+        size,
+        x + (arr.length - i - 1) * size,
         y,
-        SIZE,
-        SIZE
+        size,
+        size
       )
     }
   }

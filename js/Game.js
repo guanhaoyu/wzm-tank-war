@@ -11,6 +11,8 @@ import { SCREEN_HEIGHT, SCREEN_WIDTH } from './const/SCREEN.js'
 import { DIRECTION } from './const/WORLD.js'
 import Menu from './layer/Menu.js'
 import BattleField from './BattleField.js'
+import Scoreboard from './Scoreboard.js'
+import PlayerTank from './tank/PlayerTank.js'
 
 /**
  * 设置元素宽高尺寸
@@ -29,7 +31,8 @@ function setCanvasSize(elements, { width, height }) {
  * 键入监听
  */
 export default class Game {
-  gameState = GAME_STATE_MENU
+  gameState = GAME_STATE_INIT
+  // gameState = GAME_STATE_MENU
 
   isPause = false
 
@@ -62,24 +65,11 @@ export default class Game {
     this.menu = new Menu(stageCtx)
     this.curtain = new Curtain(stageCtx)
     this.battleField = new BattleField(wallCtx, grassCtx)
+    this.scoreboard = new Scoreboard(wallCtx)
+    this.player1 = new PlayerTank(tankCtx)
   }
 
-  handleKeyboardEvent() {
-    const codes = new Set()
-    document.addEventListener('keydown', ({ code }) => {
-      codes.add(code)
-      switch (this.gameState) {
-        case GAME_STATE_MENU:
-          this.onMenu(code)
-          break
-      }
-    })
-    document.addEventListener('keyup', ({ code }) => {
-      codes.delete(code)
-    })
-  }
-
-  onMenu(code) {
+  handleKeydownOnMenu(code) {
     if (code == KEYBOARD.ENTER) {
       this.gameState = GAME_STATE_INIT
       //只有一个玩家
@@ -88,6 +78,21 @@ export default class Game {
     } else {
       this.menu.next(code)
     }
+  }
+
+  handleKeyboardEvent() {
+    const codes = new Set()
+    document.addEventListener('keydown', ({ code }) => {
+      codes.add(code)
+      switch (this.gameState) {
+        case GAME_STATE_MENU:
+          this.handleKeydownOnMenu(code)
+          break
+      }
+    })
+    document.addEventListener('keyup', ({ code }) => {
+      codes.delete(code)
+    })
   }
 
   run() {
@@ -99,11 +104,13 @@ export default class Game {
         case GAME_STATE_INIT:
           this.curtain.fold(this.level, () => {
             this.battleField.draw(this.level)
+            this.scoreboard.init(this.level)
             this.gameState = GAME_STATE_START
           })
           break
         case GAME_STATE_START:
           this.curtain.unfold()
+          this.player1.draw()
           break
       }
     }

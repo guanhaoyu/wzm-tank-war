@@ -24,10 +24,6 @@ const DIRECTION = {
   LEFT: 2,
   RIGHT: 3
 }
-const UP = 0
-const DOWN = 1
-const LEFT = 2
-const RIGHT = 3
 
 const ENEMY_LOCATION = [192, 0, 384] //相对于主游戏区
 
@@ -38,4 +34,7 @@ const BULLET_TYPE_ENEMY = 2
 const CRACK_TYPE_TANK = 'tank'
 const CRACK_TYPE_BULLET = 'bullet'
 
-export { DIRECTION, TILE_TYPE }
+/********************每秒帧数********************/
+const FPS = 60
+
+export { DIRECTION, TILE_TYPE, FPS }
