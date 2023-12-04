@@ -31,16 +31,20 @@ function setCanvasSize(elements, { width, height }) {
  * 键入监听
  */
 export default class Game {
-  gameState = GAME_STATE_INIT
-  // gameState = GAME_STATE_MENU
-
-  isPause = false
-
-  level = 1
-
   constructor() {
+    this.level = 1
+    this.isPause = false
+    // gameState = GAME_STATE_MENU
+    this.gameState = GAME_STATE_INIT
     this.prepare()
     this.handleKeyboardEvent()
+
+    this.enemyArr = []
+    this.restEnemy = 20 // 剩余敌方坦克数量
+    this.appearEnemy = 0 // 正在显示的敌方坦克数量
+    this.maxAppearEnemy = 5 // 屏幕上最多显示几个敌方坦克
+
+    this.mainframe = 0 // 用于计时
   }
 
   prepare() {
@@ -104,17 +108,50 @@ export default class Game {
         case GAME_STATE_INIT:
           this.curtain.fold(this.level, () => {
             this.battleField.draw(this.level)
-            this.scoreboard.init(this.level)
+            this.scoreboard.init(this.level, this.restEnemy)
+            this.player1.draw()
             this.gameState = GAME_STATE_START
           })
           break
         case GAME_STATE_START:
           this.curtain.unfold()
-          this.player1.draw()
+          if (this.appearEnemy < this.restEnemy) {
+            if (this.mainframe % 100 == 0) {
+              this.addEnemyTank()
+              this.mainframe = 0
+            }
+            this.mainframe++
+          }
+          // drawEnemyTanks();
           break
       }
     }
     requestAnimationFrame(this.run.bind(this))
+  }
+
+  addEnemyTank() {
+    if (this.enemyArr.length > this.maxAppearEnemy || this.restEnemy === 0) {
+      return
+    }
+    this.appearEnemy++
+    const willAppearEnemy = parseInt(Math.random() * 3)
+    console.log(`增加${willAppearEnemy + 1}个敌方坦克`)
+    // var obj = null
+    // if (willAppearEnemy == 0) {
+    //   obj = new EnemyOne(tankCtx)
+    // } else if (willAppearEnemy == 1) {
+    //   obj = new EnemyTwo(tankCtx)
+    // } else if (willAppearEnemy == 2) {
+    //   obj = new EnemyThree(tankCtx)
+    // }
+    // obj.x = ENEMY_LOCATION[parseInt(Math.random() * 3)] + map.offsetX
+    // obj.y = map.offsetY
+    // obj.dir = DOWN
+    this.enemyArr.push(...new Array(willAppearEnemy).fill(null))
+    this.appearEnemy += willAppearEnemy
+    this.restEnemy = this.restEnemy - willAppearEnemy
+    //更新地图右侧坦克数
+    this.scoreboard.drawEnemyCount(this.restEnemy, this.appearEnemy)
   }
 
   pause() {

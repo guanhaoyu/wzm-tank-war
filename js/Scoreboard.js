@@ -7,7 +7,7 @@ export default class Scoreboard {
     this.digital = new Digital(this.ctx)
   }
 
-  init(level) {
+  init(level, enemyCount) {
     this.ctx.drawImage(RESOURCE_IMAGE, POS['score'][0], POS['score'][1], 30, 32, 464, 256, 30, 32) //player1
 
     this.ctx.drawImage(
@@ -38,7 +38,7 @@ export default class Scoreboard {
     this.drawLevel(level)
     this.drawLives(0, 1)
     this.drawLives(0, 2)
-    this.drawEnemyCount(20)
+    this.drawEnemyCount(enemyCount)
   }
 
   drawLevel(level) {
@@ -61,9 +61,9 @@ export default class Scoreboard {
 
   /**
    * 画右侧敌方坦克数
-   * @param {Integer} count 
+   * @param {Integer} count
    */
-  drawEnemyCount(count = 0) {
+  drawEnemyCount0(count = 0) {
     // 列数
     const colums = 2
     const x = 466
@@ -81,6 +81,47 @@ export default class Scoreboard {
         14,
         14
       )
+    }
+  }
+
+  /**
+   * 清除右侧敌方坦克数，从最下面开始清楚
+   * @param restEnemy 敌方坦克的总数
+   * @param appearEnemy 已出现的敌方坦克数
+   */
+  drawEnemyCount(restEnemy = 0, appearEnemy = 0) {
+    const x = 466
+    let y = 34
+    const size = this.digital.size
+    // 列数
+    const colums = 2
+    const ENEMY_SIZE = 16
+    if (appearEnemy > 0) {
+      y = 34 + 16
+      this.ctx.fillStyle = '#7f7f7f'
+      this.ctx.fillRect(
+        x + (appearEnemy % colums) * ENEMY_SIZE,
+        y +
+          (Math.ceil(restEnemy / colums) - 1) * ENEMY_SIZE -
+          parseInt((appearEnemy - 1) / colums) * ENEMY_SIZE,
+        size,
+        size
+      )
+    } else {
+      const enemySize = 16
+      for (let i = 1; i <= restEnemy; i++) {
+        this.ctx.drawImage(
+          RESOURCE_IMAGE,
+          92 + POS['score'][0],
+          POS['score'][1],
+          size,
+          size,
+          i % colums === 0 ? x + enemySize : x,
+          y + parseInt((i + 1) / colums) * enemySize,
+          size,
+          size
+        )
+      }
     }
   }
 }
