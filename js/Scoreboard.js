@@ -99,6 +99,7 @@ export default class Scoreboard {
     if (appearEnemy > 0) {
       y = 34 + 16
       this.ctx.fillStyle = '#7f7f7f'
+      // 涂格子
       this.ctx.fillRect(
         x + (appearEnemy % colums) * ENEMY_SIZE,
         y +
@@ -116,12 +117,27 @@ export default class Scoreboard {
           POS['score'][1],
           size,
           size,
-          i % colums === 0 ? x + enemySize : x,
-          y + parseInt((i + 1) / colums) * enemySize,
+          ...calculatePositionInColumns(i, colums, x, y, enemySize, enemySize),
           size,
           size
         )
       }
     }
   }
+}
+
+/**
+ * 画n列，计算每一个元素的位置
+ * @param {Integer} i 第几个元素，从1开始
+ * @param {Integer} colums 列数
+ * @param {number} x 初始x坐标
+ * @param {number} y 初始y坐标
+ * @param {number} offsetX 元素间水平距离
+ * @param {number} offsetY 元素间垂直距离
+ */
+function calculatePositionInColumns(i, colums, x, y, offsetX, offsetY) {
+  return [
+    x + i % colums * offsetX,
+    y + Math.ceil(i / colums) * offsetY,
+  ]
 }
