@@ -60,32 +60,7 @@ export default class Scoreboard {
   }
 
   /**
-   * 画右侧敌方坦克数
-   * @param {Integer} count
-   */
-  drawEnemyCount0(count = 0) {
-    // 列数
-    const colums = 2
-    const x = 466
-    const y = 34
-    const enemySize = 16
-    for (let i = 1; i <= count; i++) {
-      this.ctx.drawImage(
-        RESOURCE_IMAGE,
-        92 + POS['score'][0],
-        POS['score'][1],
-        14,
-        14,
-        i % colums === 0 ? x + enemySize : x,
-        y + parseInt((i + 1) / colums) * enemySize,
-        14,
-        14
-      )
-    }
-  }
-
-  /**
-   * 清除右侧敌方坦克数，从最下面开始清楚
+   * 清除右侧敌方坦克数，从最下面开始清除
    * @param restEnemy 敌方坦克的总数
    * @param appearEnemy 已出现的敌方坦克数
    */
@@ -97,19 +72,17 @@ export default class Scoreboard {
     const colums = 2
     const ENEMY_SIZE = 16
     if (appearEnemy > 0) {
-      y = 34 + 16
+      y = 34 + ENEMY_SIZE
       this.ctx.fillStyle = '#7f7f7f'
-      // 涂格子
-      this.ctx.fillRect(
-        x + (appearEnemy % colums) * ENEMY_SIZE,
-        y +
-          (Math.ceil(restEnemy / colums) - 1) * ENEMY_SIZE -
-          parseInt((appearEnemy - 1) / colums) * ENEMY_SIZE,
-        size,
-        size
-      )
+      for (let i = 1; i <= appearEnemy; i++) {
+        // 涂格子
+        this.ctx.fillRect(
+          ...calculatePositionInColumns(i, colums, x, y, ENEMY_SIZE, ENEMY_SIZE, restEnemy + appearEnemy),
+          size,
+          size
+        )
+      }
     } else {
-      const enemySize = 16
       for (let i = 1; i <= restEnemy; i++) {
         this.ctx.drawImage(
           RESOURCE_IMAGE,
@@ -117,7 +90,7 @@ export default class Scoreboard {
           POS['score'][1],
           size,
           size,
-          ...calculatePositionInColumns(i, colums, x, y, enemySize, enemySize),
+          ...calculatePositionInColumns(i, colums, x, y, ENEMY_SIZE, ENEMY_SIZE),
           size,
           size
         )
@@ -128,16 +101,19 @@ export default class Scoreboard {
 
 /**
  * 画n列，计算每一个元素的位置
- * @param {Integer} i 第几个元素，从1开始
+ * @param {Integer} i 第几个元素，从第一个（左上角）开始；若反向，则从最后一个（右下角）开始
  * @param {Integer} colums 列数
  * @param {number} x 初始x坐标
  * @param {number} y 初始y坐标
  * @param {number} offsetX 元素间水平距离
  * @param {number} offsetY 元素间垂直距离
+ * @param {Integer} total 总共画几个元素，若传该参数则反向画
+ * @returns {[number, number]}
  */
-function calculatePositionInColumns(i, colums, x, y, offsetX, offsetY) {
+function calculatePositionInColumns(i, colums, x, y, offsetX, offsetY, total) {
+  const rows = total ? Math.floor((total - i) / colums) : Math.ceil(i / colums)
   return [
-    x + i % colums * offsetX,
-    y + Math.ceil(i / colums) * offsetY,
+    x + (i % colums) * offsetX,
+    y + rows * offsetY,
   ]
 }

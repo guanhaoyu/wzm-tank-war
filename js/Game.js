@@ -122,7 +122,6 @@ export default class Game {
             }
             this.mainframe++
           }
-          // drawEnemyTanks();
           break
       }
     }
@@ -133,9 +132,9 @@ export default class Game {
     if (this.enemyArr.length > this.maxAppearEnemy || this.restEnemy === 0) {
       return
     }
-    this.appearEnemy++
-    const willAppearEnemy = parseInt(Math.random() * 3)
-    console.log(`增加${willAppearEnemy + 1}个敌方坦克`)
+    const willAppearEnemy = parseInt(Math.random() * 4
+    )
+    console.log(`增加${willAppearEnemy}个敌方坦克`)
     // var obj = null
     // if (willAppearEnemy == 0) {
     //   obj = new EnemyOne(tankCtx)
