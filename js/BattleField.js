@@ -1,7 +1,7 @@
 import { POS, RESOURCE_IMAGE } from './const/IMAGE.js'
 import maps from './const/LEVEL.js'
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from './const/SCREEN.js'
-import { TILE_TYPE } from './const/WORLD.js'
+import { BATTLE_FIELD, TILE_TYPE } from './const/WORLD.js'
 
 const { WALL, GRASS, ICE, GRID, WATER, HOME, ANOTHREHOME } = TILE_TYPE
 export default class BattleField {
@@ -10,10 +10,10 @@ export default class BattleField {
   tileSize = 16 //地图块的大小
   homeSize = 32 //家图标的大小
 
-  offsetX = 32 //主游戏区的X偏移量
-  offsetY = 16 //主游戏区的Y偏移量
-  width = 416
-  height = 416
+  offsetX = BATTLE_FIELD.OFFSET_X //主游戏区的X偏移量
+  offsetY = BATTLE_FIELD.OFFSET_Y //主游戏区的Y偏移量
+  width = BATTLE_FIELD.WIDTH
+  height = BATTLE_FIELD.HEIGHT
 
   mapPos = POS['map']
 
@@ -64,6 +64,7 @@ export default class BattleField {
             this.tileSize
           )
         } else if (mapLevel[i][j] == HOME) {
+          console.log(111)
           this.wallCtx.drawImage(
             RESOURCE_IMAGE,
             this.mapPos[0],

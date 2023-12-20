@@ -6,8 +6,8 @@ const { UP, DOWN, RIGHT, LEFT } = DIRECTION
 // 坦克的大小 ? 不同型号的size应该不一样
 
 export default class Tank extends Spirit {
-  constructor(context, type = 'player', x = 0, y = 0, size = 32, speed = 1, direction = UP) {
-    super(context, type, x, y, size, speed, direction)
+  constructor(context, type = 'player') {
+    super(context, type)
     // 敌方坦克切换方向的时间？
     this.frame = 0
 
@@ -21,6 +21,9 @@ export default class Tank extends Spirit {
     this.bullet = null
     // 射击的概率
     this.probabilityOfShoot = 0.6
+
+    this.size = 32
+    this.speed = 1
   }
 
   getSourcePosition() {

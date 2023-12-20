@@ -34,7 +34,15 @@ const BULLET_TYPE_ENEMY = 2
 const CRACK_TYPE_TANK = 'tank'
 const CRACK_TYPE_BULLET = 'bullet'
 
+/********************战场几何信息********************/
+const BATTLE_FIELD = {
+  WIDTH: 416,
+  HEIGHT: 416,
+  OFFSET_X: 32,
+  OFFSET_Y: 16
+}
+
 /********************每秒帧数********************/
 const FPS = 60
 
-export { DIRECTION, TILE_TYPE, FPS }
+export { DIRECTION, TILE_TYPE, FPS, ENEMY_LOCATION, BATTLE_FIELD }

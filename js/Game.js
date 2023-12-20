@@ -8,11 +8,13 @@ import {
 } from './const/GAMESTATE.js'
 import KEYBOARD from './const/KEYBOARD.js'
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from './const/SCREEN.js'
-import { DIRECTION } from './const/WORLD.js'
+import { DIRECTION, ENEMY_LOCATION, FPS } from './const/WORLD.js'
 import Menu from './layer/Menu.js'
 import BattleField from './BattleField.js'
 import Scoreboard from './Scoreboard.js'
 import PlayerTank from './tank/PlayerTank.js'
+import { Enemy1, Enemy2, Enemy3 } from './tank/EnemyTank.js'
+import checkCollision from './utils/collision.js'
 
 /**
  * 设置元素宽高尺寸
@@ -25,6 +27,12 @@ function setCanvasSize(elements, { width, height }) {
     element.height = height
   })
 }
+
+// 2s产生一个敌坦克
+const ADD_ENEMY_INTERVAL = 2 * FPS
+
+// 每一关的敌方坦克总数
+const TOTAL_ENEMY = 20
 
 /**
  * 调度
@@ -40,11 +48,11 @@ export default class Game {
     this.handleKeyboardEvent()
 
     this.enemyArr = []
-    this.restEnemy = 20 // 剩余敌方坦克数量
+    this.restEnemy = TOTAL_ENEMY // 剩余敌方坦克数量
     this.appearEnemy = 0 // 正在显示的敌方坦克数量
     this.maxAppearEnemy = 5 // 屏幕上最多显示几个敌方坦克
 
-    this.mainframe = 0 // 用于计时
+    this.addEnemyFrames = 0 // 用于添加敌方坦克的计时
   }
 
   prepare() {
@@ -64,13 +72,13 @@ export default class Game {
     const stageCtx = stageCanvas.getContext('2d')
     const wallCtx = wallCanvas.getContext('2d')
     const grassCtx = grassCanvas.getContext('2d')
-    const tankCtx = tankCanvas.getContext('2d')
+    this.tankCtx = tankCanvas.getContext('2d')
     const overCtx = overCanvas.getContext('2d')
     this.menu = new Menu(stageCtx)
     this.curtain = new Curtain(stageCtx)
     this.battleField = new BattleField(wallCtx, grassCtx)
     this.scoreboard = new Scoreboard(wallCtx)
-    this.player1 = new PlayerTank(tankCtx)
+    this.player1 = new PlayerTank(this.tankCtx)
   }
 
   handleKeydownOnMenu(code) {
@@ -99,6 +107,12 @@ export default class Game {
     })
   }
 
+  drawTanks() {
+    this.tankCtx.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
+    this.enemyArr.forEach(el => el.draw())
+    this.player1.draw()
+  }
+
   run() {
     if (!this.isPause) {
       switch (this.gameState) {
@@ -109,48 +123,66 @@ export default class Game {
           this.curtain.fold(this.level, () => {
             this.battleField.draw(this.level)
             this.scoreboard.init(this.level, this.restEnemy)
-            this.player1.draw()
             this.gameState = GAME_STATE_START
           })
           break
         case GAME_STATE_START:
-          this.curtain.unfold()
-          if (this.appearEnemy < this.restEnemy) {
-            if (this.mainframe % 100 == 0) {
-              this.addEnemyTank()
-              this.mainframe = 0
-            }
-            this.mainframe++
+          if (this.curtain.alreadyDrawHeight > 0) {
+            this.curtain.unfold()
           }
+          this.addEnemyTank()
+          this.drawTanks()
           break
       }
     }
     requestAnimationFrame(this.run.bind(this))
   }
 
+  getEnemyClass() {
+    const random = Math.ceil(Math.random() * 3)
+    let EnemyClass
+    if (random === 1) {
+      EnemyClass = Enemy1
+    } else if (random === 2) {
+      EnemyClass = Enemy2
+    } else {
+      EnemyClass = Enemy3
+    }
+    return EnemyClass
+  }
+
   addEnemyTank() {
     if (this.enemyArr.length > this.maxAppearEnemy || this.restEnemy === 0) {
       return
     }
-    const willAppearEnemy = parseInt(Math.random() * 4
-    )
-    console.log(`增加${willAppearEnemy}个敌方坦克`)
-    // var obj = null
-    // if (willAppearEnemy == 0) {
-    //   obj = new EnemyOne(tankCtx)
-    // } else if (willAppearEnemy == 1) {
-    //   obj = new EnemyTwo(tankCtx)
-    // } else if (willAppearEnemy == 2) {
-    //   obj = new EnemyThree(tankCtx)
-    // }
-    // obj.x = ENEMY_LOCATION[parseInt(Math.random() * 3)] + map.offsetX
-    // obj.y = map.offsetY
-    // obj.dir = DOWN
-    this.enemyArr.push(...new Array(willAppearEnemy).fill(null))
-    this.appearEnemy += willAppearEnemy
-    this.restEnemy = this.restEnemy - willAppearEnemy
-    //更新地图右侧坦克数
-    this.scoreboard.drawEnemyCount(this.restEnemy, this.appearEnemy)
+    const y = 16
+    const size = 32
+    if (this.addEnemyFrames % ADD_ENEMY_INTERVAL === 0) {
+      const willAppearEnemy = Math.min(Math.ceil(Math.random() * 3), this.restEnemy)
+      let willNotAppearEnemy = 0
+      for (let i = 0; i < willAppearEnemy; i++) {
+        const willAppearEnemyLocationX = ENEMY_LOCATION[Math.floor(Math.random() * 3)] + size
+        const isCollision = checkCollision(
+          { x: willAppearEnemyLocationX, y, width: size, height: size },
+          this.enemyArr.map(el => ({ x: el.x, y: el.y, width: el.size, height: el.size }))
+        )
+        if (isCollision) {
+          willNotAppearEnemy++
+        } else {
+          const EnemyClass = this.getEnemyClass()
+          this.enemyArr.push(
+            new EnemyClass(this.tankCtx, willAppearEnemyLocationX, y, DIRECTION.DOWN)
+          )
+        }
+      }
+      this.appearEnemy = this.appearEnemy + willAppearEnemy - willNotAppearEnemy
+      this.restEnemy = TOTAL_ENEMY - this.appearEnemy
+
+      //更新地图右侧坦克数
+      this.scoreboard.drawEnemyCount(this.restEnemy, this.appearEnemy)
+      this.addEnemyFrames = 0
+    }
+    this.addEnemyFrames++
   }
 
   pause() {

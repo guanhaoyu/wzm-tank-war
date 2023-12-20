@@ -11,17 +11,17 @@ const { UP, DOWN, RIGHT, LEFT } = DIRECTION
  * 默认都是刚体
  */
 export default class Spirit {
-  constructor(context, type, x = 0, y = 0, size = 0, speed = 0, direction = UP) {
+  constructor(context, type) {
     this.ctx = context
     this.type = type
     // 速度
-    this.speed = speed
-    this.x = x
-    this.y = y
+    this.speed = 0
+    this.x = 0
+    this.y = 0
     // 大小
-    this.size = size
+    this.size = 0
     // 运动方向
-    this.direction = direction
+    this.direction = UP
 
     this.isDestroyed = false
   }

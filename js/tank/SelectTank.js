@@ -16,14 +16,14 @@ export default class SelectTank extends Tank {
   }
   get sourcePosition() {
     const [x, y] = POS[this.type]
-    return [x, y + this.deltaY , this.size, this.size]
+    return [x, y + this.deltaY, this.size, this.size]
   }
   get deltaY() {
     this.current = (this.current + 1) % this.deltaYs.length
     return this.deltaYs[this.current]
   }
   move(direction) {
-    super.move(direction)    
+    super.move(direction)
     // 只改变y坐标
     this.y = Math.min(this.y, this.y2)
     this.y = Math.max(this.y, this.y1)
