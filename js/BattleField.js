@@ -64,11 +64,10 @@ export default class BattleField {
             this.tileSize
           )
         } else if (mapLevel[i][j] == HOME) {
-          console.log(111)
           this.wallCtx.drawImage(
             RESOURCE_IMAGE,
-            this.mapPos[0],
-            this.mapPos[1],
+            POS['home'][0],
+            POS['home'][1],
             this.homeSize,
             this.homeSize,
             j * this.tileSize + this.offsetX,

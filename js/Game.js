@@ -14,7 +14,7 @@ import BattleField from './BattleField.js'
 import Scoreboard from './Scoreboard.js'
 import PlayerTank from './tank/PlayerTank.js'
 import { Enemy1, Enemy2, Enemy3 } from './tank/EnemyTank.js'
-import checkCollision from './utils/collision.js'
+import isCollision, { rigidbodies } from './utils/collision.js'
 
 /**
  * 设置元素宽高尺寸
@@ -42,8 +42,8 @@ export default class Game {
   constructor() {
     this.level = 1
     this.isPause = false
-    // gameState = GAME_STATE_MENU
-    this.gameState = GAME_STATE_INIT
+    this.gameState = GAME_STATE_MENU
+    // this.gameState = GAME_STATE_INIT
     this.prepare()
     this.handleKeyboardEvent()
 
@@ -134,6 +134,8 @@ export default class Game {
           this.drawTanks()
           break
       }
+      // 地方坦克全部进入刚体数组
+      rigidbodies.push(...this.enemyArr)
     }
     requestAnimationFrame(this.run.bind(this))
   }
@@ -162,11 +164,12 @@ export default class Game {
       let willNotAppearEnemy = 0
       for (let i = 0; i < willAppearEnemy; i++) {
         const willAppearEnemyLocationX = ENEMY_LOCATION[Math.floor(Math.random() * 3)] + size
-        const isCollision = checkCollision(
-          { x: willAppearEnemyLocationX, y, width: size, height: size },
-          this.enemyArr.map(el => ({ x: el.x, y: el.y, width: el.size, height: el.size }))
-        )
-        if (isCollision) {
+        if (
+          isCollision(
+            { x: willAppearEnemyLocationX, y, width: size, height: size },
+            this.enemyArr.map(el => ({ x: el.x, y: el.y, width: el.size, height: el.size }))
+          )
+        ) {
           willNotAppearEnemy++
         } else {
           const EnemyClass = this.getEnemyClass()

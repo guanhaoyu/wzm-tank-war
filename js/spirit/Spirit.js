@@ -7,6 +7,8 @@ import { DIRECTION } from '../const/WORLD.js'
 
 const { UP, DOWN, RIGHT, LEFT } = DIRECTION
 
+let id = 0
+
 /**
  * 默认都是刚体
  */
@@ -24,6 +26,8 @@ export default class Spirit {
     this.direction = UP
 
     this.isDestroyed = false
+    this.id = id
+    id++
   }
   // 当前位置
   get position() {

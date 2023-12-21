@@ -21,24 +21,38 @@ function isOverlap([a, b], [c, d]) {
  * @param {{x: number, y: number, width: number, height: number}[]} obstacles
  * @returns {boolean}
  */
-export default function checkCollision(target, obstacles = []) {
-  return obstacles.some(
-    obstacle =>
-      isOverlap([target.x, target.x + target.width], [obstacle.x, obstacle.x + obstacle.width]) &&
-      isOverlap([target.y, target.y + target.height], [obstacle.y, obstacle.y + obstacle.height])
+export default function isCollision(
+  target,
+  obstacles = [],
+  boundary = {
+    x: BATTLE_FIELD.OFFSET_X,
+    y: BATTLE_FIELD.OFFSET_Y,
+    width: BATTLE_FIELD.WIDTH,
+    height: BATTLE_FIELD.HEIGHT,
+  }
+) {
+  return (
+    obstacles.filter(obstacle => obstacle.id !== target.id).some(
+      obstacle =>
+        isOverlap([target.x, target.x + target.width], [obstacle.x, obstacle.x + obstacle.width]) &&
+        isOverlap([target.y, target.y + target.height], [obstacle.y, obstacle.y + obstacle.height])
+    ) || !isInBoundary(target, boundary)
   )
 }
 
 /**
  * 判断是否在边界内
  * @param {x: number, y: number, width: number, height: number} target
+ * @param {x: number, y: number, width: number, height: number} boundary
  * @returns {boolean}
  */
-export function isInBoundary(target) {
+export function isInBoundary(target, boundary) {
   return (
-    target.x >= BATTLE_FIELD.OFFSET_X &&
-    target.x + target.width <= BATTLE_FIELD.OFFSET_X + BATTLE_FIELD.WIDTH &&
-    target.y >= BATTLE_FIELD.OFFSET_Y &&
-    target.y + target.height <= BATTLE_FIELD.OFFSET_Y + BATTLE_FIELD.HEIGHT
+    target.x >= boundary.x &&
+    target.x + target.width <= boundary.x + boundary.width &&
+    target.y >= boundary.y &&
+    target.y + target.height <= boundary.y + boundary.height
   )
 }
+
+export const rigidbodies = [];
