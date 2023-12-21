@@ -41,14 +41,6 @@ export default class Spirit {
   draw() {
     this.ctx.drawImage(RESOURCE_IMAGE, ...this.sourcePosition, ...this.position)
   }
-  // 移动
-  move(direction) {
-    this.direction = direction
-    const [x, y] = step(this.direction, this.speed, [this.x, this.y])
-    // 碰撞和边界检测
-    this.x = x
-    this.y = y
-  }
   // 销毁
   destroy() {
     this.isDestroyed = true

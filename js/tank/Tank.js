@@ -1,7 +1,7 @@
 import { step } from '../action/movement.js'
 import { DIRECTION } from '../const/WORLD.js'
 import Spirit from '../spirit/Spirit.js'
-import isCollision, { rigidbodies } from '../utils/collision.js'
+import { isCollision, rigidbodies } from '../utils/collision.js'
 
 const { UP, DOWN, RIGHT, LEFT } = DIRECTION
 
@@ -28,19 +28,30 @@ export default class Tank extends Spirit {
     this.speed = 1
   }
 
+  get width() {
+    return this.size
+  }
+
+  get height() {
+    return this.size
+  }
+
   getSourcePosition() {
     const [x, y] = POS[this.type]
     return [x + this.direction * this.size, y, this.size, this.size]
   }
 
-  // move(direction = this.direction) {
-  //   this.direction = direction
-  //   const [x, y] = step(this.direction, this.speed, [this.x, this.y])
-  //   if (!isCollision({ x, y, width: this.width, height: this.height }, rigidbodies)) {
-  //     this.x = x
-  //     this.y = y
-  //   }
-  // }
+  move() {
+    const [x, y] = step(this.direction, this.speed, [this.x, this.y])
+    const isCollisionResult = isCollision(
+      { x, y, width: this.size, height: this.size, id: this.id },
+      rigidbodies
+    )
+    if (!isCollisionResult) {
+      this.x = x
+      this.y = y
+    }
+  }
 
   // 是否被击中
   isShotted() {}

@@ -33,7 +33,7 @@ class EnemyTank extends Tank {
         this.size,
         this.size
       )
-      // this.move()
+      this.move()
     } else {
       this.blink.draw(this.frames)
       if (this.frames === this.beforeAppearFrames) {

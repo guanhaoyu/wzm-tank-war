@@ -17,11 +17,11 @@ function isOverlap([a, b], [c, d]) {
 
 /**
  * 碰撞检测V2
- * @param {{x: number, y: number, width: number, height: number}} target
- * @param {{x: number, y: number, width: number, height: number}[]} obstacles
+ * @param {{id?: Integer, x: number, y: number, width: number, height: number}} target
+ * @param {{id: Integer, x: number, y: number, width: number, height: number}[]} obstacles
  * @returns {boolean}
  */
-export default function isCollision(
+export function isCollision(
   target,
   obstacles = [],
   boundary = {
@@ -32,11 +32,19 @@ export default function isCollision(
   }
 ) {
   return (
-    obstacles.filter(obstacle => obstacle.id !== target.id).some(
-      obstacle =>
-        isOverlap([target.x, target.x + target.width], [obstacle.x, obstacle.x + obstacle.width]) &&
-        isOverlap([target.y, target.y + target.height], [obstacle.y, obstacle.y + obstacle.height])
-    ) || !isInBoundary(target, boundary)
+    obstacles
+      .filter(obstacle => obstacle.id !== target.id)
+      .some(
+        obstacle =>
+          isOverlap(
+            [target.x, target.x + target.width],
+            [obstacle.x, obstacle.x + obstacle.width]
+          ) &&
+          isOverlap(
+            [target.y, target.y + target.height],
+            [obstacle.y, obstacle.y + obstacle.height]
+          )
+      ) || !isInBoundary(target, boundary)
   )
 }
 
@@ -55,4 +63,12 @@ export function isInBoundary(target, boundary) {
   )
 }
 
-export const rigidbodies = [];
+export const rigidbodies = []
+
+export function pushRigidbodies(...arr) {
+  arr.forEach(el => {
+    if (!rigidbodies.find(item => item.id === el.id)) {
+      rigidbodies.push(el)
+    }
+  })
+}

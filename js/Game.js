@@ -14,7 +14,7 @@ import BattleField from './BattleField.js'
 import Scoreboard from './Scoreboard.js'
 import PlayerTank from './tank/PlayerTank.js'
 import { Enemy1, Enemy2, Enemy3 } from './tank/EnemyTank.js'
-import isCollision, { rigidbodies } from './utils/collision.js'
+import { isCollision, pushRigidbodies } from './utils/collision.js'
 
 /**
  * 设置元素宽高尺寸
@@ -50,7 +50,7 @@ export default class Game {
     this.enemyArr = []
     this.restEnemy = TOTAL_ENEMY // 剩余敌方坦克数量
     this.appearEnemy = 0 // 正在显示的敌方坦克数量
-    this.maxAppearEnemy = 5 // 屏幕上最多显示几个敌方坦克
+    this.maxAppearEnemy = 10 // 屏幕上最多显示几个敌方坦克
 
     this.addEnemyFrames = 0 // 用于添加敌方坦克的计时
   }
@@ -135,7 +135,7 @@ export default class Game {
           break
       }
       // 地方坦克全部进入刚体数组
-      rigidbodies.push(...this.enemyArr)
+      pushRigidbodies(...this.enemyArr)
     }
     requestAnimationFrame(this.run.bind(this))
   }
@@ -160,16 +160,15 @@ export default class Game {
     const y = 16
     const size = 32
     if (this.addEnemyFrames % ADD_ENEMY_INTERVAL === 0) {
-      const willAppearEnemy = Math.min(Math.ceil(Math.random() * 3), this.restEnemy)
+      const willAppearEnemy = Math.min(Math.ceil(Math.random() * 3), this.restEnemy, this.maxAppearEnemy - this.appearEnemy)
       let willNotAppearEnemy = 0
       for (let i = 0; i < willAppearEnemy; i++) {
         const willAppearEnemyLocationX = ENEMY_LOCATION[Math.floor(Math.random() * 3)] + size
-        if (
-          isCollision(
-            { x: willAppearEnemyLocationX, y, width: size, height: size },
-            this.enemyArr.map(el => ({ x: el.x, y: el.y, width: el.size, height: el.size }))
-          )
-        ) {
+        const isCollisionResult = isCollision(
+          { x: willAppearEnemyLocationX, y, width: size, height: size },
+          this.enemyArr
+        )
+        if (isCollisionResult) {
           willNotAppearEnemy++
         } else {
           const EnemyClass = this.getEnemyClass()
