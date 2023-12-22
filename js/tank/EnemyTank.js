@@ -20,7 +20,6 @@ class EnemyTank extends Tank {
     this.blink = new Blink(context, x, y, this.size)
   }
   draw() {
-    this.frames++
     if (this.isAppear) {
       this.ctx.drawImage(
         RESOURCE_IMAGE,
@@ -41,6 +40,7 @@ class EnemyTank extends Tank {
         this.frames = 0
       }
     }
+    this.frames++
   }
 }
 

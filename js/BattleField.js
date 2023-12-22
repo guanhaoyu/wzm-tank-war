@@ -22,7 +22,16 @@ export default class BattleField {
     this.grassCtx = grassCtx
   }
 
-  draw(level) {
+  setLevel(level = 1) {
+    this.level = level
+    this.mapLevel = maps[Math.max(level - 1, 0)]
+  }
+
+  updateMapLevel(i, j) {
+    this.mapLevel[i][j] = 0
+  }
+
+  draw() {
     this.wallCtx.fillStyle = '#7f7f7f'
     this.wallCtx.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
     this.wallCtx.fillStyle = '#000'
@@ -30,19 +39,19 @@ export default class BattleField {
 
     this.grassCtx.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
 
-    const mapLevel = maps[Math.max(level - 1, 0)]
-
     for (let i = 0; i < this.hTileCount; i++) {
       for (let j = 0; j < this.wTileCount; j++) {
+        const id = `rigidbody-${i}-${j}`
+        const current = this.mapLevel[i][j]
         if (
-          mapLevel[i][j] == WALL ||
-          mapLevel[i][j] == GRID ||
-          mapLevel[i][j] == WATER ||
-          mapLevel[i][j] == ICE
+          current === WALL ||
+          current === GRID ||
+          current === WATER ||
+          current === ICE
         ) {
           this.wallCtx.drawImage(
             RESOURCE_IMAGE,
-            this.tileSize * (mapLevel[i][j] - 1) + this.mapPos[0],
+            this.tileSize * (current - 1) + this.mapPos[0],
             this.mapPos[1],
             this.tileSize,
             this.tileSize,
@@ -51,10 +60,10 @@ export default class BattleField {
             this.tileSize,
             this.tileSize
           )
-        } else if (mapLevel[i][j] == GRASS) {
+        } else if (current === GRASS) {
           this.grassCtx.drawImage(
             RESOURCE_IMAGE,
-            this.tileSize * (mapLevel[i][j] - 1) + this.mapPos[0],
+            this.tileSize * (current - 1) + this.mapPos[0],
             this.mapPos[1],
             this.tileSize,
             this.tileSize,
@@ -63,7 +72,7 @@ export default class BattleField {
             this.tileSize,
             this.tileSize
           )
-        } else if (mapLevel[i][j] == HOME) {
+        } else if (current === HOME) {
           this.wallCtx.drawImage(
             RESOURCE_IMAGE,
             POS['home'][0],

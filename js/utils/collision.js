@@ -62,13 +62,3 @@ export function isInBoundary(target, boundary) {
     target.y + target.height <= boundary.y + boundary.height
   )
 }
-
-export const rigidbodies = []
-
-export function pushRigidbodies(...arr) {
-  arr.forEach(el => {
-    if (!rigidbodies.find(item => item.id === el.id)) {
-      rigidbodies.push(el)
-    }
-  })
-}

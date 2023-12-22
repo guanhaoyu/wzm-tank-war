@@ -1,11 +1,10 @@
 import { step } from '../action/movement.js'
 import { DIRECTION } from '../const/WORLD.js'
 import Spirit from '../spirit/Spirit.js'
-import { isCollision, rigidbodies } from '../utils/collision.js'
+import rigidManager from '../utils/RigidManager.js'
+import { isCollision } from '../utils/collision.js'
 
 const { UP, DOWN, RIGHT, LEFT } = DIRECTION
-
-// 坦克的大小 ? 不同型号的size应该不一样
 
 export default class Tank extends Spirit {
   constructor(context, type = 'player') {
@@ -36,16 +35,11 @@ export default class Tank extends Spirit {
     return this.size
   }
 
-  getSourcePosition() {
-    const [x, y] = POS[this.type]
-    return [x + this.direction * this.size, y, this.size, this.size]
-  }
-
   move() {
     const [x, y] = step(this.direction, this.speed, [this.x, this.y])
     const isCollisionResult = isCollision(
       { x, y, width: this.size, height: this.size, id: this.id },
-      rigidbodies
+      rigidManager.getObstacles()
     )
     if (!isCollisionResult) {
       this.x = x

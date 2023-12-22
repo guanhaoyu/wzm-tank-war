@@ -14,7 +14,8 @@ import BattleField from './BattleField.js'
 import Scoreboard from './Scoreboard.js'
 import PlayerTank from './tank/PlayerTank.js'
 import { Enemy1, Enemy2, Enemy3 } from './tank/EnemyTank.js'
-import { isCollision, pushRigidbodies } from './utils/collision.js'
+import { isCollision } from './utils/collision.js'
+import rigidManager from './utils/RigidManager.js'
 
 /**
  * 设置元素宽高尺寸
@@ -121,7 +122,8 @@ export default class Game {
           break
         case GAME_STATE_INIT:
           this.curtain.fold(this.level, () => {
-            this.battleField.draw(this.level)
+            this.battleField.setLevel(this.level)
+            this.battleField.draw()
             this.scoreboard.init(this.level, this.restEnemy)
             this.gameState = GAME_STATE_START
           })
@@ -134,8 +136,7 @@ export default class Game {
           this.drawTanks()
           break
       }
-      // 地方坦克全部进入刚体数组
-      pushRigidbodies(...this.enemyArr)
+      rigidManager.add(...this.enemyArr)
     }
     requestAnimationFrame(this.run.bind(this))
   }

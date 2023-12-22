@@ -1,5 +1,3 @@
-import { RESOURCE_IMAGE, POS } from '../const/IMAGE.js'
-import { step } from '../action/movement.js'
 import { DIRECTION } from '../const/WORLD.js'
 
 // drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
@@ -26,20 +24,8 @@ export default class Spirit {
     this.direction = UP
 
     this.isDestroyed = false
-    this.id = id
+    this.id = `spirit-${id}`
     id++
-  }
-  // 当前位置
-  get position() {
-    return [this.x, this.y, this.size, this.size]
-  }
-  get sourcePosition() {
-    const [x, y] = POS[this.type]
-    return [x + this.direction * this.size, y, this.size, this.size]
-  }
-  // 绘制
-  draw() {
-    this.ctx.drawImage(RESOURCE_IMAGE, ...this.sourcePosition, ...this.position)
   }
   // 销毁
   destroy() {
