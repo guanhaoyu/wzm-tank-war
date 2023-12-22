@@ -17,8 +17,8 @@ function isOverlap([a, b], [c, d]) {
 
 /**
  * 碰撞检测V2
- * @param {{id?: Integer, x: number, y: number, width: number, height: number}} target
- * @param {{id: Integer, x: number, y: number, width: number, height: number}[]} obstacles
+ * @param {{id?: string, x: number, y: number, width: number, height: number}} target
+ * @param {{id: string, x: number, y: number, width: number, height: number}[]} obstacles
  * @returns {boolean}
  */
 export function isCollision(

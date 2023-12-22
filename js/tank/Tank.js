@@ -1,7 +1,7 @@
 import { step } from '../action/movement.js'
 import { DIRECTION } from '../const/WORLD.js'
 import Spirit from '../spirit/Spirit.js'
-import rigidManager from '../utils/RigidManager.js'
+import obstacleManager from '../utils/RigidManager.js'
 import { isCollision } from '../utils/collision.js'
 
 const { UP, DOWN, RIGHT, LEFT } = DIRECTION
@@ -39,7 +39,7 @@ export default class Tank extends Spirit {
     const [x, y] = step(this.direction, this.speed, [this.x, this.y])
     const isCollisionResult = isCollision(
       { x, y, width: this.size, height: this.size, id: this.id },
-      rigidManager.getObstacles()
+      obstacleManager.getObstacles()
     )
     if (!isCollisionResult) {
       this.x = x

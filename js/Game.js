@@ -15,7 +15,7 @@ import Scoreboard from './Scoreboard.js'
 import PlayerTank from './tank/PlayerTank.js'
 import { Enemy1, Enemy2, Enemy3 } from './tank/EnemyTank.js'
 import { isCollision } from './utils/collision.js'
-import rigidManager from './utils/RigidManager.js'
+import obstacleManager from './utils/RigidManager.js'
 
 /**
  * 设置元素宽高尺寸
@@ -136,7 +136,7 @@ export default class Game {
           this.drawTanks()
           break
       }
-      rigidManager.add(...this.enemyArr)
+      obstacleManager.add(...this.enemyArr)
     }
     requestAnimationFrame(this.run.bind(this))
   }

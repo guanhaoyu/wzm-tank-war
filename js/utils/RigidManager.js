@@ -1,4 +1,4 @@
-class RigidManager {
+class ObstacleManager {
   constructor() {
     this.obstacles = []
   }
@@ -27,6 +27,6 @@ class RigidManager {
   }
 }
 
-const rigidManager = new RigidManager()
+const obstacleManager = new ObstacleManager()
 
-export default rigidManager
+export default obstacleManager

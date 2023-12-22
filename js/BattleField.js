@@ -1,7 +1,8 @@
 import { POS, RESOURCE_IMAGE } from './const/IMAGE.js'
 import maps from './const/LEVEL.js'
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from './const/SCREEN.js'
-import { BATTLE_FIELD, TILE_TYPE } from './const/WORLD.js'
+import { BATTLE_FIELD, OBSTACLE_TYPES, TILE_TYPE } from './const/WORLD.js'
+import obstacleManager from './utils/RigidManager.js'
 
 const { WALL, GRASS, ICE, GRID, WATER, HOME, ANOTHREHOME } = TILE_TYPE
 export default class BattleField {
@@ -16,6 +17,9 @@ export default class BattleField {
   height = BATTLE_FIELD.HEIGHT
 
   mapPos = POS['map']
+
+  homePosX = POS['home'][0]
+  homePosY = POS['home'][1]
 
   constructor(wallCtx, grassCtx) {
     this.wallCtx = wallCtx
@@ -41,14 +45,9 @@ export default class BattleField {
 
     for (let i = 0; i < this.hTileCount; i++) {
       for (let j = 0; j < this.wTileCount; j++) {
-        const id = `rigidbody-${i}-${j}`
         const current = this.mapLevel[i][j]
-        if (
-          current === WALL ||
-          current === GRID ||
-          current === WATER ||
-          current === ICE
-        ) {
+        const id = `${current}-${i}-${j}`
+        if (current === WALL || current === GRID || current === WATER || current === ICE) {
           this.wallCtx.drawImage(
             RESOURCE_IMAGE,
             this.tileSize * (current - 1) + this.mapPos[0],
@@ -75,8 +74,8 @@ export default class BattleField {
         } else if (current === HOME) {
           this.wallCtx.drawImage(
             RESOURCE_IMAGE,
-            POS['home'][0],
-            POS['home'][1],
+            this.homePosX,
+            this.homePosY,
             this.homeSize,
             this.homeSize,
             j * this.tileSize + this.offsetX,

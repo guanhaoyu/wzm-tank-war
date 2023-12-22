@@ -7,6 +7,14 @@ const ICE = 5
 const HOME = 9
 const ANOTHREHOME = 8
 
+const OBSTACLE_TYPES = [
+  WALL,
+  GRID,
+  WATER,
+  HOME,
+  ANOTHREHOME
+]
+
 const TILE_TYPE = {
   WALL,
   GRID,
@@ -45,4 +53,4 @@ const BATTLE_FIELD = {
 /********************每秒帧数********************/
 const FPS = 60
 
-export { DIRECTION, TILE_TYPE, FPS, ENEMY_LOCATION, BATTLE_FIELD }
+export { OBSTACLE_TYPES, DIRECTION, TILE_TYPE, FPS, ENEMY_LOCATION, BATTLE_FIELD }
