@@ -7,12 +7,12 @@ import { BATTLE_FIELD } from '../const/WORLD.js'
  * @returns {boolean}
  */
 function isOverlap([a, b], [c, d]) {
-  return (
+  const res =
     (a <= c && c <= b && b <= d) ||
     (c <= a && a <= d && d <= b) ||
     (c <= a && b <= d) ||
     (a <= c && d <= b)
-  )
+  return res
 }
 
 /**
