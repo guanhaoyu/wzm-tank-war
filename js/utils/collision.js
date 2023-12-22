@@ -7,12 +7,14 @@ import { BATTLE_FIELD } from '../const/WORLD.js'
  * @returns {boolean}
  */
 function isOverlap([a, b], [c, d]) {
-  const res =
-    (a <= c && c <= b && b <= d) ||
-    (c <= a && a <= d && d <= b) ||
+  const result =
+    // 交叉，端点坐标一定不会相等
+    (a < c && c < b && b < d) ||
+    (c < a && a < d && d < b) ||
+    // 包含，端点坐标至少有一个相等
     (c <= a && b <= d) ||
     (a <= c && d <= b)
-  return res
+  return result
 }
 
 /**

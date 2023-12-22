@@ -34,8 +34,7 @@ const DIRECTION = {
 }
 
 // 调试代码
-const ENEMY_LOCATION = [192] //相对于主游戏区
-// const ENEMY_LOCATION = [192, 0, 384] //相对于主游戏区
+const ENEMY_LOCATION = [192, 0, 384] //相对于主游戏区
 
 /********************子弹类型********************/
 const BULLET_TYPE_PLAYER = 1
