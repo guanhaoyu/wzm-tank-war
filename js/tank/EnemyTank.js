@@ -6,8 +6,8 @@ import Tank from './Tank.js'
 class EnemyTank extends Tank {
   constructor(context, type, x, y, direction) {
     super(context, type)
-    this.isAppear = false
-    // 画了几次，用于计时
+    this.isAppear = true
+    // this.isAppear = false
     this.frames = 0
     this.isAI = true
     this.x = x

@@ -59,6 +59,15 @@ export default class BattleField {
             this.tileSize,
             this.tileSize
           )
+          if (OBSTACLE_TYPES.includes(current)) {
+            obstacleManager.add({
+              id,
+              x: j * this.tileSize + this.offsetX,
+              y: i * this.tileSize + this.offsetY,
+              width: this.tileSize,
+              height: this.tileSize
+            })
+          }
         } else if (current === GRASS) {
           this.grassCtx.drawImage(
             RESOURCE_IMAGE,

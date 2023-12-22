@@ -30,7 +30,7 @@ function setCanvasSize(elements, { width, height }) {
 }
 
 // 2s产生一个敌坦克
-const ADD_ENEMY_INTERVAL = 2 * FPS
+const ADD_ENEMY_INTERVAL = 1 * FPS
 
 // 每一关的敌方坦克总数
 const TOTAL_ENEMY = 20
@@ -43,15 +43,15 @@ export default class Game {
   constructor() {
     this.level = 1
     this.isPause = false
-    this.gameState = GAME_STATE_MENU
-    // this.gameState = GAME_STATE_INIT
+    // this.gameState = GAME_STATE_MENU
+    this.gameState = GAME_STATE_INIT
     this.prepare()
     this.handleKeyboardEvent()
 
     this.enemyArr = []
     this.restEnemy = TOTAL_ENEMY // 剩余敌方坦克数量
     this.appearEnemy = 0 // 正在显示的敌方坦克数量
-    this.maxAppearEnemy = 10 // 屏幕上最多显示几个敌方坦克
+    this.maxAppearEnemy = 1 // 屏幕上最多显示几个敌方坦克
 
     this.addEnemyFrames = 0 // 用于添加敌方坦克的计时
   }
@@ -121,17 +121,17 @@ export default class Game {
           this.menu.draw()
           break
         case GAME_STATE_INIT:
-          this.curtain.fold(this.level, () => {
+          // this.curtain.fold(this.level, () => {
             this.battleField.setLevel(this.level)
             this.battleField.draw()
             this.scoreboard.init(this.level, this.restEnemy)
             this.gameState = GAME_STATE_START
-          })
+          // })
           break
         case GAME_STATE_START:
-          if (this.curtain.alreadyDrawHeight > 0) {
-            this.curtain.unfold()
-          }
+          // if (this.curtain.alreadyDrawHeight > 0) {
+          //   this.curtain.unfold()
+          // }
           this.addEnemyTank()
           this.drawTanks()
           break
@@ -164,7 +164,9 @@ export default class Game {
       const willAppearEnemy = Math.min(Math.ceil(Math.random() * 3), this.restEnemy, this.maxAppearEnemy - this.appearEnemy)
       let willNotAppearEnemy = 0
       for (let i = 0; i < willAppearEnemy; i++) {
-        const willAppearEnemyLocationX = ENEMY_LOCATION[Math.floor(Math.random() * 3)] + size
+        // 调试代码
+        const willAppearEnemyLocationX = ENEMY_LOCATION[0] + size
+        // const willAppearEnemyLocationX = ENEMY_LOCATION[Math.floor(Math.random() * 3)] + size
         const isCollisionResult = isCollision(
           { x: willAppearEnemyLocationX, y, width: size, height: size },
           this.enemyArr
@@ -172,10 +174,17 @@ export default class Game {
         if (isCollisionResult) {
           willNotAppearEnemy++
         } else {
-          const EnemyClass = this.getEnemyClass()
-          this.enemyArr.push(
-            new EnemyClass(this.tankCtx, willAppearEnemyLocationX, y, DIRECTION.DOWN)
-          )
+          // 调试代码
+          const param = [this.tankCtx, willAppearEnemyLocationX, y, DIRECTION.DOWN]
+          // if (this.enemyArr.length) {
+          //   this.enemyArr.push(new Enemy1(...param))
+          // } else {
+            this.enemyArr.push(new Enemy3(...param))
+          // }
+          // const EnemyClass = this.getEnemyClass()
+          // this.enemyArr.push(
+          //   new EnemyClass(this.tankCtx, willAppearEnemyLocationX, y, DIRECTION.DOWN)
+          // )
         }
       }
       this.appearEnemy = this.appearEnemy + willAppearEnemy - willNotAppearEnemy
