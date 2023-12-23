@@ -35,15 +35,22 @@ export default class Tank extends Spirit {
     return this.size
   }
 
+  // todo
+  get collisionSize() {
+    return this.size
+  }
+
   move() {
-    const [x, y] = step(this.direction, this.speed, [this.x, this.y])
-    const isCollisionResult = isCollision(
-      { x, y, width: this.size, height: this.size, id: this.id },
-      obstacleManager.getObstacles()
-    )
-    if (!isCollisionResult) {
-      this.x = x
-      this.y = y
+    for (let i = 0; i < this.speed; i = i + 0.5) {
+      const [x, y] = step(this.direction, 0.5, [this.x, this.y])
+      const isCollisionResult = isCollision(
+        { x, y, width: this.collisionSize, height: this.collisionSize, id: this.id },
+        obstacleManager.getObstacles()
+      )
+      if (!isCollisionResult) {
+        this.x = x
+        this.y = y
+      }
     }
   }
 

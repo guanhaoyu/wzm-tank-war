@@ -6,9 +6,9 @@ import {
   GAME_STATE_OVER,
   GAME_STATE_WIN,
 } from './const/GAMESTATE.js'
-import KEYBOARD from './const/KEYBOARD.js'
+import KEYBOARD, { keyDirectionMap } from './const/KEYBOARD.js'
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from './const/SCREEN.js'
-import { DIRECTION, ENEMY_LOCATION, FPS } from './const/WORLD.js'
+import { BATTLE_FIELD, DIRECTION, ENEMY_LOCATION, FPS } from './const/WORLD.js'
 import Menu from './layer/Menu.js'
 import BattleField from './BattleField.js'
 import Scoreboard from './Scoreboard.js'
@@ -16,6 +16,25 @@ import PlayerTank from './tank/PlayerTank.js'
 import { Enemy1, Enemy2, Enemy3 } from './tank/EnemyTank.js'
 import { isCollision } from './utils/collision.js'
 import obstacleManager from './utils/RigidManager.js'
+
+const gameStateToKeyboardEventMap = {
+  [GAME_STATE_MENU]: function(code) {
+    if (code == KEYBOARD.ENTER) {
+      this.gameState = GAME_STATE_INIT
+      // todo 只有一个玩家
+      if (this.menu.numberOfPlayers == 1) {
+      }
+    } else {
+      this.menu.next(code)
+    }
+  },
+  [GAME_STATE_START]: function(code) {
+    const direction = keyDirectionMap.get(code)
+    if (direction !== undefined) {
+      this.player1.direction = direction
+    }
+  },
+}
 
 /**
  * 设置元素宽高尺寸
@@ -43,8 +62,8 @@ export default class Game {
   constructor() {
     this.level = 1
     this.isPause = false
-    // this.gameState = GAME_STATE_MENU
-    this.gameState = GAME_STATE_INIT
+    this.gameState = GAME_STATE_MENU
+    // this.gameState = GAME_STATE_INIT
     this.prepare()
     this.handleKeyboardEvent()
 
@@ -97,11 +116,7 @@ export default class Game {
     const codes = new Set()
     document.addEventListener('keydown', ({ code }) => {
       codes.add(code)
-      switch (this.gameState) {
-        case GAME_STATE_MENU:
-          this.handleKeydownOnMenu(code)
-          break
-      }
+      gameStateToKeyboardEventMap[this.gameState].call(this, code)
     })
     document.addEventListener('keyup', ({ code }) => {
       codes.delete(code)
@@ -132,8 +147,10 @@ export default class Game {
           if (this.curtain.alreadyDrawHeight > 0) {
             this.curtain.unfold()
           }
-          this.addEnemyTank()
-          this.drawTanks()
+          if (this.curtain.alreadyDrawHeight <= 0) {
+            this.addEnemyTank()
+            this.drawTanks()
+          }
           break
       }
       obstacleManager.add(...this.enemyArr)
@@ -158,17 +175,16 @@ export default class Game {
     if (this.enemyArr.length > this.maxAppearEnemy || this.restEnemy === 0) {
       return
     }
-    const y = 16
-    const size = 32
+    const tankSize = 32
     if (this.addEnemyFrames % ADD_ENEMY_INTERVAL === 0) {
       const willAppearEnemy = Math.min(Math.ceil(Math.random() * 3), this.restEnemy, this.maxAppearEnemy - this.appearEnemy)
       let willNotAppearEnemy = 0
       for (let i = 0; i < willAppearEnemy; i++) {
         // 调试代码
         // const willAppearEnemyLocationX = ENEMY_LOCATION[0] + size
-        const willAppearEnemyLocationX = ENEMY_LOCATION[Math.floor(Math.random() * 3)] + size
+        const willAppearEnemyLocationX = ENEMY_LOCATION[Math.floor(Math.random() * 3)] + tankSize
         const isCollisionResult = isCollision(
-          { x: willAppearEnemyLocationX, y, width: size, height: size },
+          { x: willAppearEnemyLocationX, y: BATTLE_FIELD.OFFSET_Y, width: tankSize, height: tankSize },
           this.enemyArr
         )
         if (isCollisionResult) {
@@ -183,7 +199,7 @@ export default class Game {
           // }
           const EnemyClass = this.getEnemyClass()
           this.enemyArr.push(
-            new EnemyClass(this.tankCtx, willAppearEnemyLocationX, y, DIRECTION.DOWN)
+            new EnemyClass(this.tankCtx, willAppearEnemyLocationX, BATTLE_FIELD.OFFSET_Y, DIRECTION.DOWN)
           )
         }
       }
