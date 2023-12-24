@@ -217,7 +217,7 @@ export default class Game {
             willAppearEnemyLocationX,
             BATTLE_FIELD.OFFSET_Y,
             DIRECTION.DOWN
-          )
+          ).addToObstacleManager()
         }
       }
       this.appearEnemy = this.appearEnemy + willAppearEnemy - willNotAppearEnemy

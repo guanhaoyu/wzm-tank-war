@@ -22,11 +22,9 @@ export default class Tank extends Spirit {
 
     this.width = this.height = 26
     this.speed = 1
-
-    this.addObstacleManager()
   }
 
-  addObstacleManager() {
+  addToObstacleManager() {
     obstacleManager.add(this)
   }
 
