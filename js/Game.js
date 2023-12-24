@@ -7,7 +7,7 @@ import {
   GAME_STATE_WIN,
 } from './const/GAMESTATE.js'
 import KEYBOARD, { keyDirectionMap } from './const/KEYBOARD.js'
-import { SCREEN_HEIGHT, SCREEN_WIDTH } from './const/SCREEN.js'
+import { BRICK_SIZE, SCREEN_HEIGHT, SCREEN_WIDTH } from './const/SCREEN.js'
 import { BATTLE_FIELD, DIRECTION, ENEMY_LOCATION, FPS } from './const/WORLD.js'
 import Menu from './layer/Menu.js'
 import BattleField from './BattleField.js'
@@ -28,12 +28,12 @@ const gameStateToKeyboardEventMap = {
       this.menu.next(code)
     }
   },
-  [GAME_STATE_START]: function(code) {
-    const direction = keyDirectionMap.get(code)
-    if (direction !== undefined) {
-      this.player1.direction = direction
-    }
-  },
+  // [GAME_STATE_START]: function(code) {
+  //   const direction = keyDirectionMap.get(code)
+  //   if (direction !== undefined) {
+  //     this.player1.direction = direction
+  //   }
+  // },
 }
 
 /**
@@ -62,8 +62,9 @@ export default class Game {
   constructor() {
     this.level = 1
     this.isPause = false
-    this.gameState = GAME_STATE_MENU
-    // this.gameState = GAME_STATE_INIT
+    // this.gameState = GAME_STATE_MENU
+    this.gameState = GAME_STATE_INIT
+    // this.gameState = GAME_STATE_START
     this.prepare()
     this.handleKeyboardEvent()
 
@@ -73,6 +74,8 @@ export default class Game {
     this.maxAppearEnemy = 10 // 屏幕上最多显示几个敌方坦克
 
     this.addEnemyFrames = 0 // 用于添加敌方坦克的计时
+
+    this.codes = new Set()
   }
 
   prepare() {
@@ -113,20 +116,19 @@ export default class Game {
   }
 
   handleKeyboardEvent() {
-    const codes = new Set()
     document.addEventListener('keydown', ({ code }) => {
-      codes.add(code)
-      gameStateToKeyboardEventMap[this.gameState].call(this, code)
+      this.codes.add(code)
+      gameStateToKeyboardEventMap[this.gameState]?.call(this, code)
     })
     document.addEventListener('keyup', ({ code }) => {
-      codes.delete(code)
+      this.codes.delete(code)
     })
   }
 
   drawTanks() {
     this.tankCtx.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
     this.enemyArr.forEach(el => el.draw())
-    this.player1.draw()
+    this.player1.draw(this.codes)
   }
 
   run() {
@@ -153,7 +155,7 @@ export default class Game {
           }
           break
       }
-      obstacleManager.add(...this.enemyArr)
+      obstacleManager.add(...this.enemyArr, this.player1)
     }
     requestAnimationFrame(this.run.bind(this))
   }
@@ -175,17 +177,16 @@ export default class Game {
     if (this.enemyArr.length > this.maxAppearEnemy || this.restEnemy === 0) {
       return
     }
-    const tankSize = 32
     if (this.addEnemyFrames % ADD_ENEMY_INTERVAL === 0) {
       const willAppearEnemy = Math.min(Math.ceil(Math.random() * 3), this.restEnemy, this.maxAppearEnemy - this.appearEnemy)
       let willNotAppearEnemy = 0
       for (let i = 0; i < willAppearEnemy; i++) {
         // 调试代码
         // const willAppearEnemyLocationX = ENEMY_LOCATION[0] + size
-        const willAppearEnemyLocationX = ENEMY_LOCATION[Math.floor(Math.random() * 3)] + tankSize
+        const willAppearEnemyLocationX = ENEMY_LOCATION[Math.floor(Math.random() * 3)] + BRICK_SIZE
         const isCollisionResult = isCollision(
-          { x: willAppearEnemyLocationX, y: BATTLE_FIELD.OFFSET_Y, width: tankSize, height: tankSize },
-          this.enemyArr
+          { x: willAppearEnemyLocationX, y: BATTLE_FIELD.OFFSET_Y, width: BRICK_SIZE, height: BRICK_SIZE },
+          obstacleManager.getObstacles()
         )
         if (isCollisionResult) {
           willNotAppearEnemy++

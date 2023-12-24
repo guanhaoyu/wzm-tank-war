@@ -23,28 +23,15 @@ export default class Tank extends Spirit {
     // 射击的概率
     this.probabilityOfShoot = 0.6
 
-    this.size = 32
+    this.width = this.height = 26
     this.speed = 1
-  }
-
-  get width() {
-    return this.size
-  }
-
-  get height() {
-    return this.size
-  }
-
-  // todo
-  get collisionSize() {
-    return this.size
   }
 
   move() {
     for (let i = 0; i < this.speed; i = i + 0.5) {
       const [x, y] = step(this.direction, 0.5, [this.x, this.y])
       const isCollisionResult = isCollision(
-        { x, y, width: this.collisionSize, height: this.collisionSize, id: this.id },
+        { x, y, width: this.width, height: this.height, id: this.id },
         obstacleManager.getObstacles()
       )
       if (!isCollisionResult) {

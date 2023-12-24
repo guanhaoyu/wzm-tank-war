@@ -1,4 +1,5 @@
 import { POS, RESOURCE_IMAGE } from '../const/IMAGE.js'
+import { BRICK_SIZE } from '../const/SCREEN.js'
 import { FPS } from '../const/WORLD.js'
 import Blink from '../other/Blink.js'
 import Tank from './Tank.js'
@@ -16,21 +17,26 @@ class EnemyTank extends Tank {
     this.posX = POS[this.type][0]
     this.posY = POS[this.type][1]
     this.beforeAppearFrames = FPS * BEFORE_APPEAR_TIME
-    this.blink = new Blink(context, x, y, this.size)
+    this.blink = new Blink(context, x, y, BRICK_SIZE)
   }
+
+  drawImage() {
+    this.ctx.drawImage(
+      RESOURCE_IMAGE,
+      this.posX + this.direction * BRICK_SIZE,
+      this.posY,
+      this.width,
+      this.height,
+      this.x,
+      this.y,
+      this.width,
+      this.height
+    )
+  }
+
   draw() {
     if (this.isAppear) {
-      this.ctx.drawImage(
-        RESOURCE_IMAGE,
-        this.posX + this.direction * this.size,
-        this.posY,
-        this.size,
-        this.size,
-        this.x,
-        this.y,
-        this.size,
-        this.size
-      )
+      this.drawImage()
       this.move()
     } else {
       this.blink.draw(this.frames)
@@ -54,8 +60,26 @@ export class Enemy1 extends EnemyTank {
 export class Enemy2 extends EnemyTank {
   constructor(context, x, y, direction) {
     super(context, 'enemy2', x, y, direction)
+    this.height = 28
+    this.width = 28
     this.lives = 2
     this.speed = 1
+  }
+
+  drawImage() {
+    // enemy2 截图起点x与其他坦克不一样
+    const offsetX = Math.floor(this.direction / 2) * 2
+    this.ctx.drawImage(
+      RESOURCE_IMAGE,
+      this.posX + this.direction * BRICK_SIZE - offsetX,
+      this.posY,
+      this.width,
+      this.height,
+      this.x,
+      this.y,
+      this.width,
+      this.height
+    )
   }
 }
 
