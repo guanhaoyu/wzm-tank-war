@@ -101,20 +101,13 @@ export default class Game {
     this.battleField = new BattleField(wallCtx, grassCtx)
     this.scoreboard = new Scoreboard(wallCtx)
     this.player1 = new PlayerTank(this.tankCtx)
-    this.player1.addToObstacleManager()
+    this.player1.create()
   }
 
   prepareEnemyTanks() {
     Array.from({ length: TOTAL_ENEMY }, () => {
       const EnemyClass = this.getEnemyClass()
-      this.enemyTankStack.push(
-        new EnemyClass(
-          this.tankCtx,
-          BATTLE_FIELD.OFFSET_X,
-          BATTLE_FIELD.OFFSET_Y,
-          DIRECTION.DOWN
-        )
-      )
+      this.enemyTankStack.push(new EnemyClass(this.tankCtx))
     })
   }
 
@@ -212,8 +205,10 @@ export default class Game {
           willNotAppearEnemy++
         } else {
           const enemy = this.enemyTankStack.pop()
-          enemy.setLocation(willAppearEnemyLocationX + (BRICK_SIZE - enemy.width) / 2, enemy.y)
-          enemy.addToObstacleManager()
+          enemy.create(
+            willAppearEnemyLocationX + (BRICK_SIZE - enemy.width) / 2,
+            BATTLE_FIELD.OFFSET_Y
+          )
         }
       }
       this.appearEnemy = this.appearEnemy + willAppearEnemy - willNotAppearEnemy

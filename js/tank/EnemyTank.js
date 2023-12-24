@@ -5,16 +5,11 @@ import Blink from '../other/Blink.js'
 import Tank from './Tank.js'
 
 class EnemyTank extends Tank {
-  constructor(context, type, x, y, direction) {
+  constructor(context, type) {
     super(context, type)
     this.isAppear = false
     this.frames = 0
     this.isAI = true
-    this.x = x
-    this.y = y
-    this.blinkX = x
-    this.blinkY = y
-    this.direction = direction
     const BEFORE_APPEAR_TIME = 2
     this.posX = POS[this.type][0]
     this.posY = POS[this.type][1]
@@ -22,12 +17,15 @@ class EnemyTank extends Tank {
     this.blink = new Blink(context, BRICK_SIZE)
   }
 
-  setLocation(x, y) {
-    this.x = typeof x === 'number' ? x : this.x
-    this.y = typeof y === 'number' ? y : this.y
+  create(x, y, direction = DIRECTION.DOWN) {
+    this.x = x
+    this.y = y
+    this.direction = direction
     this.blinkX = Math.round(this.x / BRICK_SIZE) * BRICK_SIZE
     // BATTLE_FIELD.OFFSET_Y是16，BATTLE_FIELD.OFFSET_X是32，值不一样，所以计算方式也不一样
     this.blinkY = Math.round(this.y / BRICK_SIZE) * BRICK_SIZE - BATTLE_FIELD.OFFSET_Y
+
+    super.create()
   }
 
   drawImage() {
@@ -74,16 +72,16 @@ class EnemyTank extends Tank {
 }
 
 export class Enemy1 extends EnemyTank {
-  constructor(context, x, y, direction) {
-    super(context, 'enemy1', x, y, direction)
+  constructor(context) {
+    super(context, 'enemy1')
     this.lives = 1
     this.speed = 1.5
   }
 }
 
 export class Enemy2 extends EnemyTank {
-  constructor(context, x, y, direction) {
-    super(context, 'enemy2', x, y, direction)
+  constructor(context) {
+    super(context, 'enemy2')
     this.height = 28
     this.width = 24
     this.lives = 2
@@ -118,8 +116,8 @@ export class Enemy2 extends EnemyTank {
 }
 
 export class Enemy3 extends EnemyTank {
-  constructor(context, x, y, direction) {
-    super(context, 'enemy3', x, y, direction)
+  constructor(context) {
+    super(context, 'enemy3')
     this.lives = 3
     this.speed = 0.5
 

@@ -24,7 +24,7 @@ export default class Tank extends Spirit {
     this.speed = 1
   }
 
-  addToObstacleManager() {
+  create() {
     obstacleManager.add(this)
   }
 
@@ -55,5 +55,7 @@ export default class Tank extends Spirit {
   // 射击
   shoot() {}
 
-  destroy() {}
+  destroy() {
+    obstacleManager.delete(this.id)
+  }
 }
