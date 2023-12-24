@@ -38,9 +38,16 @@ export default class Tank extends Spirit {
       if (!isCollisionResult) {
         this.x = x
         this.y = y
+        this.afterMove()
+      } else {
+        this.onCollision()
       }
     }
   }
+
+  afterMove() {}
+
+  onCollision() {}
 
   // 是否被击中
   isShotted() {}

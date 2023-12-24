@@ -57,6 +57,20 @@ class EnemyTank extends Tank {
     }
     this.frames++
   }
+
+  afterMove() {
+    if (this.frames % (FPS * 5) === 0) {
+      this.changeDirection()
+    }
+  }
+
+  onCollision() {
+    this.changeDirection()
+  }
+
+  changeDirection() {
+    this.direction = DIRECTION[Object.keys(DIRECTION).filter(key => DIRECTION[key] !== this.direction)[Math.floor(Math.random() * 3)]]
+  }
 }
 
 export class Enemy1 extends EnemyTank {
