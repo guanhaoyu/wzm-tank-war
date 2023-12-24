@@ -59,8 +59,6 @@ export default class Game {
     // this.gameState = GAME_STATE_MENU
     this.gameState = GAME_STATE_INIT
     // this.gameState = GAME_STATE_START
-    this.prepare()
-    this.handleKeyboardEvent()
 
     this.restEnemy = TOTAL_ENEMY // 剩余敌方坦克数量
     this.appearEnemy = 0 // 正在显示的敌方坦克数量
@@ -69,6 +67,8 @@ export default class Game {
     this.addEnemyFrames = 0 // 用于添加敌方坦克的计时
 
     this.codes = new Set()
+    this.prepare()
+    this.handleKeyboardEvent()
   }
 
   get enemyArr() {
@@ -99,6 +99,22 @@ export default class Game {
     this.battleField = new BattleField(wallCtx, grassCtx)
     this.scoreboard = new Scoreboard(wallCtx)
     this.player1 = new PlayerTank(this.tankCtx)
+    this.player1.addToObstacleManager()
+  }
+
+  prepareEnemyTanks() {
+    Array.from({ length: TOTAL_ENEMY }, () => {
+      const EnemyClass = this.getEnemyClass()
+      this.enemyTankStack.push(
+        new EnemyClass(
+          this.tankCtx,
+          // willAppearEnemyLocationX,
+          BATTLE_FIELD.OFFSET_X,
+          BATTLE_FIELD.OFFSET_Y,
+          DIRECTION.DOWN
+        )
+      )
+    })
   }
 
   handleKeydownOnMenu(code) {

@@ -1,6 +1,6 @@
 import { POS, RESOURCE_IMAGE } from '../const/IMAGE.js'
 import { BRICK_SIZE } from '../const/SCREEN.js'
-import { FPS } from '../const/WORLD.js'
+import { DIRECTION, FPS } from '../const/WORLD.js'
 import Blink from '../other/Blink.js'
 import Tank from './Tank.js'
 
@@ -67,7 +67,6 @@ export class Enemy2 extends EnemyTank {
   }
 
   drawImage() {
-    // enemy2 截图起点x与其他坦克不一样
     const offsetX = Math.floor(this.direction / 2) * 2
     this.ctx.drawImage(
       RESOURCE_IMAGE,
@@ -88,5 +87,35 @@ export class Enemy3 extends EnemyTank {
     super(context, 'enemy3', x, y, direction)
     this.lives = 3
     this.speed = 0.5
+
+    this.posX = POS[this.type][0]
+    this.posY = POS[this.type][1]
+    this.height = 28
+    this.width = 26
+  }
+
+  drawImage() {
+    let offsetX = 0
+    let offsetY = 0
+    if ([DIRECTION.LEFT, DIRECTION.RIGHT].includes(this.direction)) {
+      offsetX = 1
+      offsetY = 1
+      this.width = 28
+      this.height = 26
+    } else {
+      this.width = 26
+      this.height = 28
+    }
+    this.ctx.drawImage(
+      RESOURCE_IMAGE,
+      this.posX + this.direction * BRICK_SIZE - offsetX,
+      this.posY + offsetY,
+      this.width,
+      this.height,
+      this.x,
+      this.y,
+      this.width,
+      this.height
+    )
   }
 }
