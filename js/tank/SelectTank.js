@@ -20,6 +20,7 @@ export default class SelectTank extends Tank {
     this.slowTimes = 2
     this.seriesLength = 2
   }
+  addObstacleManager() {}
   draw() {
     this.frames++
     const index = Math.floor(this.frames / this.slowTimes) % this.seriesLength

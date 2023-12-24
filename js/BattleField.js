@@ -2,7 +2,7 @@ import { POS, RESOURCE_IMAGE } from './const/IMAGE.js'
 import maps from './const/LEVEL.js'
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from './const/SCREEN.js'
 import { BATTLE_FIELD, OBSTACLE_TYPES, TILE_TYPE } from './const/WORLD.js'
-import obstacleManager from './utils/RigidManager.js'
+import obstacleManager from './utils/ObstacleManager.js'
 
 const { WALL, GRASS, ICE, GRID, WATER, HOME, ANOTHREHOME } = TILE_TYPE
 export default class BattleField {

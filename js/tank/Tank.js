@@ -1,13 +1,10 @@
 import { step } from '../action/movement.js'
-import { DIRECTION } from '../const/WORLD.js'
 import Spirit from '../spirit/Spirit.js'
-import obstacleManager from '../utils/RigidManager.js'
+import obstacleManager from '../utils/ObstacleManager.js'
 import { isCollision } from '../utils/collision.js'
 
-const { UP, DOWN, RIGHT, LEFT } = DIRECTION
-
 export default class Tank extends Spirit {
-  constructor(context, type = 'player') {
+  constructor(context, type) {
     super(context, type)
     // 敌方坦克切换方向的时间？
     this.frame = 0
@@ -25,6 +22,12 @@ export default class Tank extends Spirit {
 
     this.width = this.height = 26
     this.speed = 1
+
+    this.addObstacleManager()
+  }
+
+  addObstacleManager() {
+    obstacleManager.add(this)
   }
 
   move() {

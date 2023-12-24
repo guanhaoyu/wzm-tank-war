@@ -15,10 +15,10 @@ import Scoreboard from './Scoreboard.js'
 import PlayerTank from './tank/PlayerTank.js'
 import { Enemy1, Enemy2, Enemy3 } from './tank/EnemyTank.js'
 import { isCollision } from './utils/collision.js'
-import obstacleManager from './utils/RigidManager.js'
+import obstacleManager from './utils/ObstacleManager.js'
 
 const gameStateToKeyboardEventMap = {
-  [GAME_STATE_MENU]: function(code) {
+  [GAME_STATE_MENU]: function (code) {
     if (code == KEYBOARD.ENTER) {
       this.gameState = GAME_STATE_INIT
       // todo 只有一个玩家
@@ -28,12 +28,6 @@ const gameStateToKeyboardEventMap = {
       this.menu.next(code)
     }
   },
-  // [GAME_STATE_START]: function(code) {
-  //   const direction = keyDirectionMap.get(code)
-  //   if (direction !== undefined) {
-  //     this.player1.direction = direction
-  //   }
-  // },
 }
 
 /**
@@ -68,7 +62,6 @@ export default class Game {
     this.prepare()
     this.handleKeyboardEvent()
 
-    this.enemyArr = []
     this.restEnemy = TOTAL_ENEMY // 剩余敌方坦克数量
     this.appearEnemy = 0 // 正在显示的敌方坦克数量
     this.maxAppearEnemy = 10 // 屏幕上最多显示几个敌方坦克
@@ -76,6 +69,10 @@ export default class Game {
     this.addEnemyFrames = 0 // 用于添加敌方坦克的计时
 
     this.codes = new Set()
+  }
+
+  get enemyArr() {
+    return obstacleManager.getObstacles().filter(obstacle => obstacle.type?.includes('enemy'))
   }
 
   prepare() {
@@ -155,7 +152,6 @@ export default class Game {
           }
           break
       }
-      obstacleManager.add(...this.enemyArr, this.player1)
     }
     requestAnimationFrame(this.run.bind(this))
   }
@@ -178,29 +174,33 @@ export default class Game {
       return
     }
     if (this.addEnemyFrames % ADD_ENEMY_INTERVAL === 0) {
-      const willAppearEnemy = Math.min(Math.ceil(Math.random() * 3), this.restEnemy, this.maxAppearEnemy - this.appearEnemy)
+      const willAppearEnemy = Math.min(
+        Math.ceil(Math.random() * 3),
+        this.restEnemy,
+        this.maxAppearEnemy - this.appearEnemy
+      )
       let willNotAppearEnemy = 0
       for (let i = 0; i < willAppearEnemy; i++) {
-        // 调试代码
-        // const willAppearEnemyLocationX = ENEMY_LOCATION[0] + size
         const willAppearEnemyLocationX = ENEMY_LOCATION[Math.floor(Math.random() * 3)] + BRICK_SIZE
         const isCollisionResult = isCollision(
-          { x: willAppearEnemyLocationX, y: BATTLE_FIELD.OFFSET_Y, width: BRICK_SIZE, height: BRICK_SIZE },
+          {
+            x: willAppearEnemyLocationX,
+            y: BATTLE_FIELD.OFFSET_Y,
+            width: BRICK_SIZE,
+            height: BRICK_SIZE,
+          },
           obstacleManager.getObstacles()
         )
         if (isCollisionResult) {
           willNotAppearEnemy++
         } else {
-          // 调试代码
-          // const param = [this.tankCtx, willAppearEnemyLocationX, y, DIRECTION.DOWN]
-          // if (this.enemyArr.length) {
-          //   this.enemyArr.push(new Enemy1(...param))
-          // } else {
-            // this.enemyArr.push(new Enemy3(...param))
-          // }
+          // optimize: 更好的做法应该是先初始化好20个，等着出栈，这样位置控制更精细
           const EnemyClass = this.getEnemyClass()
-          this.enemyArr.push(
-            new EnemyClass(this.tankCtx, willAppearEnemyLocationX, BATTLE_FIELD.OFFSET_Y, DIRECTION.DOWN)
+          new EnemyClass(
+            this.tankCtx,
+            willAppearEnemyLocationX,
+            BATTLE_FIELD.OFFSET_Y,
+            DIRECTION.DOWN
           )
         }
       }

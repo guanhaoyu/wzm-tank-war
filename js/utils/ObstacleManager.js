@@ -15,7 +15,7 @@ class ObstacleManager {
     })
   }
 
-  remove(...ids) {
+  delete(...ids) {
     ids.forEach(id => {
       const index = this.obstacles.findIndex(obstacle => obstacle.id === id)
       this.obstacles.splice(index, 1)
