@@ -66,9 +66,11 @@ export default class Game {
 
     this.addEnemyFrames = 0 // 用于添加敌方坦克的计时
 
+    this.enemyTankStack = []
     this.codes = new Set()
     this.prepare()
     this.handleKeyboardEvent()
+    this.prepareEnemyTanks()
   }
 
   get enemyArr() {
@@ -108,7 +110,6 @@ export default class Game {
       this.enemyTankStack.push(
         new EnemyClass(
           this.tankCtx,
-          // willAppearEnemyLocationX,
           BATTLE_FIELD.OFFSET_X,
           BATTLE_FIELD.OFFSET_Y,
           DIRECTION.DOWN
@@ -210,14 +211,9 @@ export default class Game {
         if (isCollisionResult) {
           willNotAppearEnemy++
         } else {
-          // optimize: 更好的做法应该是先初始化好20个，等着出栈，这样位置控制更精细
-          const EnemyClass = this.getEnemyClass()
-          new EnemyClass(
-            this.tankCtx,
-            willAppearEnemyLocationX,
-            BATTLE_FIELD.OFFSET_Y,
-            DIRECTION.DOWN
-          ).addToObstacleManager()
+          const enemy = this.enemyTankStack.pop()
+          enemy.setLocation(willAppearEnemyLocationX + (BRICK_SIZE - enemy.width) / 2, enemy.y)
+          enemy.addToObstacleManager()
         }
       }
       this.appearEnemy = this.appearEnemy + willAppearEnemy - willNotAppearEnemy
