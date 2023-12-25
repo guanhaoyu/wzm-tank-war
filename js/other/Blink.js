@@ -9,16 +9,21 @@ export default class Blink {
     this.seriesLength = 7
     this.slowTimes = 5
   }
-  draw(x, y, frames) {
-    const index = parseInt(frames / this.slowTimes) % this.seriesLength
+
+  create(x, y) {
+    this.x = x
+    this.y = y
+  }
+  draw(frames) {
+    const index = Math.floor(frames / this.slowTimes) % this.seriesLength
     this.ctx.drawImage(
       RESOURCE_IMAGE,
       this.posX + index * this.size,
       this.posY,
       this.size,
       this.size,
-      x,
-      y,
+      this.x,
+      this.y,
       this.size,
       this.size
     )

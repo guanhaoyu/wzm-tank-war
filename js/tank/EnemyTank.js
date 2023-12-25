@@ -26,7 +26,7 @@ class EnemyTank extends Tank {
     this.blinkX = Math.round(this.x / BRICK_SIZE) * BRICK_SIZE
     // BATTLE_FIELD.OFFSET_Y是16，BATTLE_FIELD.OFFSET_X是32，值不一样，所以计算方式也不一样
     this.blinkY = Math.round(this.y / BRICK_SIZE) * BRICK_SIZE - BATTLE_FIELD.OFFSET_Y
-
+    this.blink.create(this.blinkX, this.blinkY)
     super.create()
   }
 
@@ -49,7 +49,7 @@ class EnemyTank extends Tank {
       this.drawImage()
       this.move()
     } else {
-      this.blink.draw(this.blinkX, this.blinkY, this.frames)
+      this.blink.draw(this.frames)
       if (this.frames === this.beforeAppearFrames) {
         this.isAppear = true
         this.frames = 0
