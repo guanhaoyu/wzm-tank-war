@@ -6,6 +6,11 @@ export default class Blink extends Explosion {
     this.slowTimes = 5
     this.isOver = false
   }
+  create(x, y) {
+    this.x = x
+    this.y = y
+    explosionManager.add(this)
+  }
   afterDraw(tick) {
     if (this.durationFrames <= this.frames && (tick === 0 || tick === this.seriesLength - 1)) {
       this.isOver = true

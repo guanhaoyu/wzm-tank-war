@@ -2,6 +2,7 @@ import { updateCurrentMap } from '../BattleField.js'
 import { move, step } from '../action/movement.js'
 import { POS, RESOURCE_IMAGE } from '../const/IMAGE.js'
 import { DIRECTION, PLANCK_DISTANCE, TILE_TYPE } from '../const/WORLD.js'
+import Explosion from '../other/Explosion.js'
 import Spirits from '../spirit/Spirit.js'
 import obstacleManager from '../utils/ObstacleManager.js'
 import { checkCollision } from '../utils/collision.js'
@@ -60,8 +61,6 @@ export default class Bullet extends Spirits {
   }
 
   move() {
-    // move.call(this)
-
     for (let i = 0; i < this.speed; i = i + PLANCK_DISTANCE) {
       const [x, y] = step(this.direction, PLANCK_DISTANCE, [this.x, this.y])
       const collisionResult = checkCollision(
@@ -104,8 +103,14 @@ export default class Bullet extends Spirits {
     }
   }
 
+  createExplosion() {
+    const explosion = new Explosion(this.ctx, 'bulletBomb')
+    explosion.create(this.x, this.y, this.width, this.height)
+  }
+
   destroy() {
     obstacleManager.delete(this.id)
+    this.createExplosion()
   }
 
   isShooted() {

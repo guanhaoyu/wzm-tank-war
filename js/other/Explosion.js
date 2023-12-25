@@ -1,20 +1,23 @@
 import { POS, RESOURCE_IMAGE } from "../const/IMAGE.js"
 import { FPS } from "../const/WORLD.js"
 
-const duration = 2
+const HALF = 0.5
 
 const explosionType = {
   bulletBomb: {
     size: 32,
     seriesLength: 3,
+    duration: 0.5
   },
   tankBomb: {
     size: 66,
     seriesLength: 4,
+    duration: 1
   },
   enemyBefore: {
     size: 32,
-    seriesLength: 7
+    seriesLength: 7,
+    duration: 2
   }
 }
 
@@ -23,7 +26,7 @@ let id = 0
 export default class Explosion {
   constructor(context, type) {
     this.ctx = context
-    const { size, seriesLength } = explosionType[type]
+    const { size, seriesLength, duration } = explosionType[type]
     this.type = type
     this.seriesLength = seriesLength
     this.size = size
@@ -36,9 +39,9 @@ export default class Explosion {
     this.durationFrames = duration * FPS
   }
 
-  create(x, y) {
-    this.x = x
-    this.y = y
+  create(x, y, width, height) {
+    this.x = x + width * HALF - this.size * HALF
+    this.y = y + height * HALF - this.size * HALF
     explosionManager.add(this)
   }
 
