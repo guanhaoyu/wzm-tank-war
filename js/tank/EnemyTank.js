@@ -10,6 +10,8 @@ class EnemyTank extends Tank {
     this.isAppear = false
     this.frames = 0
     this.isAI = true
+    // 射击的概率
+    this.probabilityOfShoot = 0.6
     const BEFORE_APPEAR_TIME = 2
     this.posX = POS[this.type][0]
     this.posY = POS[this.type][1]
@@ -56,7 +58,7 @@ class EnemyTank extends Tank {
     this.frames++
   }
 
-  afterMove() {
+  onAccess() {
     if (this.frames % (FPS * 5) === 0) {
       this.changeDirection()
     }

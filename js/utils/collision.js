@@ -121,14 +121,3 @@ export function checkCollisionBoundary(target, boundary) {
   }
   return null
 }
-
-/**
- * 获取最终的坐标）
- * @param {{id?: string, x: number, y: number, width: number, height: number, direction: Integer}} target 
- * @param {number} prev 
- * @param {{id?: string, x?: number, y?: number, width?: number, height?: number}[]} obstacles 
- * @returns {number}
- */
-function calculateFinalCoordinate(target, prev, obstacles) {
-  return prev
-}
