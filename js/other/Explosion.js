@@ -1,34 +1,14 @@
 import { POS, RESOURCE_IMAGE } from "../const/IMAGE.js"
-import { FPS } from "../const/WORLD.js"
-
-const HALF = 0.5
-
-const explosionType = {
-  bulletBomb: {
-    size: 32,
-    seriesLength: 3,
-    duration: 0.5
-  },
-  tankBomb: {
-    size: 66,
-    seriesLength: 4,
-    duration: 1
-  },
-  enemyBefore: {
-    size: 32,
-    seriesLength: 7,
-    duration: 2
-  }
-}
+import { EXPLOSION_TYPE, FPS } from "../const/WORLD.js"
 
 let id = 0
 
 export default class Explosion {
   constructor(context, type) {
     this.ctx = context
-    const { size, seriesLength, duration } = explosionType[type]
+    const { size, ticks, duration } = EXPLOSION_TYPE[type]
     this.type = type
-    this.seriesLength = seriesLength
+    this.ticks = ticks
     this.size = size
     this.posX = POS[this.type][0]
     this.posY = POS[this.type][1]
@@ -39,9 +19,9 @@ export default class Explosion {
     this.durationFrames = duration * FPS
   }
 
-  create(x, y, width, height) {
-    this.x = x + width * HALF - this.size * HALF
-    this.y = y + height * HALF - this.size * HALF
+  create(x, y) {
+    this.x = x
+    this.y = y
     explosionManager.add(this)
   }
 
@@ -52,7 +32,7 @@ export default class Explosion {
   }
 
   draw() {
-    const index = Math.floor(this.frames / this.slowTimes) % this.seriesLength
+    const index = Math.floor(this.frames / this.slowTimes) % this.ticks
     this.ctx.drawImage(
       RESOURCE_IMAGE,
       this.posX + index * this.size,

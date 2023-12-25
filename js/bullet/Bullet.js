@@ -1,7 +1,7 @@
 import { updateCurrentMap } from '../BattleField.js'
 import { move, step } from '../action/movement.js'
 import { POS, RESOURCE_IMAGE } from '../const/IMAGE.js'
-import { DIRECTION, PLANCK_DISTANCE, TILE_TYPE } from '../const/WORLD.js'
+import { DIRECTION, EXPLOSION_TYPE, PLANCK_DISTANCE, TILE_TYPE } from '../const/WORLD.js'
 import Explosion from '../other/Explosion.js'
 import Spirits from '../spirit/Spirit.js'
 import obstacleManager from '../utils/ObstacleManager.js'
@@ -9,11 +9,11 @@ import { checkCollision } from '../utils/collision.js'
 
 // 不同阵营的子弹可以对撞，也属于障碍物
 export default class Bullet extends Spirits {
-  constructor(context) {
+  constructor(context, camp) {
     // todo
     super(context, 'bullet')
     this.speed = 0.5
-
+    this.camp = camp
     this.posX = POS[this.type][0]
     this.posY = POS[this.type][1]
   }
@@ -104,8 +104,10 @@ export default class Bullet extends Spirits {
   }
 
   createExplosion() {
-    const explosion = new Explosion(this.ctx, 'bulletBomb')
-    explosion.create(this.x, this.y, this.width, this.height)
+    const bulletBomb = 'bulletBomb'
+    const { size } = EXPLOSION_TYPE[bulletBomb]
+    const explosion = new Explosion(this.ctx, bulletBomb)
+    explosion.create(this.x + this.width / 2 - size / 2, this.y + this.height / 2 - size / 2)
   }
 
   destroy() {

@@ -51,4 +51,32 @@ const FPS = 60
 /********************最小距离********************/
 const PLANCK_DISTANCE = 0.5
 
-export { OBSTACLE_TYPES, DIRECTION, TILE_TYPE, FPS, ENEMY_LOCATION, BATTLE_FIELD, PLANCK_DISTANCE }
+/********************爆炸类型********************/
+const EXPLOSION_TYPE = {
+  bulletBomb: {
+    size: 32,
+    ticks: 3,
+    duration: 0.5,
+  },
+  tankBomb: {
+    size: 66,
+    ticks: 4,
+    duration: 1,
+  },
+  enemyBefore: {
+    size: 32,
+    ticks: 7,
+    duration: 2,
+  },
+}
+
+export {
+  EXPLOSION_TYPE,
+  OBSTACLE_TYPES,
+  DIRECTION,
+  TILE_TYPE,
+  FPS,
+  ENEMY_LOCATION,
+  BATTLE_FIELD,
+  PLANCK_DISTANCE,
+}
