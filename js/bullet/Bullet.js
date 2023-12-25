@@ -6,41 +6,62 @@ import Explosion from '../other/Explosion.js'
 import Spirits from '../spirit/Spirit.js'
 import obstacleManager from '../utils/ObstacleManager.js'
 import { checkCollision } from '../utils/collision.js'
+import { calculateCenter } from '../utils/geometry.js'
 
+const { UP, DOWN, LEFT, RIGHT } = DIRECTION
 // 不同阵营的子弹可以对撞，也属于障碍物
 export default class Bullet extends Spirits {
   constructor(context, camp) {
-    // todo
     super(context, 'bullet')
     this.speed = 0.5
     this.camp = camp
     this.posX = POS[this.type][0]
     this.posY = POS[this.type][1]
   }
-  create(x, y, direction) {
-    this.x = x
-    this.y = y
+  // 此处[x, y]是发射器的中心点
+  create([x, y], direction, [width, height] = [0, 0]) {
     this.direction = direction
+    if (direction === UP) {
+      this.x = x - this.width / 2
+      this.y = y - height / 2 - this.height
+    } else if (direction === DOWN) {
+      this.x = x - this.width / 2
+      this.y = y + height / 2
+    } else if (direction === LEFT) {
+      this.x = x - width / 2 - this.width
+      this.y = y - this.height / 2
+    } else {
+      this.x = x + width / 2
+      this.y = y - this.height / 2
+    }
     obstacleManager.add(this)
+  }
+
+  get width() {
+    if (this.direction === LEFT || this.direction === RIGHT) {
+      return 5
+    }
+    return 4
+  }
+
+  get height() {
+    if (this.direction === LEFT || this.direction === RIGHT) {
+      return 4
+    }
+    return 5
   }
 
   drawImage() {
     const interval = 6
     let offsetY = 0
     let offsetX = 0
-    this.width = 4
-    this.height = 5
-    if (this.direction === DIRECTION.DOWN) {
+    if (this.direction === DOWN) {
       offsetY = 1
-    } else if (this.direction === DIRECTION.LEFT) {
+    } else if (this.direction === LEFT) {
       offsetX = 1
       offsetY = 1
-      this.width = 5
-      this.height = 4
-    } else if (this.direction === DIRECTION.RIGHT) {
+    } else if (this.direction === RIGHT) {
       offsetY = 1
-      this.width = 5
-      this.height = 4
     }
     this.ctx.drawImage(
       RESOURCE_IMAGE,
@@ -77,11 +98,11 @@ export default class Bullet extends Spirits {
   }
 
   onCollision(obstacle) {
-    if (this.direction === DIRECTION.UP) {
+    if (this.direction === UP) {
       this.y = obstacle.y + obstacle.height
-    } else if (this.direction === DIRECTION.DOWN) {
+    } else if (this.direction === DOWN) {
       this.y = obstacle.y
-    } else if (this.direction === DIRECTION.LEFT) {
+    } else if (this.direction === LEFT) {
       this.x = obstacle.x + obstacle.width
     } else {
       this.x = obstacle.x
@@ -107,7 +128,9 @@ export default class Bullet extends Spirits {
     const bulletBomb = 'bulletBomb'
     const { size } = EXPLOSION_TYPE[bulletBomb]
     const explosion = new Explosion(this.ctx, bulletBomb)
-    explosion.create(this.x + this.width / 2 - size / 2, this.y + this.height / 2 - size / 2)
+    const [x, y] = calculateCenter(this.x, this.y, this.width, this.height)
+    const halfSize = size / 2
+    explosion.create(x - halfSize, y - halfSize)
   }
 
   destroy() {

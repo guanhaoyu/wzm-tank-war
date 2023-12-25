@@ -1,7 +1,7 @@
 import { POS, RESOURCE_IMAGE } from '../const/IMAGE.js'
-import { keyDirectionMap } from '../const/KEYBOARD.js'
+import KEYBOARD, { keyDirectionMap } from '../const/KEYBOARD.js'
 import { BRICK_SIZE } from '../const/SCREEN.js'
-import { BATTLE_FIELD } from '../const/WORLD.js'
+import { BATTLE_FIELD, CAMP } from '../const/WORLD.js'
 import Tank from './Tank.js'
 
 export default class PlayerTank extends Tank {
@@ -15,6 +15,7 @@ export default class PlayerTank extends Tank {
     this.y = 385 + BATTLE_FIELD.OFFSET_Y + 4
     this.posX = POS[this.type][0]
     this.posY = POS[this.type][1]
+    this.camp = CAMP.PLAYER
   }
 
   // 绘制
@@ -31,6 +32,7 @@ export default class PlayerTank extends Tank {
       this.height
     )
     this.move(Array.from(codes))
+    this.shoot(Array.from(codes))
   }
 
   move(codes = []) {
@@ -42,6 +44,13 @@ export default class PlayerTank extends Tank {
         super.move()
         break
       }
+    }
+  }
+
+  shoot(codes = []) {
+    if (codes.includes(KEYBOARD.SPACE)) {
+      console.log('tank', [this.x, this.y])
+      super.shoot()
     }
   }
 }

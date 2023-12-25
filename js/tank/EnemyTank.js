@@ -1,6 +1,6 @@
 import { POS, RESOURCE_IMAGE } from '../const/IMAGE.js'
 import { BRICK_SIZE } from '../const/SCREEN.js'
-import { BATTLE_FIELD, DIRECTION, FPS } from '../const/WORLD.js'
+import { BATTLE_FIELD, CAMP, DIRECTION, FPS } from '../const/WORLD.js'
 import Blink from '../other/Blink.js'
 import Tank from './Tank.js'
 
@@ -15,6 +15,7 @@ class EnemyTank extends Tank {
     this.posX = POS[this.type][0]
     this.posY = POS[this.type][1]
     this.blink = new Blink(context)
+    this.camp = CAMP.ENEMY
   }
 
   create(x, y, direction = DIRECTION.DOWN) {

@@ -70,6 +70,12 @@ const EXPLOSION_TYPE = {
   },
 }
 
+/********************阵营类型********************/
+const CAMP = {
+  PLAYER: 0,
+  ENEMY: 1,
+}
+
 export {
   EXPLOSION_TYPE,
   OBSTACLE_TYPES,
@@ -79,4 +85,5 @@ export {
   ENEMY_LOCATION,
   BATTLE_FIELD,
   PLANCK_DISTANCE,
+  CAMP
 }

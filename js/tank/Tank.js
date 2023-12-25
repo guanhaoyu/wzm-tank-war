@@ -1,15 +1,17 @@
 import { move, step } from '../action/movement.js'
+import Bullet from '../bullet/Bullet.js'
 import { DIRECTION, PLANCK_DISTANCE } from '../const/WORLD.js'
 import Spirit from '../spirit/Spirit.js'
 import obstacleManager from '../utils/ObstacleManager.js'
 import { isCollision } from '../utils/collision.js'
+import { calculateCenter } from '../utils/geometry.js'
 
 export default class Tank extends Spirit {
   constructor(context, type) {
     super(context, type)
     // 敌方坦克切换方向的时间？
     this.frame = 0
-
+    this.camp = null
     // 是否碰到坦克或者墙
     this.hit = false
     // 是否自动
@@ -22,8 +24,6 @@ export default class Tank extends Spirit {
     this.width = 26
     this.height = 26
     this.speed = 1
-
-    this.className = 'Tank'
   }
 
   create() {
@@ -57,7 +57,15 @@ export default class Tank extends Spirit {
   onCollision() {}
 
   // 射击
-  shoot() {}
+  shoot() {
+    if (!this.bullet) {
+      this.bullet = new Bullet(this.ctx, this.camp)
+      this.bullet.create(calculateCenter(this.x, this.y, this.width, this.height), this.direction, [
+        this.width,
+        this.height,
+      ])
+    }
+  }
 
   destroy() {
     obstacleManager.delete(this.id)
