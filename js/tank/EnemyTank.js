@@ -12,10 +12,8 @@ class EnemyTank extends Tank {
     this.isAI = true
     // 射击的概率
     this.probabilityOfShoot = 0.6
-    const BEFORE_APPEAR_TIME = 2
     this.posX = POS[this.type][0]
     this.posY = POS[this.type][1]
-    this.beforeAppearFrames = FPS * BEFORE_APPEAR_TIME
     this.blink = new Blink(context, BRICK_SIZE)
   }
 
@@ -50,10 +48,7 @@ class EnemyTank extends Tank {
       this.move()
     } else {
       this.blink.draw(this.frames)
-      if (this.frames === this.beforeAppearFrames) {
-        this.isAppear = true
-        this.frames = 0
-      }
+      this.isAppear = this.blink.isOver
     }
     this.frames++
   }
