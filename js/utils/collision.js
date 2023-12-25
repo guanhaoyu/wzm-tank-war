@@ -55,7 +55,7 @@ export function isCollision(
  * 获取碰撞物
  * @param {{id?: string, x: number, y: number, width: number, height: number}} target
  * @param {{id: string, x: number, y: number, width: number, height: number}[]} obstacles
- * @returns {{id?: string, x?: number, y?: number, width?: number, height?: number}[]}
+ * @returns {{id?: string, x: number, y: number, width: number, height: number} | null}
  */
 export function checkCollision(
   target,
@@ -67,7 +67,6 @@ export function checkCollision(
     height: BATTLE_FIELD.HEIGHT,
   }
 ) {
-  const collisionObstacles = [];
   const obstaclesBeyondItself = obstacles.filter(obstacle => obstacle.id !== target.id)
   for (const obstacle of obstaclesBeyondItself) {
     if (
@@ -80,11 +79,14 @@ export function checkCollision(
         [obstacle.y, obstacle.y + obstacle.height]
       )
     ) {
-      collisionObstacles.push(obstacle)
+      return obstacle
+    }
+    const collisionBoundary = checkCollisionBoundary(target, boundary)
+    if (collisionBoundary) {
+      return collisionBoundary
     }
   }
-  collisionObstacles.push(checkCollision(target, boundary))
-  return collisionObstacles.filter(Boolean)
+  return null
 }
 
 /**

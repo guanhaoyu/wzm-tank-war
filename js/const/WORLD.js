@@ -7,13 +7,7 @@ const ICE = 5
 const HOME = 9
 const ANOTHREHOME = 8
 
-const OBSTACLE_TYPES = [
-  WALL,
-  GRID,
-  WATER,
-  HOME,
-  ANOTHREHOME
-]
+const OBSTACLE_TYPES = [WALL, GRID, WATER, HOME, ANOTHREHOME]
 
 const TILE_TYPE = {
   WALL,
@@ -22,7 +16,7 @@ const TILE_TYPE = {
   WATER,
   ICE,
   HOME,
-  ANOTHREHOME
+  ANOTHREHOME,
 }
 
 /********************运动的四个方向********************/
@@ -30,7 +24,7 @@ const DIRECTION = {
   UP: 0,
   DOWN: 1,
   LEFT: 2,
-  RIGHT: 3
+  RIGHT: 3,
 }
 
 // 调试代码
@@ -48,10 +42,13 @@ const BATTLE_FIELD = {
   WIDTH: 416,
   HEIGHT: 416,
   OFFSET_X: 32,
-  OFFSET_Y: 16
+  OFFSET_Y: 16,
 }
 
 /********************每秒帧数********************/
 const FPS = 60
 
-export { OBSTACLE_TYPES, DIRECTION, TILE_TYPE, FPS, ENEMY_LOCATION, BATTLE_FIELD }
+/********************最小距离********************/
+const PLANCK_DISTANCE = 0.5
+
+export { OBSTACLE_TYPES, DIRECTION, TILE_TYPE, FPS, ENEMY_LOCATION, BATTLE_FIELD, PLANCK_DISTANCE }

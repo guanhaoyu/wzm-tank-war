@@ -1,5 +1,5 @@
 import { move, step } from '../action/movement.js'
-import { DIRECTION } from '../const/WORLD.js'
+import { DIRECTION, PLANCK_DISTANCE } from '../const/WORLD.js'
 import Spirit from '../spirit/Spirit.js'
 import obstacleManager from '../utils/ObstacleManager.js'
 import { isCollision } from '../utils/collision.js'
@@ -16,6 +16,7 @@ export default class Tank extends Spirit {
     this.isAI = false
     // 子弹是否正在运行中 ? 是否用冷却时间更好
     this.isShooting = false
+    this.isShooted = false
     // 子弹
     this.bullet = null
 
@@ -31,26 +32,30 @@ export default class Tank extends Spirit {
     obstacleManager.add(this)
   }
 
-  // move() {
-  //   for (let i = 0; i < this.speed; i = i + 0.5) {
-  //     const [x, y] = step(this.direction, 0.5, [this.x, this.y])
-  //     const isCollisionResult = isCollision(
-  //       { x, y, width: this.width, height: this.height, id: this.id },
-  //       obstacleManager.getObstacles()
-  //     )
-  //     if (!isCollisionResult) {
-  //       this.x = x
-  //       this.y = y
-  //       this.afterMove()
-  //     } else {
-  //       this.onCollision()
-  //     }
-  //   }
-  // }
-
   move() {
-    move.call(this, this.onAccess.bind(this), this.onCollision.bind(this))
+    let voyage = 0
+    for (let i = 0; i < this.speed; i = i + PLANCK_DISTANCE) {
+      const [x, y] = step(this.direction, PLANCK_DISTANCE, [this.x, this.y])
+      const isCollisionResult = isCollision(
+        { x, y, width: this.width, height: this.height, id: this.id },
+        obstacleManager.getObstacles().filter(obstacle => obstacle.type !== 'bullet')
+      )
+      if (!isCollisionResult) {
+        this.x = x
+        this.y = y
+        voyage += PLANCK_DISTANCE
+      } else {
+        this.onCollision()
+      }
+    }
+    if (voyage === this.speed) {
+      this.onAccess()
+    }
   }
+
+  // move() {
+  //   move.call(this, this.onAccess.bind(this), this.onCollision.bind(this))
+  // }
 
   onAccess() {}
 

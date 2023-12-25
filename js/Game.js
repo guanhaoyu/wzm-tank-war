@@ -16,6 +16,7 @@ import PlayerTank from './tank/PlayerTank.js'
 import { Enemy1, Enemy2, Enemy3 } from './tank/EnemyTank.js'
 import { isCollision } from './utils/collision.js'
 import obstacleManager from './utils/ObstacleManager.js'
+import Bullet from './bullet/Bullet.js'
 
 const gameStateToKeyboardEventMap = {
   [GAME_STATE_MENU]: function (code) {
@@ -77,6 +78,10 @@ export default class Game {
     return obstacleManager.getObstacles().filter(obstacle => obstacle.type?.includes('enemy'))
   }
 
+  get spirits() {
+    return obstacleManager.getObstacles().filter(obstacle => obstacle.id?.includes('spirit'))
+  }
+
   prepare() {
     const container = document.querySelector('.container')
     container.style.width = `${SCREEN_WIDTH}px`
@@ -132,10 +137,9 @@ export default class Game {
     })
   }
 
-  drawTanks() {
+  drawAll() {
     this.tankCtx.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
-    this.enemyArr.forEach(el => el.draw())
-    this.player1.draw(this.codes)
+    this.spirits.forEach(spirit => spirit.draw(this.codes))
   }
 
   run() {
@@ -158,7 +162,7 @@ export default class Game {
           }
           if (this.curtain.alreadyDrawHeight <= 0) {
             this.addEnemyTank()
-            this.drawTanks()
+            this.drawAll()
           }
           break
       }

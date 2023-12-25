@@ -1,14 +1,17 @@
-import { move } from '../action/movement.js'
+import { move, step } from '../action/movement.js'
 import { POS, RESOURCE_IMAGE } from '../const/IMAGE.js'
-import { DIRECTION } from '../const/WORLD.js'
+import { DIRECTION, PLANCK_DISTANCE } from '../const/WORLD.js'
 import Spirits from '../spirit/Spirit.js'
+import obstacleManager from '../utils/ObstacleManager.js'
+import { checkCollision } from '../utils/collision.js'
 
+// 不同阵营的子弹可以对撞，也属于障碍物
 export default class Bullet extends Spirits {
   constructor(context) {
     // todo
     super(context, 'bullet')
-    this.hit = false
-    this.speed = 1
+    this.isShooted = false
+    this.speed = 0.5
 
     this.posX = POS[this.type][0]
     this.posY = POS[this.type][1]
@@ -17,9 +20,10 @@ export default class Bullet extends Spirits {
     this.x = x
     this.y = y
     this.direction = direction
+    obstacleManager.add(this)
   }
 
-  draw() {
+  drawImage() {
     const interval = 6
     let offsetY = 0
     let offsetX = 0
@@ -48,10 +52,47 @@ export default class Bullet extends Spirits {
       this.width,
       this.height
     )
-    this.move()
+  }
+
+  draw() {
+    if (this.isShooted) {
+      console.log('没咯')
+      obstacleManager.delete(this.id)
+    } else {
+      this.drawImage()
+      this.move()
+    }
   }
 
   move() {
-    move.call(this)
+    // move.call(this)
+
+    for (let i = 0; i < this.speed; i = i + PLANCK_DISTANCE) {
+      const [x, y] = step(this.direction, PLANCK_DISTANCE, [this.x, this.y])
+      const collisionResult = checkCollision(
+        { x, y, width: this.width, height: this.height, id: this.id },
+        obstacleManager.getObstacles()
+      )
+      if (collisionResult) {
+        this.onCollision(collisionResult)
+      } else {
+        this.x = x
+        this.y = y
+      }
+    }
+  }
+
+  onCollision(obstacle) {
+    if (this.direction === DIRECTION.UP) {
+      this.y = obstacle.y + obstacle.height
+    } else if (this.direction === DIRECTION.DOWN) {
+      this.y = obstacle.y
+    } else if (this.direction === DIRECTION.LEFT) {
+      this.x = obstacle.x + obstacle.width
+    } else {
+      this.x = obstacle.x
+    }
+    this.isShooted = true
+    obstacle.isShooted = true
   }
 }
