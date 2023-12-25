@@ -14,17 +14,18 @@ class EnemyTank extends Tank {
     this.probabilityOfShoot = 0.6
     this.posX = POS[this.type][0]
     this.posY = POS[this.type][1]
-    this.blink = new Blink(context, BRICK_SIZE)
+    this.blink = new Blink(context)
   }
 
   create(x, y, direction = DIRECTION.DOWN) {
     this.x = x
     this.y = y
     this.direction = direction
-    this.blinkX = Math.round(this.x / BRICK_SIZE) * BRICK_SIZE
     // BATTLE_FIELD.OFFSET_Y是16，BATTLE_FIELD.OFFSET_X是32，值不一样，所以计算方式也不一样
-    this.blinkY = Math.round(this.y / BRICK_SIZE) * BRICK_SIZE - BATTLE_FIELD.OFFSET_Y
-    this.blink.create(this.blinkX, this.blinkY)
+    this.blink.create(
+      Math.round(this.x / BRICK_SIZE) * BRICK_SIZE,
+      Math.round(this.y / BRICK_SIZE) * BRICK_SIZE - BATTLE_FIELD.OFFSET_Y
+    )
     super.create()
   }
 
@@ -47,7 +48,6 @@ class EnemyTank extends Tank {
       this.drawImage()
       this.move()
     } else {
-      this.blink.draw(this.frames)
       this.isAppear = this.blink.isOver
     }
     this.frames++
@@ -64,7 +64,12 @@ class EnemyTank extends Tank {
   }
 
   changeDirection() {
-    this.direction = DIRECTION[Object.keys(DIRECTION).filter(key => DIRECTION[key] !== this.direction)[Math.floor(Math.random() * 3)]]
+    this.direction =
+      DIRECTION[
+        Object.keys(DIRECTION).filter(key => DIRECTION[key] !== this.direction)[
+          Math.floor(Math.random() * 3)
+        ]
+      ]
   }
 }
 

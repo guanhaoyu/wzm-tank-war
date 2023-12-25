@@ -37,7 +37,7 @@ export default class Tank extends Spirit {
       const [x, y] = step(this.direction, PLANCK_DISTANCE, [this.x, this.y])
       const isCollisionResult = isCollision(
         { x, y, width: this.width, height: this.height, id: this.id },
-        obstacleManager.getObstacles().filter(obstacle => obstacle.type !== 'bullet')
+        obstacleManager.getAll().filter(obstacle => obstacle.type !== 'bullet')
       )
       if (!isCollisionResult) {
         this.x = x
@@ -51,10 +51,6 @@ export default class Tank extends Spirit {
       this.onAccess()
     }
   }
-
-  // move() {
-  //   move.call(this, this.onAccess.bind(this), this.onCollision.bind(this))
-  // }
 
   onAccess() {}
 

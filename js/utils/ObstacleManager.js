@@ -3,8 +3,19 @@ class ObstacleManager {
     this.obstacles = []
   }
 
-  getObstacles() {
+  getAll() {
     return this.obstacles
+  }
+
+  getTanks(...args) {
+    if (args.length === 0) {
+      return this.obstacles.filter(
+        obstacle => obstacle.type?.includes('enemy') || obstacle.type?.includes('player')
+      )
+    }
+    return this.obstacles.filter(obstacle =>
+      args.reduce((prev, cur) => prev || obstacle.type?.includes(cur), false)
+    )
   }
 
   add(...args) {
@@ -24,6 +35,12 @@ class ObstacleManager {
 
   clear() {
     this.obstacles = []
+  }
+
+  drawSpirits(...args) {
+    this.obstacles
+      .filter(obstacle => obstacle.id?.includes('spirit'))
+      .forEach(obstacle => obstacle.draw(...args))
   }
 }
 

@@ -1,9 +1,7 @@
-import { POS, RESOURCE_IMAGE } from "../const/IMAGE"
-import { FPS } from "../const/WORLD"
+import { POS, RESOURCE_IMAGE } from "../const/IMAGE.js"
+import { FPS } from "../const/WORLD.js"
 
 const duration = 2
-
-const durationFrames = duration * FPS
 
 const explosionType = {
   bulletBomb: {
@@ -35,6 +33,7 @@ export default class Explosion {
     this.id = `explosion-${id}`
     id++
     this.frames = 0
+    this.durationFrames = duration * FPS
   }
 
   create(x, y) {
@@ -43,8 +42,14 @@ export default class Explosion {
     explosionManager.add(this)
   }
 
+  afterDraw(tick) {
+    if (this.frames >= this.durationFrames && tick === 0) {
+      explosionManager.delete(this.id)
+    }
+  }
+
   draw() {
-    const index = Math.floor(frames / this.slowTimes) % this.seriesLength
+    const index = Math.floor(this.frames / this.slowTimes) % this.seriesLength
     this.ctx.drawImage(
       RESOURCE_IMAGE,
       this.posX + index * this.size,
@@ -56,9 +61,7 @@ export default class Explosion {
       this.size,
       this.size
     )
-    if (frames >= durationFrames && index === 0) {
-      explosionManager.delete(this.id)
-    }
+    this.afterDraw(index)
     this.frames++
   }
 }

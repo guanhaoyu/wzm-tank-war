@@ -4,6 +4,12 @@ import { SCREEN_HEIGHT, SCREEN_WIDTH } from './const/SCREEN.js'
 import { BATTLE_FIELD, OBSTACLE_TYPES, TILE_TYPE } from './const/WORLD.js'
 import obstacleManager from './utils/ObstacleManager.js'
 
+let currentMap = null
+
+export function updateCurrentMap([i, j], value = 0) {
+  currentMap[i][j] = value
+}
+
 const { WALL, GRASS, ICE, GRID, WATER, HOME, ANOTHREHOME } = TILE_TYPE
 export default class BattleField {
   wTileCount = 26 //主游戏区的宽度地图块数
@@ -28,16 +34,12 @@ export default class BattleField {
 
   setLevel(level = 1) {
     this.level = level
-    this.mapLevel = maps[Math.max(level - 1, 0)]
-  }
-
-  updateMapLevel(i, j) {
-    this.mapLevel[i][j] = 0
+    currentMap = maps[Math.max(level - 1, 0)]
   }
 
   draw() {
     this.wallCtx.fillStyle = '#7f7f7f'
-    this.wallCtx.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
+    this.wallCtx.fillRect(0, 0, this.offsetX + this.width, this.height + this.offsetY * 2)
     this.wallCtx.fillStyle = '#000'
     this.wallCtx.fillRect(this.offsetX, this.offsetY, this.width, this.height) //主游戏区
 
@@ -45,7 +47,7 @@ export default class BattleField {
 
     for (let i = 0; i < this.hTileCount; i++) {
       for (let j = 0; j < this.wTileCount; j++) {
-        const current = this.mapLevel[i][j]
+        const current = currentMap[i][j]
         const id = `${current}-${i}-${j}`
         if (current === WALL || current === GRID || current === WATER || current === ICE) {
           this.wallCtx.drawImage(
@@ -65,7 +67,7 @@ export default class BattleField {
               x: j * this.tileSize + this.offsetX,
               y: i * this.tileSize + this.offsetY,
               width: this.tileSize,
-              height: this.tileSize
+              height: this.tileSize,
             })
           }
         } else if (current === GRASS) {

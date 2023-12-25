@@ -1,19 +1,26 @@
 import { POS, RESOURCE_IMAGE } from './const/IMAGE.js'
+import { SCREEN_HEIGHT, SCREEN_WIDTH } from './const/SCREEN.js'
+import { BATTLE_FIELD } from './const/WORLD.js'
 import Digital from './other/Digital.js'
 
+const startX = BATTLE_FIELD.OFFSET_X + BATTLE_FIELD.WIDTH
 export default class Scoreboard {
   constructor(context) {
     this.ctx = context
     this.digital = new Digital(this.ctx)
+    this.posX = POS['score'][0]
+    this.posY = POS['score'][1]
   }
 
   init(level, enemyCount) {
-    this.ctx.drawImage(RESOURCE_IMAGE, POS['score'][0], POS['score'][1], 30, 32, 464, 256, 30, 32) //player1
+    this.ctx.fillStyle = '#7f7f7f'
+    this.ctx.fillRect(startX, 0, SCREEN_WIDTH - startX, SCREEN_HEIGHT)
+    this.ctx.drawImage(RESOURCE_IMAGE, this.posX, this.posY, 30, 32, 464, 256, 30, 32) //player1
 
     this.ctx.drawImage(
       RESOURCE_IMAGE,
-      30 + POS['score'][0],
-      POS['score'][1],
+      30 + this.posX,
+      this.posY,
       30,
       32,
       464,
@@ -25,8 +32,8 @@ export default class Scoreboard {
     //30,32旗帜的size, 464, 352旗帜在canvas中位置
     this.ctx.drawImage(
       RESOURCE_IMAGE,
-      60 + POS['score'][0],
-      POS['score'][1],
+      60 + this.posX,
+      this.posY,
       30,
       32,
       464,
@@ -77,7 +84,15 @@ export default class Scoreboard {
       for (let i = 1; i <= appearEnemy; i++) {
         // 涂格子
         this.ctx.fillRect(
-          ...calculatePositionInColumns(i, colums, x, y, ENEMY_SIZE, ENEMY_SIZE, restEnemy + appearEnemy),
+          ...calculatePositionInColumns(
+            i,
+            colums,
+            x,
+            y,
+            ENEMY_SIZE,
+            ENEMY_SIZE,
+            restEnemy + appearEnemy
+          ),
           size,
           size
         )
@@ -86,8 +101,8 @@ export default class Scoreboard {
       for (let i = 1; i <= restEnemy; i++) {
         this.ctx.drawImage(
           RESOURCE_IMAGE,
-          92 + POS['score'][0],
-          POS['score'][1],
+          92 + this.posX,
+          this.posY,
           size,
           size,
           ...calculatePositionInColumns(i, colums, x, y, ENEMY_SIZE, ENEMY_SIZE),
@@ -112,8 +127,5 @@ export default class Scoreboard {
  */
 function calculatePositionInColumns(i, colums, x, y, offsetX, offsetY, total) {
   const rows = total ? Math.floor((total - i) / colums) : Math.ceil(i / colums)
-  return [
-    x + (i % colums) * offsetX,
-    y + rows * offsetY,
-  ]
+  return [x + (i % colums) * offsetX, y + rows * offsetY]
 }

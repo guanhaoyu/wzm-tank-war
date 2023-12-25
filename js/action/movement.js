@@ -39,7 +39,7 @@ export function move(onAccess, onCollision, afterMove) {
     const [x, y] = step(this.direction, PLANCK, [this.x, this.y])
     const isCollisionResult = isCollision(
       { x, y, width: this.width, height: this.height, id: this.id },
-      obstacleManager.getObstacles()
+      obstacleManager.getAll()
     )
     if (!isCollisionResult) {
       this.x = x

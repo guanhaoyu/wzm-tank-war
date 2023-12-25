@@ -1,6 +1,7 @@
+import { updateCurrentMap } from '../BattleField.js'
 import { move, step } from '../action/movement.js'
 import { POS, RESOURCE_IMAGE } from '../const/IMAGE.js'
-import { DIRECTION, PLANCK_DISTANCE } from '../const/WORLD.js'
+import { DIRECTION, PLANCK_DISTANCE, TILE_TYPE } from '../const/WORLD.js'
 import Spirits from '../spirit/Spirit.js'
 import obstacleManager from '../utils/ObstacleManager.js'
 import { checkCollision } from '../utils/collision.js'
@@ -65,7 +66,7 @@ export default class Bullet extends Spirits {
       const [x, y] = step(this.direction, PLANCK_DISTANCE, [this.x, this.y])
       const collisionResult = checkCollision(
         { x, y, width: this.width, height: this.height, id: this.id },
-        obstacleManager.getObstacles()
+        obstacleManager.getAll()
       )
       if (collisionResult) {
         this.onCollision(collisionResult)
@@ -87,11 +88,27 @@ export default class Bullet extends Spirits {
       this.x = obstacle.x
     }
     this.destroy()
-    obstacle.isShooted?.()
+    if (typeof obstacle.isShooted === 'function') {
+      obstacle.isShooted()
+    } else {
+      this.damage(obstacle.id)
+    }
+  }
+
+  damage(id) {
+    if (id) {
+      const [tile, i, j] = id.split('-')
+      if (parseInt(tile) === TILE_TYPE.WALL) {
+        updateCurrentMap([i, j])
+      }
+    }
   }
 
   destroy() {
     obstacleManager.delete(this.id)
+  }
 
+  isShooted() {
+    this.destroy()
   }
 }

@@ -17,12 +17,13 @@ import { Enemy1, Enemy2, Enemy3 } from './tank/EnemyTank.js'
 import { isCollision } from './utils/collision.js'
 import obstacleManager from './utils/ObstacleManager.js'
 import Bullet from './bullet/Bullet.js'
+import { explosionManager } from './other/Explosion.js'
 
 const gameStateToKeyboardEventMap = {
   [GAME_STATE_MENU]: function (code) {
     if (code == KEYBOARD.ENTER) {
       this.gameState = GAME_STATE_INIT
-      // todo 只有一个玩家
+      // fixme 只有一个玩家
       if (this.menu.numberOfPlayers == 1) {
       }
     } else {
@@ -75,11 +76,7 @@ export default class Game {
   }
 
   get enemyArr() {
-    return obstacleManager.getObstacles().filter(obstacle => obstacle.type?.includes('enemy'))
-  }
-
-  get spirits() {
-    return obstacleManager.getObstacles().filter(obstacle => obstacle.id?.includes('spirit'))
+    return obstacleManager.getTanks('enemy')
   }
 
   prepare() {
@@ -119,7 +116,7 @@ export default class Game {
   handleKeydownOnMenu(code) {
     if (code == KEYBOARD.ENTER) {
       this.gameState = GAME_STATE_INIT
-      //只有一个玩家
+      // fixme 只有一个玩家
       if (this.menu.numberOfPlayers == 1) {
       }
     } else {
@@ -139,7 +136,8 @@ export default class Game {
 
   drawAll() {
     this.tankCtx.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
-    this.spirits.forEach(spirit => spirit.draw(this.codes))
+    obstacleManager.drawSpirits(this.codes)
+    explosionManager.draw()
   }
 
   run() {
@@ -161,6 +159,7 @@ export default class Game {
             this.curtain.unfold()
           }
           if (this.curtain.alreadyDrawHeight <= 0) {
+            this.battleField.draw()
             this.addEnemyTank()
             this.drawAll()
           }
@@ -203,7 +202,7 @@ export default class Game {
             width: BRICK_SIZE,
             height: BRICK_SIZE,
           },
-          obstacleManager.getObstacles()
+          obstacleManager.getTanks()
         )
         if (isCollisionResult) {
           willNotAppearEnemy++
