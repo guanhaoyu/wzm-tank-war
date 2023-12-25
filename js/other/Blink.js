@@ -13,14 +13,15 @@ export default class Blink {
     const BEFORE_APPEAR_TIME = 2
     this.durationFrames = FPS * BEFORE_APPEAR_TIME
     this.isOver = false
+    this.frames = 0
   }
 
   create(x, y) {
     this.x = x
     this.y = y
   }
-  draw(frames) {
-    const index = Math.floor(frames / this.slowTimes) % this.seriesLength
+  draw() {
+    const index = Math.floor(this.frames / this.slowTimes) % this.seriesLength
     this.ctx.drawImage(
       RESOURCE_IMAGE,
       this.posX + index * this.size,
@@ -32,8 +33,9 @@ export default class Blink {
       this.size,
       this.size
     )
-    if (this.durationFrames <= frames && (index === 0 || index === this.seriesLength - 1)) {
+    if (this.durationFrames <= this.frames && (index === 0 || index === this.seriesLength - 1)) {
       this.isOver = true
     }
+    this.frames++
   }
 }

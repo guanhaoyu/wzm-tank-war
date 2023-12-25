@@ -14,7 +14,13 @@ const explosionType = {
     size: 66,
     seriesLength: 4,
   },
+  enemyBefore: {
+    size: 32,
+    seriesLength: 7
+  }
 }
+
+let id = 0
 
 export default class Explosion {
   constructor(context, type) {
@@ -25,16 +31,19 @@ export default class Explosion {
     this.size = size
     this.posX = POS[this.type][0]
     this.posY = POS[this.type][1]
-    this.isOver = false
     this.slowTimes = 3
+    this.id = `explosion-${id}`
+    id++
+    this.frames = 0
   }
 
   create(x, y) {
     this.x = x
     this.y = y
+    explosionManager.add(this)
   }
 
-  draw(frames) {
+  draw() {
     const index = Math.floor(frames / this.slowTimes) % this.seriesLength
     this.ctx.drawImage(
       RESOURCE_IMAGE,
@@ -48,7 +57,41 @@ export default class Explosion {
       this.size
     )
     if (frames >= durationFrames && index === 0) {
-      this.isOver = true
+      explosionManager.delete(this.id)
     }
+    this.frames++
   }
 }
+
+class ExplosionManager {
+  constructor() {
+    this.explosions = []
+  }
+
+  add(...args) {
+    args.forEach(arg => {
+      if (!this.explosions.find(explosion => explosion.id === arg.id)) {
+        this.explosions.push(arg)
+      }
+    })
+  }
+
+  delete(...ids) {
+    ids.forEach(id => {
+      const index = this.explosions.findIndex(explosion => explosion.id === id)
+      this.explosions.splice(index, 1)
+    })
+  }
+
+  clear() {
+    this.explosions = []
+  }
+
+  draw() {
+    this.explosions.forEach(explosion => {
+      explosion.draw()
+    })
+  }
+}
+
+export const explosionManager = new ExplosionManager()

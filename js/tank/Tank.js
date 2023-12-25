@@ -16,7 +16,6 @@ export default class Tank extends Spirit {
     this.isAI = false
     // 子弹是否正在运行中 ? 是否用冷却时间更好
     this.isShooting = false
-    this.isShooted = false
     // 子弹
     this.bullet = null
 
@@ -60,9 +59,6 @@ export default class Tank extends Spirit {
   onAccess() {}
 
   onCollision() {}
-
-  // 是否被击中
-  isShotted() {}
 
   // 射击
   shoot() {}

@@ -18,4 +18,8 @@ export default class Spirit {
     this.id = `spirit-${id}`
     id++
   }
+
+
+  // 是否被击中
+  isShooted() {}
 }

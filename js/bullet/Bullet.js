@@ -10,7 +10,6 @@ export default class Bullet extends Spirits {
   constructor(context) {
     // todo
     super(context, 'bullet')
-    this.isShooted = false
     this.speed = 0.5
 
     this.posX = POS[this.type][0]
@@ -55,13 +54,8 @@ export default class Bullet extends Spirits {
   }
 
   draw() {
-    if (this.isShooted) {
-      console.log('没咯')
-      obstacleManager.delete(this.id)
-    } else {
-      this.drawImage()
-      this.move()
-    }
+    this.drawImage()
+    this.move()
   }
 
   move() {
@@ -92,7 +86,12 @@ export default class Bullet extends Spirits {
     } else {
       this.x = obstacle.x
     }
-    this.isShooted = true
-    obstacle.isShooted = true
+    this.destroy()
+    obstacle.isShooted?.()
+  }
+
+  destroy() {
+    obstacleManager.delete(this.id)
+
   }
 }
