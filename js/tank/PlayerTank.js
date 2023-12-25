@@ -20,19 +20,10 @@ export default class PlayerTank extends Tank {
 
   // 绘制
   draw(codes) {
-    this.ctx.drawImage(
-      RESOURCE_IMAGE,
-      this.posX + this.direction * BRICK_SIZE,
-      this.posY,
-      this.width,
-      this.height,
-      this.x,
-      this.y,
-      this.width,
-      this.height
-    )
+    this.drawImage()
     this.move(Array.from(codes))
     this.shoot(Array.from(codes))
+    this.coolDown()
   }
 
   move(codes = []) {
@@ -49,7 +40,6 @@ export default class PlayerTank extends Tank {
 
   shoot(codes = []) {
     if (codes.includes(KEYBOARD.SPACE)) {
-      console.log('tank', [this.x, this.y])
       super.shoot()
     }
   }

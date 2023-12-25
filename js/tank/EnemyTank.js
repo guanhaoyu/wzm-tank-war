@@ -30,22 +30,9 @@ class EnemyTank extends Tank {
     super.create()
   }
 
-  drawImage() {
-    this.ctx.drawImage(
-      RESOURCE_IMAGE,
-      this.posX + this.direction * BRICK_SIZE,
-      this.posY,
-      this.width,
-      this.height,
-      this.x,
-      this.y,
-      this.width,
-      this.height
-    )
-  }
-
   draw() {
     if (this.isAppear) {
+      this.coolDown()
       this.drawImage()
       this.move()
     } else {

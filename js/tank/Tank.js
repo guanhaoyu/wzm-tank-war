@@ -1,6 +1,8 @@
 import { move, step } from '../action/movement.js'
 import Bullet from '../bullet/Bullet.js'
-import { DIRECTION, PLANCK_DISTANCE } from '../const/WORLD.js'
+import { RESOURCE_IMAGE } from '../const/IMAGE.js'
+import { BRICK_SIZE } from '../const/SCREEN.js'
+import { DIRECTION, FPS, PLANCK_DISTANCE } from '../const/WORLD.js'
 import Spirit from '../spirit/Spirit.js'
 import obstacleManager from '../utils/ObstacleManager.js'
 import { isCollision } from '../utils/collision.js'
@@ -24,11 +26,45 @@ export default class Tank extends Spirit {
     this.width = 26
     this.height = 26
     this.speed = 1
+
+    this.coolDownTime = 1
+
+    this.coolDownFrames = 0
+
+    this.shootable = true
+  }
+
+  get coolDownFramesLimit() {
+    return this.coolDownTime * FPS
   }
 
   create() {
     this.direction = DIRECTION.UP
     obstacleManager.add(this)
+  }
+
+  drawImage() {
+    this.ctx.drawImage(
+      RESOURCE_IMAGE,
+      this.posX + this.direction * BRICK_SIZE,
+      this.posY,
+      this.width,
+      this.height,
+      this.x,
+      this.y,
+      this.width,
+      this.height
+    )
+  }
+
+  coolDown() {
+    if (!this.shootable) {
+      this.coolDownFrames++
+      if (this.coolDownFrames >= this.coolDownFramesLimit) {
+        this.shootable = true
+        this.coolDownFrames = 0
+      }
+    }
   }
 
   move() {
@@ -39,12 +75,13 @@ export default class Tank extends Spirit {
         { x, y, width: this.width, height: this.height, id: this.id },
         obstacleManager.getAll().filter(obstacle => obstacle.type !== 'bullet')
       )
-      if (!isCollisionResult) {
+      if (isCollisionResult) {
+        this.onCollision()
+        break
+      } else {
         this.x = x
         this.y = y
         voyage += PLANCK_DISTANCE
-      } else {
-        this.onCollision()
       }
     }
     if (voyage === this.speed) {
@@ -58,12 +95,13 @@ export default class Tank extends Spirit {
 
   // 射击
   shoot() {
-    if (!this.bullet) {
+    if (this.shootable) {
       this.bullet = new Bullet(this.ctx, this.camp)
       this.bullet.create(calculateCenter(this.x, this.y, this.width, this.height), this.direction, [
         this.width,
         this.height,
       ])
+      this.shootable = false
     }
   }
 

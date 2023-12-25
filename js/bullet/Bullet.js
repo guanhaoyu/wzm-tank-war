@@ -13,10 +13,11 @@ const { UP, DOWN, LEFT, RIGHT } = DIRECTION
 export default class Bullet extends Spirits {
   constructor(context, camp) {
     super(context, 'bullet')
-    this.speed = 0.5
+    this.speed = 6
     this.camp = camp
     this.posX = POS[this.type][0]
     this.posY = POS[this.type][1]
+    this.isDestroyed = false
   }
   // 此处[x, y]是发射器的中心点
   create([x, y], direction, [width, height] = [0, 0]) {
@@ -98,15 +99,15 @@ export default class Bullet extends Spirits {
   }
 
   onCollision(obstacle) {
-    if (this.direction === UP) {
-      this.y = obstacle.y + obstacle.height
-    } else if (this.direction === DOWN) {
-      this.y = obstacle.y
-    } else if (this.direction === LEFT) {
-      this.x = obstacle.x + obstacle.width
-    } else {
-      this.x = obstacle.x
-    }
+    // if (this.direction === UP) {
+    //   this.y = obstacle.y + obstacle.height
+    // } else if (this.direction === DOWN) {
+    //   this.y = obstacle.y
+    // } else if (this.direction === LEFT) {
+    //   this.x = obstacle.x + obstacle.width
+    // } else {
+    //   this.x = obstacle.x
+    // }
     this.destroy()
     if (typeof obstacle.isShooted === 'function') {
       obstacle.isShooted()
@@ -120,6 +121,7 @@ export default class Bullet extends Spirits {
       const [tile, i, j] = id.split('-')
       if (parseInt(tile) === TILE_TYPE.WALL) {
         updateCurrentMap([i, j])
+        obstacleManager.delete(id)
       }
     }
   }
@@ -134,8 +136,11 @@ export default class Bullet extends Spirits {
   }
 
   destroy() {
-    obstacleManager.delete(this.id)
-    this.createExplosion()
+    if (!this.isDestroyed) {
+      obstacleManager.delete(this.id)
+      this.createExplosion()
+      this.isDestroyed = true
+    }
   }
 
   isShooted() {
