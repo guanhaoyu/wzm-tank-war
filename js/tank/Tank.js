@@ -8,8 +8,6 @@ import obstacleManager from '../utils/ObstacleManager.js'
 import { isCollision } from '../utils/collision.js'
 import { calculateCenter } from '../utils/geometry.js'
 
-window.flag = false
-
 export default class Tank extends Spirit {
   constructor(context, type) {
     super(context, type)
@@ -74,12 +72,12 @@ export default class Tank extends Spirit {
     }
   }
 
-  move0() {
+  move() {
     let voyage = 0
     for (let i = 0; i < this.speed; i = i + PLANCK_DISTANCE) {
       const [x, y] = step(this.direction, PLANCK_DISTANCE, [this.x, this.y])
       const isCollisionResult = isCollision(
-        { x, y, width: this.width, height: this.height, id: this.id },
+        { ...this, x, y, width: this.width, height: this.height },
         obstacleManager.getAll().filter(obstacle => obstacle.type !== 'bullet')
       )
       if (isCollisionResult) {
@@ -96,17 +94,15 @@ export default class Tank extends Spirit {
     }
   }
 
-  move() {
+  move1() {
+    // 下一帧的位置
     const [x, y] = step(this.direction, this.speed, [this.x, this.y])
     const isCollisionResult = isCollision(
-      // { x, y, width: this.width, height: this.height, id: this.id, type: this.type },
-      this,
+      // width和height得重新设置一下，因为声明了一个新对象，其上没有读取器
+      { ...this, x, y, width: this.width, height: this.height },
       obstacleManager.getAll().filter(obstacle => obstacle.type !== 'bullet')
     )
     if (isCollisionResult) {
-      if (this.isAI && this.direction === 1) {
-        window.flag = true
-      }
       this.onCollision()
     } else {
       this.x = x

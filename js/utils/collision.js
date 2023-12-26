@@ -38,17 +38,15 @@ export function isCollision(
     obstacles
       .filter(obstacle => obstacle.id !== target.id)
       .some(obstacle => {
-        // if (target.type?.includes('enemy')) {
-        //   debugger
-        // }
         let tWidth = target.width
         let tHeight = target.height
         let oWidth = obstacle.width
         let oHeight = obstacle.height
-        if (isTank(target) && isTank(obstacle) && window.flag) {
+        if (isTank(target) && isTank(obstacle)) {
           tWidth = tHeight = Math.max(tWidth, tHeight)
           oWidth = oHeight = Math.max(oWidth, oHeight)
         }
+        
         const resultX = isOverlap([target.x, target.x + tWidth], [obstacle.x, obstacle.x + oWidth])
         const resultY = isOverlap(
           [target.y, target.y + tHeight],
@@ -100,6 +98,15 @@ export function checkCollision(
  * @returns {boolean}
  */
 export function isInBoundary(target, boundary) {
+  // if (target.direction === 1) {
+  //   const r1 = target.x >= boundary.x
+  //   const r2 = target.x + target.width <= boundary.x + boundary.width
+  //   console.log(target.x + target.width, boundary.x + boundary.width, r2)
+  //   const r3 = target.y >= boundary.y
+  //   const r4 = target.y + target.height <= boundary.y + boundary.height
+  //   console.log(r1,r2,r3,r4)
+  //   debugger
+  // }
   return (
     target.x >= boundary.x &&
     target.x + target.width <= boundary.x + boundary.width &&

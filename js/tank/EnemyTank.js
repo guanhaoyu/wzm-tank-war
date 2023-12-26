@@ -21,6 +21,7 @@ class EnemyTank extends Tank {
   }
 
   create(x, y, direction = DOWN) {
+    super.create()
     this.x = x
     this.y = y
     this.direction = direction
@@ -29,7 +30,6 @@ class EnemyTank extends Tank {
       Math.round(this.x / BRICK_SIZE) * BRICK_SIZE,
       Math.round(this.y / BRICK_SIZE) * BRICK_SIZE - BATTLE_FIELD.OFFSET_Y
     )
-    super.create()
   }
 
   draw() {
