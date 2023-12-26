@@ -1,7 +1,7 @@
 import { POS, RESOURCE_IMAGE } from '../const/IMAGE.js'
 import KEYBOARD, { keyDirectionMap } from '../const/KEYBOARD.js'
 import { BRICK_SIZE } from '../const/SCREEN.js'
-import { BATTLE_FIELD, CAMP } from '../const/WORLD.js'
+import { BATTLE_FIELD, CAMP, DIRECTION } from '../const/WORLD.js'
 import Tank from './Tank.js'
 
 export default class PlayerTank extends Tank {
@@ -16,6 +16,11 @@ export default class PlayerTank extends Tank {
     this.posX = POS[this.type][0]
     this.posY = POS[this.type][1]
     this.camp = CAMP.PLAYER
+  }
+
+  create() {
+    super.create()
+    this.direction = DIRECTION.UP
   }
 
   // 绘制

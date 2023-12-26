@@ -1,5 +1,6 @@
 import { POS, RESOURCE_IMAGE } from "../const/IMAGE.js"
 import { EXPLOSION_TYPE, FPS } from "../const/WORLD.js"
+import { calculateCenter } from "../utils/geometry.js"
 
 let id = 0
 
@@ -81,3 +82,15 @@ class ExplosionManager {
 }
 
 export const explosionManager = new ExplosionManager()
+
+/**
+ * 创建💥
+ * @param {'bulletBomb' | 'tankBomb'} type 
+ */
+export function createExplosion(type, ctx, x, y, width, height) {
+  const { size } = EXPLOSION_TYPE[type]
+  const explosion = new Explosion(ctx, type)
+  const [cx, cy] = calculateCenter(x, y, width, height)
+  const halfSize = size / 2
+  explosion.create(cx - halfSize, cy - halfSize)
+}

@@ -1,8 +1,9 @@
-import { move, step } from '../action/movement.js'
+import { step } from '../action/movement.js'
 import Bullet from '../bullet/Bullet.js'
 import { RESOURCE_IMAGE } from '../const/IMAGE.js'
 import { BRICK_SIZE } from '../const/SCREEN.js'
-import { DIRECTION, FPS, PLANCK_DISTANCE } from '../const/WORLD.js'
+import { FPS, PLANCK_DISTANCE } from '../const/WORLD.js'
+import { createExplosion } from '../other/Explosion.js'
 import Spirit from '../spirit/Spirit.js'
 import obstacleManager from '../utils/ObstacleManager.js'
 import { isCollision } from '../utils/collision.js'
@@ -18,15 +19,14 @@ export default class Tank extends Spirit {
     this.hit = false
     // 是否自动
     this.isAI = false
-    // 子弹是否正在运行中 ? 是否用冷却时间更好
-    this.isShooting = false
-    // 子弹
-    this.bullet = null
+    this.isDestroyed = false
     this.speed = 1
 
     this.coolDownTime = 1
     this.coolDownFrames = 0
     this.shootable = true
+    // 击中坦克的子弹
+    this.bullets = new Set()
   }
 
   get coolDownFramesLimit() {
@@ -42,8 +42,27 @@ export default class Tank extends Spirit {
   }
 
   create() {
-    this.direction = DIRECTION.UP
     obstacleManager.add(this)
+  }
+
+  destroy() {
+    if (!this.isDestroyed) {
+      this.isDestroyed = true
+      obstacleManager.delete(this.id)
+      createExplosion('tankBomb', this.ctx, this.x, this.y, this.width, this.height)
+    }
+  }
+
+  isShooted(bullet) {
+    if (bullet && !this.bullets.has(bullet)) {
+      this.bullets.add(bullet)
+      if (this.isAppear || !this.isAI) {
+        this.lives--
+        if (this.lives === 0) {
+          this.destroy()
+        }
+      }
+    }
   }
 
   drawImage() {
@@ -122,9 +141,5 @@ export default class Tank extends Spirit {
       ])
       this.shootable = false
     }
-  }
-
-  destroy() {
-    obstacleManager.delete(this.id)
   }
 }

@@ -2,7 +2,7 @@ import { updateCurrentMap } from '../BattleField.js'
 import { move, step } from '../action/movement.js'
 import { POS, RESOURCE_IMAGE } from '../const/IMAGE.js'
 import { DIRECTION, EXPLOSION_TYPE, PLANCK_DISTANCE, TILE_TYPE } from '../const/WORLD.js'
-import Explosion from '../other/Explosion.js'
+import Explosion, { createExplosion } from '../other/Explosion.js'
 import Spirits from '../spirit/Spirit.js'
 import obstacleManager from '../utils/ObstacleManager.js'
 import { checkCollision } from '../utils/collision.js'
@@ -115,7 +115,7 @@ export default class Bullet extends Spirits {
     // }
     this.destroy()
     if (typeof obstacle.isShooted === 'function') {
-      obstacle.isShooted()
+      obstacle.isShooted(this.id)
     } else {
       this.damage(obstacle.id)
     }
@@ -131,19 +131,10 @@ export default class Bullet extends Spirits {
     }
   }
 
-  createExplosion() {
-    const bulletBomb = 'bulletBomb'
-    const { size } = EXPLOSION_TYPE[bulletBomb]
-    const explosion = new Explosion(this.ctx, bulletBomb)
-    const [x, y] = calculateCenter(this.x, this.y, this.width, this.height)
-    const halfSize = size / 2
-    explosion.create(x - halfSize, y - halfSize)
-  }
-
   destroy() {
     if (!this.isDestroyed) {
       obstacleManager.delete(this.id)
-      this.createExplosion()
+      createExplosion('bulletBomb', this.ctx, this.x, this.y, this.width, this.height)
       this.isDestroyed = true
     }
   }
