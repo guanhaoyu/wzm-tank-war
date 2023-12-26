@@ -1,4 +1,5 @@
 import { BATTLE_FIELD } from '../const/WORLD.js'
+import { isTank } from './ObstacleManager.js'
 
 /**
  * 判断线段是否重叠，x1 < x2
@@ -19,8 +20,8 @@ function isOverlap([a, b], [c, d]) {
 
 /**
  * 碰撞检测V2
- * @param {{id?: string, x: number, y: number, width: number, height: number}} target
- * @param {{id: string, x: number, y: number, width: number, height: number}[]} obstacles
+ * @param {{id?: string, x: number, y: number, width: number, height: number, type?: string}} target
+ * @param {{id: string, x: number, y: number, width: number, height: number, type?: string}[]} obstacles
  * @returns {boolean}
  */
 export function isCollision(
@@ -37,19 +38,28 @@ export function isCollision(
     obstacles
       .filter(obstacle => obstacle.id !== target.id)
       .some(obstacle => {
-        const result =
-          isOverlap(
-            [target.x, target.x + target.width],
-            [obstacle.x, obstacle.x + obstacle.width]
-          ) &&
-          isOverlap(
-            [target.y, target.y + target.height],
-            [obstacle.y, obstacle.y + obstacle.height]
-          )
-        return result
+        // if (target.type?.includes('enemy')) {
+        //   debugger
+        // }
+        let tWidth = target.width
+        let tHeight = target.height
+        let oWidth = obstacle.width
+        let oHeight = obstacle.height
+        if (isTank(target) && isTank(obstacle) && window.flag) {
+          tWidth = tHeight = Math.max(tWidth, tHeight)
+          oWidth = oHeight = Math.max(oWidth, oHeight)
+        }
+        const resultX = isOverlap([target.x, target.x + tWidth], [obstacle.x, obstacle.x + oWidth])
+        const resultY = isOverlap(
+          [target.y, target.y + tHeight],
+          [obstacle.y, obstacle.y + oHeight]
+        )
+        return resultX && resultY
       }) || !isInBoundary(target, boundary)
   )
 }
+
+window.isOverlap = isOverlap
 
 /**
  * 获取碰撞物
@@ -70,14 +80,8 @@ export function checkCollision(
   const obstaclesBeyondItself = obstacles.filter(obstacle => obstacle.id !== target.id)
   for (const obstacle of obstaclesBeyondItself) {
     if (
-      isOverlap(
-        [target.x, target.x + target.width],
-        [obstacle.x, obstacle.x + obstacle.width]
-      ) &&
-      isOverlap(
-        [target.y, target.y + target.height],
-        [obstacle.y, obstacle.y + obstacle.height]
-      )
+      isOverlap([target.x, target.x + target.width], [obstacle.x, obstacle.x + obstacle.width]) &&
+      isOverlap([target.y, target.y + target.height], [obstacle.y, obstacle.y + obstacle.height])
     ) {
       return obstacle
     }

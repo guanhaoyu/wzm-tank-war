@@ -9,9 +9,7 @@ class ObstacleManager {
 
   getTanks(...args) {
     if (args.length === 0) {
-      return this.obstacles.filter(
-        obstacle => obstacle.type?.includes('enemy') || obstacle.type?.includes('player')
-      )
+      return this.obstacles.filter(isTank)
     }
     return this.obstacles.filter(obstacle =>
       args.reduce((prev, cur) => prev || obstacle.type?.includes(cur), false)
@@ -44,6 +42,10 @@ class ObstacleManager {
       .filter(obstacle => obstacle.id?.includes('spirit'))
       .forEach(obstacle => obstacle.draw(...args))
   }
+}
+
+export function isTank(target) {
+  return target.type?.includes('enemy') || target.type?.includes('player')
 }
 
 const obstacleManager = new ObstacleManager()

@@ -4,6 +4,8 @@ import { BATTLE_FIELD, CAMP, DIRECTION, FPS } from '../const/WORLD.js'
 import Blink from '../other/Blink.js'
 import Tank from './Tank.js'
 
+const { DOWN, LEFT, RIGHT } = DIRECTION
+
 class EnemyTank extends Tank {
   constructor(context, type) {
     super(context, type)
@@ -18,7 +20,7 @@ class EnemyTank extends Tank {
     this.camp = CAMP.ENEMY
   }
 
-  create(x, y, direction = DIRECTION.DOWN) {
+  create(x, y, direction = DOWN) {
     this.x = x
     this.y = y
     this.direction = direction
@@ -72,23 +74,30 @@ export class Enemy1 extends EnemyTank {
 export class Enemy2 extends EnemyTank {
   constructor(context) {
     super(context, 'enemy2')
-    this.height = 28
-    this.width = 24
     this.lives = 2
     this.speed = 1
+  }
+
+  get width() {
+    if ([LEFT, RIGHT].includes(this.direction)) {
+      return 28
+    }
+    return 24
+  }
+
+  get height() {
+    if ([LEFT, RIGHT].includes(this.direction)) {
+      return 24
+    }
+    return 28
   }
 
   drawImage() {
     let offsetX = 0
     let offsetY = 0
-    if ([DIRECTION.LEFT, DIRECTION.RIGHT].includes(this.direction)) {
+    if ([LEFT, RIGHT].includes(this.direction)) {
       offsetX = 2
       offsetY = 2
-      this.width = 28
-      this.height = 24
-    } else {
-      this.width = 24
-      this.height = 28
     }
 
     this.ctx.drawImage(
@@ -113,21 +122,28 @@ export class Enemy3 extends EnemyTank {
 
     this.posX = POS[this.type][0]
     this.posY = POS[this.type][1]
-    this.height = 28
-    this.width = 26
+  }
+
+  get width() {
+    if ([LEFT, RIGHT].includes(this.direction)) {
+      return 28
+    }
+    return 26
+  }
+
+  get height() {
+    if ([LEFT, RIGHT].includes(this.direction)) {
+      return 26
+    }
+    return 28
   }
 
   drawImage() {
     let offsetX = 0
     let offsetY = 0
-    if ([DIRECTION.LEFT, DIRECTION.RIGHT].includes(this.direction)) {
+    if ([LEFT, RIGHT].includes(this.direction)) {
       offsetX = 1
       offsetY = 1
-      this.width = 28
-      this.height = 26
-    } else {
-      this.width = 26
-      this.height = 28
     }
     this.ctx.drawImage(
       RESOURCE_IMAGE,
