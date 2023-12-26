@@ -19,6 +19,7 @@ export default class Tank extends Spirit {
     this.hit = false
     // 是否自动
     this.isAI = false
+    // 避免多次调用destroy方法
     this.isDestroyed = false
     this.speed = 1
 

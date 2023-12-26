@@ -18,6 +18,7 @@ export default class Bullet extends Spirits {
     this.camp = camp
     this.posX = POS[this.type][0]
     this.posY = POS[this.type][1]
+    // 避免多次调用destroy方法
     this.isDestroyed = false
   }
   // 此处[x, y]是发射器的中心点

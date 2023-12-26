@@ -1,4 +1,3 @@
-import Curtain from './layer/Curtain.js'
 import {
   GAME_STATE_MENU,
   GAME_STATE_INIT,
@@ -6,9 +5,9 @@ import {
   GAME_STATE_OVER,
   GAME_STATE_WIN,
 } from './const/GAMESTATE.js'
-import KEYBOARD, { keyDirectionMap } from './const/KEYBOARD.js'
+import KEYBOARD from './const/KEYBOARD.js'
 import { BRICK_SIZE, SCREEN_HEIGHT, SCREEN_WIDTH } from './const/SCREEN.js'
-import { BATTLE_FIELD, DIRECTION, ENEMY_LOCATION, FPS } from './const/WORLD.js'
+import { BATTLE_FIELD, ENEMY_LOCATION, FPS } from './const/WORLD.js'
 import Menu from './layer/Menu.js'
 import BattleField from './BattleField.js'
 import Scoreboard from './Scoreboard.js'
@@ -16,7 +15,6 @@ import PlayerTank from './tank/PlayerTank.js'
 import { Enemy1, Enemy2, Enemy3 } from './tank/EnemyTank.js'
 import { isCollision } from './utils/collision.js'
 import obstacleManager from './utils/ObstacleManager.js'
-import Bullet from './bullet/Bullet.js'
 import { explosionManager } from './other/Explosion.js'
 
 const gameStateToKeyboardEventMap = {
@@ -45,7 +43,7 @@ function setCanvasSize(elements, { width, height }) {
 }
 
 // 2s产生一个敌坦克
-const ADD_ENEMY_INTERVAL = 1 * FPS
+const ADD_ENEMY_INTERVAL = 2 * FPS
 
 // 每一关的敌方坦克总数
 const TOTAL_ENEMY = 20
@@ -58,13 +56,13 @@ export default class Game {
   constructor() {
     this.level = 1
     this.isPause = false
-    // this.gameState = GAME_STATE_MENU
-    this.gameState = GAME_STATE_INIT
+    this.gameState = GAME_STATE_MENU
+    // this.gameState = GAME_STATE_INIT
     // this.gameState = GAME_STATE_START
 
     this.restEnemy = TOTAL_ENEMY // 剩余敌方坦克数量
     this.appearEnemy = 0 // 正在显示的敌方坦克数量
-    this.maxAppearEnemy = 10 // 屏幕上最多显示几个敌方坦克
+    this.maxAppearEnemy = 5 // 屏幕上最多显示几个敌方坦克
 
     this.addEnemyFrames = 0 // 用于添加敌方坦克的计时
 
@@ -99,7 +97,6 @@ export default class Game {
     this.tankCtx = tankCanvas.getContext('2d')
     const overCtx = overCanvas.getContext('2d')
     this.menu = new Menu(stageCtx)
-    this.curtain = new Curtain(stageCtx)
     this.battleField = new BattleField(wallCtx, grassCtx)
     this.scoreboard = new Scoreboard(wallCtx)
     this.player1 = new PlayerTank(this.tankCtx)
@@ -147,7 +144,7 @@ export default class Game {
           this.menu.draw()
           break
         case GAME_STATE_INIT:
-          this.curtain.fold(this.level, () => {
+          this.menu.close(this.level, () => {
             this.battleField.setLevel(this.level)
             this.battleField.draw()
             this.scoreboard.init(this.level, this.restEnemy)
@@ -155,10 +152,9 @@ export default class Game {
           })
           break
         case GAME_STATE_START:
-          if (this.curtain.alreadyDrawHeight > 0) {
-            this.curtain.unfold()
-          }
-          if (this.curtain.alreadyDrawHeight <= 0) {
+          if (this.menu.isClosed) {
+            this.menu.clear()
+          } else {
             this.battleField.draw()
             this.addEnemyTank()
             this.drawAll()

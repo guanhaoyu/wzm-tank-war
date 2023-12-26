@@ -2,7 +2,7 @@ import { SCREEN_HEIGHT, SCREEN_WIDTH } from '../const/SCREEN.js'
 import { MENU_IMAGE } from '../const/IMAGE.js'
 import SelectTank from '../tank/SelectTank.js'
 import KEYBOARD, { keyDirectionMap } from '../const/KEYBOARD.js'
-import { GAME_STATE_MENU } from '../const/GAMESTATE.js'
+import Curtain from './Curtain.js'
 
 // 游戏开始菜单
 export default class Menu {
@@ -13,6 +13,12 @@ export default class Menu {
     this.selectTank = new SelectTank(context)
     // 选择游戏人数
     this.numberOfPlayers = 1
+
+    this.curtain = new Curtain(context)
+  }
+
+  get isClosed() {
+    return this.curtain.alreadyDrawHeight > 0
   }
 
   // 画菜单
@@ -44,5 +50,13 @@ export default class Menu {
       this.numberOfPlayers = 2
     }
     this.selectTank.move(keyDirectionMap.get(keyCode))
+  }
+
+  close(level, cb) {
+    this.curtain.fold(level, cb)
+  }
+
+  clear() {
+    this.curtain.unfold()
   }
 }
