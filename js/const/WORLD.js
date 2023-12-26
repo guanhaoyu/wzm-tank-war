@@ -56,17 +56,17 @@ const EXPLOSION_TYPE = {
   bulletBomb: {
     size: 32,
     ticks: 3,
-    duration: 0.5,
+    duration: 0.2,
   },
   tankBomb: {
     size: 66,
     ticks: 4,
-    duration: 1,
+    duration: 0.5,
   },
   enemyBefore: {
     size: 32,
     ticks: 7,
-    duration: 2,
+    duration: 1.5,
   },
 }
 

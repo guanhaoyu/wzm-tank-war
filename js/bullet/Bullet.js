@@ -87,7 +87,12 @@ export default class Bullet extends Spirits {
       const [x, y] = step(this.direction, PLANCK_DISTANCE, [this.x, this.y])
       const collisionResult = checkCollision(
         { x, y, width: this.width, height: this.height, id: this.id },
-        obstacleManager.getAll()
+        /**
+         * 过滤出不同阵营以解决以下2个问题：
+         * 1. 避免友军伤害
+         * 2. 坦克刚开炮，下一帧先画的是坦克，由于坦克看不到子弹，就会前进，等到子弹碰撞检测时就会认为撞到了坦克
+         */
+        obstacleManager.getAll().filter(obstacle => obstacle.camp !== this.camp)
       )
       if (collisionResult) {
         this.onCollision(collisionResult)

@@ -25,9 +25,7 @@ export default class Tank extends Spirit {
     this.speed = 1
 
     this.coolDownTime = 1
-
     this.coolDownFrames = 0
-
     this.shootable = true
   }
 

@@ -32,11 +32,18 @@ class EnemyTank extends Tank {
     )
   }
 
+  shoot() {
+    if (Math.random() < this.probabilityOfShoot) {
+      super.shoot()
+    }
+  }
+
   draw() {
     if (this.isAppear) {
-      this.coolDown()
       this.drawImage()
       this.move()
+      this.shoot()
+      this.coolDown()
     } else {
       this.isAppear = this.blink.isOver
     }
@@ -76,6 +83,7 @@ export class Enemy2 extends EnemyTank {
     super(context, 'enemy2')
     this.lives = 2
     this.speed = 1
+    this.probabilityOfShoot = 0.65
   }
 
   get width() {
@@ -119,7 +127,7 @@ export class Enemy3 extends EnemyTank {
     super(context, 'enemy3')
     this.lives = 3
     this.speed = 0.5
-
+    this.probabilityOfShoot = 0.7
     this.posX = POS[this.type][0]
     this.posY = POS[this.type][1]
   }
