@@ -13,7 +13,8 @@ const { UP, DOWN, LEFT, RIGHT } = DIRECTION
 export default class Bullet extends Spirits {
   constructor(context, camp) {
     super(context, 'bullet')
-    this.speed = 6
+    // 不能超过16，否则有能打穿2个墙
+    this.speed = 10
     this.camp = camp
     this.posX = POS[this.type][0]
     this.posY = POS[this.type][1]
