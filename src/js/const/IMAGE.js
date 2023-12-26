@@ -1,9 +1,12 @@
+import tankAll from '../../images/tankAll.gif'
+import menu from '../../images/menu.gif'
+
 /********************图片资源********************/
 const MENU_IMAGE = new Image()
-MENU_IMAGE.src = 'images/menu.gif'
+MENU_IMAGE.src = menu
 
 const RESOURCE_IMAGE = new Image()
-RESOURCE_IMAGE.src = 'images/tankAll.gif'
+RESOURCE_IMAGE.src = tankAll
 
 /********************各个图块在图片中的位置********************/
 const POS = {}

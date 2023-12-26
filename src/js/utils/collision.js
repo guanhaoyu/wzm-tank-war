@@ -57,8 +57,6 @@ export function isCollision(
   )
 }
 
-window.isOverlap = isOverlap
-
 /**
  * 获取碰撞物
  * @param {{id?: string, x: number, y: number, width: number, height: number}} target
@@ -98,15 +96,6 @@ export function checkCollision(
  * @returns {boolean}
  */
 export function isInBoundary(target, boundary) {
-  // if (target.direction === 1) {
-  //   const r1 = target.x >= boundary.x
-  //   const r2 = target.x + target.width <= boundary.x + boundary.width
-  //   console.log(target.x + target.width, boundary.x + boundary.width, r2)
-  //   const r3 = target.y >= boundary.y
-  //   const r4 = target.y + target.height <= boundary.y + boundary.height
-  //   console.log(r1,r2,r3,r4)
-  //   debugger
-  // }
   return (
     target.x >= boundary.x &&
     target.x + target.width <= boundary.x + boundary.width &&

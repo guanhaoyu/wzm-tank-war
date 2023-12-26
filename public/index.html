@@ -2,22 +2,20 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="shortcut icon" href="favicon.svg" type="image/x-icon" />
-    <title>Tank War</title>
-		<link rel="stylesheet" type="text/css" href="css/index.css" />
+    <title><%= htmlWebpackPlugin.options.title %></title>
+    <link rel="icon" href="<%= BASE_URL %>favicon.svg" />
   </head>
   <body>
     <div>
-      <!-- <h3>操作说明：玩家1：wasd上左下右，space射击；玩家2：方向键，enter射击。n下一关，p上一关。</h3> -->
       <div class="container">
-        <canvas id="wallCanvas" ></canvas> 
+        <canvas id="wallCanvas"></canvas>
         <canvas id="tankCanvas"></canvas>
         <canvas id="grassCanvas"></canvas>
         <canvas id="overCanvas"></canvas>
         <canvas id="stageCanvas"></canvas>
       </div>
     </div>
-    <script type="module" src="js/main.js"></script>
   </body>
 </html>
