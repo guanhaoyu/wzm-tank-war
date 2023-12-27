@@ -6,7 +6,8 @@ const HtmlWebpackPlugin = require("html-webpack-plugin")
 const prodConfig = {
 	mode: 'production',
 	output: {
-		path: path.resolve(__dirname, "../tank-war-dist"), // 打包后的目录
+		filename: "js/[name].[chunkhash:6].js",
+		path: path.resolve(__dirname, '../tank-war'), // 打包后的目录
 	},
 	module: {
 		rules: [
@@ -28,7 +29,7 @@ const prodConfig = {
 	},
 	plugins: [
 		new HtmlWebpackPlugin({
-			title: "开炮",
+			title: "💥💥💥开炮💥💥💥",
 			// 选取一个html作为模版，在dist目录下会生成一个相同的html，之后将打包好的js注入到该html文件
 			template: "./public/index.html",
 			// 默认会使用一个插件html-minifier-terser

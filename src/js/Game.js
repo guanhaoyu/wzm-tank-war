@@ -179,18 +179,21 @@ export default class Game {
   }
 
   addEnemyTank() {
-    if (this.enemyArr.length > this.maxAppearEnemy || this.restEnemy === 0) {
+    const enemyArrLen = this.enemyArr.length
+    if (enemyArrLen > this.maxAppearEnemy || this.restEnemy === 0) {
       return
     }
     if (this.addEnemyFrames % ADD_ENEMY_INTERVAL === 0) {
+      const enemyLocationLen = ENEMY_LOCATION.length
       const willAppearEnemy = Math.min(
-        Math.ceil(Math.random() * 3),
+        Math.ceil(Math.random() * enemyLocationLen),
         this.restEnemy,
-        this.maxAppearEnemy - this.appearEnemy
+        this.maxAppearEnemy - enemyArrLen
       )
       let willNotAppearEnemy = 0
       for (let i = 0; i < willAppearEnemy; i++) {
-        const willAppearEnemyLocationX = ENEMY_LOCATION[Math.floor(Math.random() * 3)] + BRICK_SIZE
+        const willAppearEnemyLocationX =
+          ENEMY_LOCATION[Math.floor(Math.random() * enemyLocationLen)] + BRICK_SIZE
         const isCollisionResult = isCollision(
           {
             x: willAppearEnemyLocationX,
