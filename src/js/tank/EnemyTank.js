@@ -5,6 +5,7 @@ import Blink from '../spark/Blink.js'
 import Tank from './Tank.js'
 
 const { DOWN, LEFT, RIGHT } = DIRECTION
+const DIRECTION_LENGTH = Object.keys(DIRECTION).length
 
 class EnemyTank extends Tank {
   constructor(context, type) {
@@ -69,10 +70,15 @@ class EnemyTank extends Tank {
       ]
   }
 
+  onLivesDecrease() {}
+
   underAttack() {
-    this.lives--
-    if (this.lives === 0) {
-      this.destroy()
+    if (this.isAppear) {
+      this.lives--
+      this.onLivesDecrease()
+      if (this.lives === 0) {
+        this.destroy()
+      }
     }
   }
 }
@@ -171,5 +177,9 @@ export class Enemy3 extends EnemyTank {
       this.width,
       this.height
     )
+  }
+
+  onLivesDecrease() {
+    this.posX += BRICK_SIZE * DIRECTION_LENGTH
   }
 }

@@ -171,8 +171,9 @@ export default class Game {
   }
 
   getEnemyClass() {
+    // 目前有3个敌坦克类
     const random = Math.ceil(Math.random() * 3)
-    let EnemyClass
+    let EnemyClass = null
     if (random === 1) {
       EnemyClass = Enemy1
     } else if (random === 2) {
