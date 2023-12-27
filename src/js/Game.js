@@ -16,6 +16,7 @@ import { Enemy1, Enemy2, Enemy3 } from './tank/EnemyTank.js'
 import { isCollision } from './utils/collision.js'
 import interactiveManager from './utils/InteractiveManager.js'
 import { sparkManager } from './spark/Spark.js'
+import Reward from './spark/Reward.js'
 
 const gameStateToKeyboardEventMap = {
   [GAME_STATE_MENU](code) {
@@ -40,7 +41,7 @@ const gameStateToKeyboardEventMap = {
     if (code == KEYBOARD.BACKSPACE) {
       interactiveManager.destroyAllEnemy()
     }
-  }
+  },
 }
 
 /**
@@ -170,6 +171,7 @@ export default class Game {
           } else {
             this.battleField.draw()
             this.addEnemyTank()
+            this.addReward()
             this.drawAll()
           }
           break
@@ -190,6 +192,13 @@ export default class Game {
       EnemyClass = Enemy3
     }
     return EnemyClass
+  }
+
+  addReward() {
+    if (Math.random() < 0.00001) {
+      const index = Math.floor(Math.random() * 6)
+      new Reward(this.tankCtx, index).create(0, 0)
+    }
   }
 
   addEnemyTank() {

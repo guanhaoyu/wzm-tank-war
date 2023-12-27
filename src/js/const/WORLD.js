@@ -72,6 +72,11 @@ const SPARK_TYPE = {
     size: 32,
     ticks: 2,
     duration: 25,
+  },
+  prop: {
+    size: 30,
+    ticks: 1,
+    duration: 30
   }
 }
 

@@ -1,6 +1,5 @@
 import { POS, RESOURCE_IMAGE } from "../const/IMAGE.js"
 import { SPARK_TYPE, FPS } from "../const/WORLD.js"
-import { calculateCenter } from "../utils/geometry.js"
 
 let id = 0
 
@@ -8,6 +7,7 @@ export default class Spark {
   constructor(context, type) {
     this.ctx = context
     this.type = type
+    // duration不一定是spark控制，也可能是tank控制，为了避免通信成本，故不在此获取duration
     const { size, ticks } = SPARK_TYPE[type]
     this.ticks = ticks
     this.size = size
