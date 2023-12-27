@@ -17,6 +17,7 @@ const KEYBOARD = {
   W: 'KeyW',
 
   T: 'KeyT',
+  BACKSPACE: 'Backspace'
 }
 
 // 按键到方向的映射

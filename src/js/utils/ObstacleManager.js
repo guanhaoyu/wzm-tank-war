@@ -24,6 +24,12 @@ class ObstacleManager {
     this.enemyStopFrames = 0
   }
 
+  destroyAllEnemy() {
+    this.obstacles
+      .filter(obstacle => obstacle.isAI && obstacle.isAppear)
+      .forEach(obstacle => obstacle.destroy())
+  }
+
   getAll() {
     return this.obstacles
   }
