@@ -1,6 +1,6 @@
 import { POS } from '../const/IMAGE.js'
 import KEYBOARD, { keyDirectionMap } from '../const/KEYBOARD.js'
-import { BATTLE_FIELD, CAMP, DIRECTION, FPS } from '../const/WORLD.js'
+import { BATTLE_FIELD, CAMP, DIRECTION, FPS, SPARK_TYPE } from '../const/WORLD.js'
 import Invincible from '../spark/Invincible.js'
 import Tank from './Tank.js'
 
@@ -61,14 +61,18 @@ export default class PlayerTank extends Tank {
   protect() {
     this.invincible.isOver = !this.isProtected
     if (this.isProtected) {
-      // x,y可能需要修正一下，坦克不是32*32的正方形
-      this.invincible.x = this.x - 5
-      this.invincible.y = this.y
+      this.invincible.setLocation(this.x, this.y, this.width, this.height)
     }
     this.protectedFrames++
     if (this.protectedFrames > this.protectedFramesLimit) {
       this.isProtected = false
       this.protectedFrames = 0
+    }
+  }
+
+  isShooted(bullet) {
+    if (!this.isProtected) {
+      super.isShooted(bullet)
     }
   }
 }
