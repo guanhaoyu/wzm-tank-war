@@ -1,9 +1,7 @@
 import { POS, RESOURCE_IMAGE } from '../const/IMAGE.js'
 import { BRICK_SIZE } from '../const/SCREEN.js'
 import { BATTLE_FIELD, CAMP, DIRECTION, FPS } from '../const/WORLD.js'
-import Blink from '../other/Blink.js'
-import { createExplosion } from '../other/Explosion.js'
-import obstacleManager from '../utils/ObstacleManager.js'
+import Blink from '../spark/Blink.js'
 import Tank from './Tank.js'
 
 const { DOWN, LEFT, RIGHT } = DIRECTION

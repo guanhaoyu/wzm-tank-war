@@ -15,7 +15,7 @@ import PlayerTank from './tank/PlayerTank.js'
 import { Enemy1, Enemy2, Enemy3 } from './tank/EnemyTank.js'
 import { isCollision } from './utils/collision.js'
 import obstacleManager from './utils/ObstacleManager.js'
-import { explosionManager } from './other/Explosion.js'
+import { sparkManager } from './spark/Spark.js'
 
 const gameStateToKeyboardEventMap = {
   [GAME_STATE_MENU]: function (code) {
@@ -134,7 +134,7 @@ export default class Game {
   drawAll() {
     this.tankCtx.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
     obstacleManager.drawSpirits(this.codes)
-    explosionManager.draw()
+    sparkManager.draw()
   }
 
   run() {

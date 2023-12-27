@@ -1,12 +1,11 @@
 import { updateCurrentMap } from '../BattleField.js'
-import { move, step } from '../action/movement.js'
+import { step } from '../action/movement.js'
 import { POS, RESOURCE_IMAGE } from '../const/IMAGE.js'
-import { DIRECTION, EXPLOSION_TYPE, PLANCK_DISTANCE, TILE_TYPE } from '../const/WORLD.js'
-import Explosion, { createExplosion } from '../other/Explosion.js'
+import { DIRECTION, PLANCK_DISTANCE, TILE_TYPE } from '../const/WORLD.js'
+import { createExplosion } from '../spark/Explosion.js'
 import Spirits from '../spirit/Spirit.js'
 import obstacleManager from '../utils/ObstacleManager.js'
 import { checkCollision } from '../utils/collision.js'
-import { calculateCenter } from '../utils/geometry.js'
 
 const { UP, DOWN, LEFT, RIGHT } = DIRECTION
 // 不同阵营的子弹可以对撞，也属于障碍物
@@ -136,7 +135,7 @@ export default class Bullet extends Spirits {
   destroy() {
     if (!this.isDestroyed) {
       obstacleManager.delete(this.id)
-      createExplosion('bulletBomb', this.ctx, this.x, this.y, this.width, this.height)
+      createExplosion(this.ctx, 'bulletBomb', this.x, this.y, this.width, this.height)
       this.isDestroyed = true
     }
   }

@@ -18,12 +18,12 @@ export default class SelectTank extends Tank {
     this.direction = RIGHT
     this.frames = 0
     this.slowTimes = 2
-    this.seriesLength = 2
+    this.ticks = 2
   }
   addObstacleManager() {}
   draw() {
     this.frames++
-    const index = Math.floor(this.frames / this.slowTimes) % this.seriesLength
+    const index = Math.floor(this.frames / this.slowTimes) % this.ticks
     const [x, y] = POS[this.type]
     this.ctx.drawImage(RESOURCE_IMAGE, ...[x, y + this.size * index, this.size, this.size], ...[this.x, this.y, this.size, this.size])
   }

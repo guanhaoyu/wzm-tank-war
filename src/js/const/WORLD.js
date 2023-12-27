@@ -51,8 +51,8 @@ const FPS = 60
 /********************最小距离********************/
 const PLANCK_DISTANCE = 0.5
 
-/********************爆炸类型********************/
-const EXPLOSION_TYPE = {
+/********************星火类型********************/
+const SPARK_TYPE = {
   bulletBomb: {
     size: 32,
     ticks: 3,
@@ -68,6 +68,11 @@ const EXPLOSION_TYPE = {
     ticks: 7,
     duration: 1.5,
   },
+  protected: {
+    size: 32,
+    ticks: 2,
+    duration: 25,
+  }
 }
 
 /********************阵营类型********************/
@@ -77,7 +82,7 @@ const CAMP = {
 }
 
 export {
-  EXPLOSION_TYPE,
+  SPARK_TYPE,
   OBSTACLE_TYPES,
   DIRECTION,
   TILE_TYPE,

@@ -29,6 +29,8 @@ class ObstacleManager {
       const index = this.obstacles.findIndex(obstacle => obstacle.id === id)
       if (index > -1) {
         this.obstacles.splice(index, 1)
+      } else {
+        throw new Error('删除的元素不存在')
       }
     })
   }

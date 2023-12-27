@@ -3,7 +3,7 @@ import Bullet from '../bullet/Bullet.js'
 import { RESOURCE_IMAGE } from '../const/IMAGE.js'
 import { BRICK_SIZE } from '../const/SCREEN.js'
 import { FPS, PLANCK_DISTANCE } from '../const/WORLD.js'
-import { createExplosion } from '../other/Explosion.js'
+import { createExplosion } from '../spark/Explosion.js'
 import Spirit from '../spirit/Spirit.js'
 import obstacleManager from '../utils/ObstacleManager.js'
 import { isCollision } from '../utils/collision.js'
@@ -50,7 +50,7 @@ export default class Tank extends Spirit {
     if (!this.isDestroyed) {
       this.isDestroyed = true
       obstacleManager.delete(this.id)
-      createExplosion('tankBomb', this.ctx, this.x, this.y, this.width, this.height)
+      createExplosion(this.ctx, 'tankBomb', this.x, this.y, this.width, this.height)
     }
   }
 
