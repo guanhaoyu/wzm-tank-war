@@ -18,7 +18,7 @@ import obstacleManager from './utils/ObstacleManager.js'
 import { sparkManager } from './spark/Spark.js'
 
 const gameStateToKeyboardEventMap = {
-  [GAME_STATE_MENU]: function (code) {
+  [GAME_STATE_MENU](code) {
     if (code == KEYBOARD.ENTER) {
       this.gameState = GAME_STATE_INIT
       // fixme 只有一个玩家
@@ -28,6 +28,11 @@ const gameStateToKeyboardEventMap = {
       this.menu.next(code)
     }
   },
+  [GAME_STATE_START](code) {
+    if (code == KEYBOARD.P) {
+      this.pause()
+    }
+  }
 }
 
 /**
@@ -224,10 +229,6 @@ export default class Game {
   }
 
   pause() {
-    this.isPause = true
-  }
-
-  resume() {
-    this.isPause = false
+    this.isPause = !this.isPause
   }
 }
