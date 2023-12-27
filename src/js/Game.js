@@ -32,6 +32,10 @@ const gameStateToKeyboardEventMap = {
     if (code == KEYBOARD.P) {
       this.pause()
     }
+    // trick 按T定住敌人
+    if (code == KEYBOARD.T) {
+      obstacleManager.stopEnemy(600)
+    }
   }
 }
 

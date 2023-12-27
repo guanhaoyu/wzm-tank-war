@@ -13,9 +13,9 @@ class ObstacleManager {
     return this.enemyStopTime * FPS
   }
 
-  stopEnemy() {
+  stopEnemy(time = 30) {
+    this.enemyStopFrames = time
     this.isEnemyStop = true
-    this.obstacles.filter(obstacle => obstacle.isAI).forEach(obstacle => (obstacle.isStop = true))
   }
 
   unStopEnemy() {
@@ -62,6 +62,7 @@ class ObstacleManager {
 
   handleEnemyStop() {
     if (this.isEnemyStop) {
+      this.obstacles.filter(obstacle => obstacle.isAI).forEach(obstacle => (obstacle.isStop = true))
       this.enemyStopFrames++
       if (this.enemyStopFrames > this.enemyStopFramesLimit) {
         this.unStopEnemy()

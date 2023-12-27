@@ -14,7 +14,9 @@ const KEYBOARD = {
   N: 'KeyN',
   P: 'KeyP',
   S: 'KeyS',
-  W: 'KeyW'
+  W: 'KeyW',
+
+  T: 'KeyT',
 }
 
 // 按键到方向的映射
