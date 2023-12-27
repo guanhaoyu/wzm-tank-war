@@ -13,6 +13,7 @@ class EnemyTank extends Tank {
     this.isAppear = false
     this.frames = 0
     this.isAI = true
+    this.isStop = false
     // 射击的概率
     this.probabilityOfShoot = 0.6
     this.posX = POS[this.type][0]
@@ -42,8 +43,10 @@ class EnemyTank extends Tank {
   draw() {
     if (this.isAppear) {
       this.drawImage()
-      this.move()
-      this.shoot()
+      if (!this.isStop) {
+        this.move()
+        this.shoot()
+      }
       this.coolDown()
     } else {
       this.isAppear = this.blink.isOver

@@ -1,6 +1,27 @@
+import { FPS } from '../const/WORLD'
+
 class ObstacleManager {
   constructor() {
     this.obstacles = []
+
+    this.isEnemyStop = false
+    this.enemyStopTime = 30
+    this.enemyStopFrames = 0
+  }
+
+  get enemyStopFramesLimit() {
+    return this.enemyStopTime * FPS
+  }
+
+  stopEnemy() {
+    this.isEnemyStop = true
+    this.obstacles.filter(obstacle => obstacle.isAI).forEach(obstacle => (obstacle.isStop = true))
+  }
+
+  unStopEnemy() {
+    this.obstacles.filter(obstacle => obstacle.isAI).forEach(obstacle => (obstacle.isStop = false))
+    this.isEnemyStop = false
+    this.enemyStopFrames = 0
   }
 
   getAll() {
@@ -39,7 +60,17 @@ class ObstacleManager {
     this.obstacles = []
   }
 
+  handleEnemyStop() {
+    if (this.isEnemyStop) {
+      this.enemyStopFrames++
+      if (this.enemyStopFrames > this.enemyStopFramesLimit) {
+        this.unStopEnemy()
+      }
+    }
+  }
+
   drawSpirits(...args) {
+    this.handleEnemyStop()
     this.obstacles
       .filter(obstacle => obstacle.id?.includes('spirit'))
       .forEach(obstacle => obstacle.draw(...args))
