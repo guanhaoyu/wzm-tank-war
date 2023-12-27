@@ -2,7 +2,7 @@ import { POS, RESOURCE_IMAGE } from './const/IMAGE.js'
 import maps from './const/LEVEL.js'
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from './const/SCREEN.js'
 import { BATTLE_FIELD, OBSTACLE_TYPES, TILE_TYPE } from './const/WORLD.js'
-import obstacleManager from './utils/ObstacleManager.js'
+import interactiveManager from './utils/InteractiveManager.js'
 
 let currentMap = null
 
@@ -62,7 +62,7 @@ export default class BattleField {
             this.tileSize
           )
           if (OBSTACLE_TYPES.includes(current)) {
-            obstacleManager.add({
+            interactiveManager.add({
               id,
               x: j * this.tileSize + this.offsetX,
               y: i * this.tileSize + this.offsetY,

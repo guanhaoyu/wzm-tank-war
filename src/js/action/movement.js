@@ -1,5 +1,5 @@
 import { DIRECTION } from '../const/WORLD.js'
-import obstacleManager from '../utils/ObstacleManager.js'
+import interactiveManager from '../utils/InteractiveManager.js'
 import { isCollision } from '../utils/collision.js'
 
 const { UP, DOWN, RIGHT, LEFT } = DIRECTION
@@ -39,7 +39,7 @@ export function move(onAccess, onCollision, afterMove) {
     const [x, y] = step(this.direction, PLANCK, [this.x, this.y])
     const isCollisionResult = isCollision(
       { x, y, width: this.width, height: this.height, id: this.id },
-      obstacleManager.getAll()
+      interactiveManager.getAll()
     )
     if (!isCollisionResult) {
       this.x = x

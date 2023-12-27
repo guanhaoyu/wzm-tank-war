@@ -4,7 +4,7 @@ import { POS, RESOURCE_IMAGE } from '../const/IMAGE.js'
 import { DIRECTION, PLANCK_DISTANCE, TILE_TYPE } from '../const/WORLD.js'
 import { createExplosion } from '../spark/Explosion.js'
 import Spirits from '../spirit/Spirit.js'
-import obstacleManager from '../utils/ObstacleManager.js'
+import interactiveManager from '../utils/InteractiveManager.js'
 import { checkCollision } from '../utils/collision.js'
 
 const { UP, DOWN, LEFT, RIGHT } = DIRECTION
@@ -36,7 +36,7 @@ export default class Bullet extends Spirits {
       this.x = x + width / 2
       this.y = y - this.height / 2
     }
-    obstacleManager.add(this)
+    interactiveManager.add(this)
   }
 
   get width() {
@@ -93,7 +93,7 @@ export default class Bullet extends Spirits {
          * 1. 避免友军伤害
          * 2. 坦克刚开炮，下一帧先画的是坦克，由于坦克看不到子弹，就会前进，等到子弹碰撞检测时就会认为撞到了坦克
          */
-        obstacleManager.getAll().filter(obstacle => obstacle.camp !== this.camp)
+        interactiveManager.getAll().filter(el => el.camp !== this.camp)
       )
       if (collisionResult) {
         this.onCollision(collisionResult)
@@ -127,14 +127,14 @@ export default class Bullet extends Spirits {
       const [tile, i, j] = id.split('-')
       if (parseInt(tile) === TILE_TYPE.WALL) {
         updateCurrentMap([i, j])
-        obstacleManager.delete(id)
+        interactiveManager.delete(id)
       }
     }
   }
 
   destroy() {
     if (!this.isDestroyed) {
-      obstacleManager.delete(this.id)
+      interactiveManager.delete(this.id)
       createExplosion(this.ctx, 'bulletBomb', this.x, this.y, this.width, this.height)
       this.isDestroyed = true
     }

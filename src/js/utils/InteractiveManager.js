@@ -1,8 +1,8 @@
 import { FPS } from '../const/WORLD'
 
-class ObstacleManager {
+class InteractiveManager {
   constructor() {
-    this.obstacles = []
+    this.arr = []
 
     this.isEnemyStop = false
     this.enemyStopTime = 30
@@ -19,43 +19,43 @@ class ObstacleManager {
   }
 
   unStopEnemy() {
-    this.obstacles.filter(obstacle => obstacle.isAI).forEach(obstacle => (obstacle.isStop = false))
+    this.arr.filter(el => el.isAI).forEach(el => (el.isStop = false))
     this.isEnemyStop = false
     this.enemyStopFrames = 0
   }
 
   destroyAllEnemy() {
-    this.obstacles
-      .filter(obstacle => obstacle.isAI && obstacle.isAppear)
-      .forEach(obstacle => obstacle.destroy())
+    this.arr
+      .filter(el => el.isAI && el.isAppear)
+      .forEach(el => el.destroy())
   }
 
   getAll() {
-    return this.obstacles
+    return this.arr
   }
 
   getTanks(...args) {
     if (args.length === 0) {
-      return this.obstacles.filter(isTank)
+      return this.arr.filter(isTank)
     }
-    return this.obstacles.filter(obstacle =>
-      args.reduce((prev, cur) => prev || obstacle.type?.includes(cur), false)
+    return this.arr.filter(el =>
+      args.reduce((prev, cur) => prev || el.type?.includes(cur), false)
     )
   }
 
   add(...args) {
     args.forEach(arg => {
-      if (!this.obstacles.find(obstacle => obstacle.id === arg.id)) {
-        this.obstacles.push(arg)
+      if (!this.arr.find(el => el.id === arg.id)) {
+        this.arr.push(arg)
       }
     })
   }
 
   delete(...ids) {
     ids.forEach(id => {
-      const index = this.obstacles.findIndex(obstacle => obstacle.id === id)
+      const index = this.arr.findIndex(el => el.id === id)
       if (index > -1) {
-        this.obstacles.splice(index, 1)
+        this.arr.splice(index, 1)
       } else {
         throw new Error('删除的元素不存在')
       }
@@ -63,12 +63,12 @@ class ObstacleManager {
   }
 
   clear() {
-    this.obstacles = []
+    this.arr = []
   }
 
   handleEnemyStop() {
     if (this.isEnemyStop) {
-      this.obstacles.filter(obstacle => obstacle.isAI).forEach(obstacle => (obstacle.isStop = true))
+      this.arr.filter(el => el.isAI).forEach(el => (el.isStop = true))
       this.enemyStopFrames++
       if (this.enemyStopFrames > this.enemyStopFramesLimit) {
         this.unStopEnemy()
@@ -78,9 +78,9 @@ class ObstacleManager {
 
   drawSpirits(...args) {
     this.handleEnemyStop()
-    this.obstacles
-      .filter(obstacle => obstacle.id?.includes('spirit'))
-      .forEach(obstacle => obstacle.draw(...args))
+    this.arr
+      .filter(el => el.id?.includes('spirit'))
+      .forEach(el => el.draw(...args))
   }
 }
 
@@ -88,6 +88,6 @@ export function isTank(target) {
   return target.type?.includes('enemy') || target.type?.includes('player')
 }
 
-const obstacleManager = new ObstacleManager()
+const interactiveManager = new InteractiveManager()
 
-export default obstacleManager
+export default interactiveManager

@@ -14,7 +14,7 @@ import Scoreboard from './Scoreboard.js'
 import PlayerTank from './tank/PlayerTank.js'
 import { Enemy1, Enemy2, Enemy3 } from './tank/EnemyTank.js'
 import { isCollision } from './utils/collision.js'
-import obstacleManager from './utils/ObstacleManager.js'
+import interactiveManager from './utils/InteractiveManager.js'
 import { sparkManager } from './spark/Spark.js'
 
 const gameStateToKeyboardEventMap = {
@@ -34,7 +34,11 @@ const gameStateToKeyboardEventMap = {
     }
     // trick 按T定住敌人
     if (code == KEYBOARD.T) {
-      obstacleManager.stopEnemy(600)
+      interactiveManager.stopEnemy(60)
+    }
+    // trick 按退格全灭敌人
+    if (code == KEYBOARD.BACKSPACE) {
+      interactiveManager.destroyAllEnemy()
     }
   }
 }
@@ -83,7 +87,7 @@ export default class Game {
   }
 
   get enemyArr() {
-    return obstacleManager.getTanks('enemy')
+    return interactiveManager.getTanks('enemy')
   }
 
   prepare() {
@@ -142,7 +146,7 @@ export default class Game {
 
   drawAll() {
     this.tankCtx.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
-    obstacleManager.drawSpirits(Array.from(this.codes))
+    interactiveManager.drawSpirits(Array.from(this.codes))
     sparkManager.draw()
   }
 
@@ -211,7 +215,7 @@ export default class Game {
             width: BRICK_SIZE,
             height: BRICK_SIZE,
           },
-          obstacleManager.getTanks()
+          interactiveManager.getTanks()
         )
         if (isCollisionResult) {
           willNotAppearEnemy++

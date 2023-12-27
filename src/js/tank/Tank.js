@@ -5,7 +5,7 @@ import { BRICK_SIZE } from '../const/SCREEN.js'
 import { FPS, PLANCK_DISTANCE } from '../const/WORLD.js'
 import { createExplosion } from '../spark/Explosion.js'
 import Spirit from '../spirit/Spirit.js'
-import obstacleManager from '../utils/ObstacleManager.js'
+import interactiveManager from '../utils/InteractiveManager.js'
 import { isCollision } from '../utils/collision.js'
 import { calculateCenter } from '../utils/geometry.js'
 
@@ -43,13 +43,13 @@ export default class Tank extends Spirit {
   }
 
   create() {
-    obstacleManager.add(this)
+    interactiveManager.add(this)
   }
 
   destroy() {
     if (!this.isDestroyed) {
       this.isDestroyed = true
-      obstacleManager.delete(this.id)
+      interactiveManager.delete(this.id)
       createExplosion(this.ctx, 'tankBomb', this.x, this.y, this.width, this.height)
     }
   }
@@ -93,7 +93,7 @@ export default class Tank extends Spirit {
       const [x, y] = step(this.direction, PLANCK_DISTANCE, [this.x, this.y])
       const isCollisionResult = isCollision(
         { ...this, x, y, width: this.width, height: this.height },
-        obstacleManager.getAll().filter(obstacle => obstacle.type !== 'bullet')
+        interactiveManager.getAll().filter(el => el.type !== 'bullet')
       )
       if (isCollisionResult) {
         this.onCollision()
@@ -109,13 +109,13 @@ export default class Tank extends Spirit {
     }
   }
 
-  move1() {
+  directMove() {
     // 下一帧的位置
     const [x, y] = step(this.direction, this.speed, [this.x, this.y])
     const isCollisionResult = isCollision(
       // width和height得重新设置一下，因为声明了一个新对象，其上没有读取器
       { ...this, x, y, width: this.width, height: this.height },
-      obstacleManager.getAll().filter(obstacle => obstacle.type !== 'bullet')
+      interactiveManager.getAll().filter(el => el.type !== 'bullet')
     )
     if (isCollisionResult) {
       this.onCollision()

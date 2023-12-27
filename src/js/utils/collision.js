@@ -1,5 +1,5 @@
 import { BATTLE_FIELD } from '../const/WORLD.js'
-import { isTank } from './ObstacleManager.js'
+import { isTank } from './InteractiveManager.js'
 
 /**
  * 判断线段是否重叠，x1 < x2
