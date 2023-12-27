@@ -17,7 +17,7 @@ export default class Menu {
     this.curtain = new Curtain(context)
   }
 
-  get isClosed() {
+  get isClearable() {
     return this.curtain.alreadyDrawHeight > 0
   }
 
@@ -52,8 +52,8 @@ export default class Menu {
     this.selectTank.move(keyDirectionMap.get(keyCode))
   }
 
-  close(level, cb) {
-    this.curtain.fold(level, cb)
+  drawLevel(level, onFinished) {
+    this.curtain.fold(level, onFinished)
   }
 
   clear() {

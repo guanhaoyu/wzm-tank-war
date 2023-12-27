@@ -133,7 +133,7 @@ export default class Game {
 
   drawAll() {
     this.tankCtx.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
-    obstacleManager.drawSpirits(this.codes)
+    obstacleManager.drawSpirits(Array.from(this.codes))
     sparkManager.draw()
   }
 
@@ -144,7 +144,7 @@ export default class Game {
           this.menu.draw()
           break
         case GAME_STATE_INIT:
-          this.menu.close(this.level, () => {
+          this.menu.drawLevel(this.level, () => {
             this.battleField.setLevel(this.level)
             this.battleField.draw()
             this.scoreboard.init(this.level, this.restEnemy)
@@ -152,7 +152,7 @@ export default class Game {
           })
           break
         case GAME_STATE_START:
-          if (this.menu.isClosed) {
+          if (this.menu.isClearable) {
             this.menu.clear()
           } else {
             this.battleField.draw()

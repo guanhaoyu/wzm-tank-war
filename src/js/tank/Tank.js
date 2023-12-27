@@ -54,15 +54,12 @@ export default class Tank extends Spirit {
     }
   }
 
+  underAttack() {}
+
   isShooted(bullet) {
     if (bullet && !this.bullets.has(bullet)) {
       this.bullets.add(bullet)
-      if (this.isAppear || !this.isAI) {
-        this.lives--
-        if (this.lives === 0) {
-          this.destroy()
-        }
-      }
+      this.underAttack()
     }
   }
 

@@ -68,6 +68,13 @@ class EnemyTank extends Tank {
         ]
       ]
   }
+
+  underAttack() {
+    this.lives--
+    if (this.lives === 0) {
+      this.destroy()
+    }
+  }
 }
 
 export class Enemy1 extends EnemyTank {
