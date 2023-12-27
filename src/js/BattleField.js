@@ -1,13 +1,63 @@
 import { POS, RESOURCE_IMAGE } from './const/IMAGE.js'
 import maps from './const/LEVEL.js'
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from './const/SCREEN.js'
-import { BATTLE_FIELD, OBSTACLE_TYPES, TILE_TYPE } from './const/WORLD.js'
+import { BATTLE_FIELD, FPS, OBSTACLE_TYPES, TILE_TYPE } from './const/WORLD.js'
 import interactiveManager from './utils/InteractiveManager.js'
 
 let currentMap = null
 
+const homeBoundary = [
+  [23, 11],
+  [23, 12],
+  [23, 13],
+  [23, 14],
+  [24, 11],
+  [24, 14],
+  [25, 11],
+  [25, 14],
+]
+
 export function updateCurrentMap([i, j], value = 0) {
   currentMap[i][j] = value
+}
+
+let homeIsProtected = false
+let homeProtectTime = 25
+let homeProtectFrames = 0
+
+function getHomeProtectFramesLimit() {
+  return homeProtectTime * FPS
+}
+
+export function protectHome(time = 25) {
+  homeProtectTime = time
+  homeProtectFrames = 0
+  homeIsProtected = true
+  homeBoundary.forEach(el => {
+    const target = interactiveManager.getAll().find(obstacle => {
+      const [tile, i, j] = obstacle.id.split('-')
+      return tile == TILE_TYPE.WALL && el[0] == i && el[1] == j
+    })
+    if (target?.id) {
+      interactiveManager.delete(target.id)
+    }
+    updateCurrentMap(el, TILE_TYPE.GRID)
+  })
+}
+
+function cancelProtectHome() {
+  homeIsProtected = false
+  homeProtectFrames = 0
+  homeBoundary.forEach(el => {
+    const target = interactiveManager.getAll().find(obstacle => {
+      const [tile, i, j] = obstacle.id.split('-')
+      return tile == TILE_TYPE.GRID && el[0] == i && el[1] == j
+    })
+    if (target?.id) {
+      interactiveManager.delete(target.id)
+    }
+    updateCurrentMap(el, TILE_TYPE.WALL)
+  })
 }
 
 const { WALL, GRASS, ICE, GRID, WATER, HOME, ANOTHREHOME } = TILE_TYPE
@@ -38,6 +88,12 @@ export default class BattleField {
   }
 
   draw() {
+    if (homeIsProtected) {
+      homeProtectFrames++
+      if (homeProtectFrames > getHomeProtectFramesLimit()) {
+        cancelProtectHome()
+      }
+    }
     this.wallCtx.fillStyle = '#7f7f7f'
     this.wallCtx.fillRect(0, 0, this.offsetX + this.width, this.height + this.offsetY * 2)
     this.wallCtx.fillStyle = '#000'
@@ -61,15 +117,6 @@ export default class BattleField {
             this.tileSize,
             this.tileSize
           )
-          if (OBSTACLE_TYPES.includes(current)) {
-            interactiveManager.add({
-              id,
-              x: j * this.tileSize + this.offsetX,
-              y: i * this.tileSize + this.offsetY,
-              width: this.tileSize,
-              height: this.tileSize,
-            })
-          }
         } else if (current === GRASS) {
           this.grassCtx.drawImage(
             RESOURCE_IMAGE,
@@ -94,6 +141,15 @@ export default class BattleField {
             this.homeSize,
             this.homeSize
           )
+        }
+        if (OBSTACLE_TYPES.includes(current)) {
+          interactiveManager.add({
+            id,
+            x: j * this.tileSize + this.offsetX,
+            y: i * this.tileSize + this.offsetY,
+            width: this.tileSize,
+            height: this.tileSize,
+          })
         }
       }
     }

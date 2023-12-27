@@ -15,7 +15,7 @@ export default class Spark {
     this.posY = POS[type][1]
     this.id = `spark-${id}`
     id++
-    this.frames = -1
+    this.frames = 0
     this.slowTimes = 3
   }
 
@@ -44,14 +44,18 @@ export default class Spark {
   }
 
   draw() {
-    this.frames++
     this.drawImage()
+    this.frames++
   }
 }
 
 class SparkManager {
   constructor() {
     this.arr = []
+  }
+  
+  getReward() {
+    return this.arr.find(el => el.type === 'prop')
   }
 
   add(...args) {

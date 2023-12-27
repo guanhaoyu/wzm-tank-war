@@ -7,10 +7,12 @@ import Tank from './Tank.js'
 const { DOWN, LEFT, RIGHT } = DIRECTION
 const DIRECTION_LENGTH = Object.keys(DIRECTION).length
 
+const appearDirections = [DOWN, LEFT, RIGHT]
 class EnemyTank extends Tank {
   constructor(context, type) {
     super(context, type)
     this.isAppear = false
+    this.direction = appearDirections[Math.floor(Math.random() * appearDirections.length)]
     this.frames = 0
     this.isAI = true
     this.isStop = false
@@ -22,11 +24,10 @@ class EnemyTank extends Tank {
     this.camp = CAMP.ENEMY
   }
 
-  create(x, y, direction = DOWN) {
+  create(x, y) {
     super.create()
     this.x = x
     this.y = y
-    this.direction = direction
     // BATTLE_FIELD.OFFSET_Y是16，BATTLE_FIELD.OFFSET_X是32，值不一样，所以计算方式也不一样
     this.blink.create(
       Math.round(this.x / BRICK_SIZE) * BRICK_SIZE,

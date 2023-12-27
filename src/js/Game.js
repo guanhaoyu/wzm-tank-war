@@ -80,7 +80,7 @@ export default class Game {
 
     this.addRewardInterval = 15 // 15s可能产生一个奖励
     this.addRewardFrames = 0 // 用于添加奖励的计时
-    this.addRewardProbability = 0.3 // 一次产生奖励的概率
+    this.addRewardProbability = 0.4 // 一次产生奖励的概率
 
     this.enemyTankStack = []
     this.codes = new Set()
@@ -211,7 +211,7 @@ export default class Game {
       Math.random() < this.addRewardProbability
     ) {
       const index = Math.floor(Math.random() * 6)
-      new Reward(this.tankCtx, index).create(0, 0)
+      new Reward(this.tankCtx, index).create(32, 290)
       this.addRewardFrames = 0
     }
   }

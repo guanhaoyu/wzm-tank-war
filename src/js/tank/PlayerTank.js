@@ -10,7 +10,7 @@ export default class PlayerTank extends Tank {
     super(context, 'player')
     this.lives = 3
     this.speed = 2
-    this.protectedTime = 25
+    this.protectedTime = 20
     this.protectedFrames = 0
     this.posX = POS[this.type][0]
     this.posY = POS[this.type][1]
@@ -92,5 +92,10 @@ export default class PlayerTank extends Tank {
         this.rebirth()
       }
     }
+  }
+
+  upgrade() {
+    this.coolDownTime = 0.9
+    this.speed = 2.2
   }
 }
