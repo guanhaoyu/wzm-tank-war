@@ -23,7 +23,7 @@ export default class Tank extends Spirit {
     this.isDestroyed = false
     this.speed = 1
 
-    this.coolDownTime = 1
+    this.coolDownTime = 1.5
     this.coolDownFrames = 0
     this.shootable = true
     // 击中坦克的子弹
@@ -80,7 +80,7 @@ export default class Tank extends Spirit {
   coolDown() {
     if (!this.shootable) {
       this.coolDownFrames++
-      if (this.coolDownFrames >= this.coolDownFramesLimit) {
+      if (this.coolDownFrames > this.coolDownFramesLimit) {
         this.shootable = true
         this.coolDownFrames = 0
       }

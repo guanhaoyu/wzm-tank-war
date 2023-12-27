@@ -1,6 +1,6 @@
 import { POS } from "../const/IMAGE";
 import { FPS } from "../const/WORLD";
-import Spark from "./Spark";
+import Spark, { sparkManager } from "./Spark";
 
 const type = 'prop'
 export default class Reward extends Spark {

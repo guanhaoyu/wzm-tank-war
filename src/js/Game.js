@@ -56,9 +56,6 @@ function setCanvasSize(elements, { width, height }) {
   })
 }
 
-// 2s产生一个敌坦克
-const ADD_ENEMY_INTERVAL = 2 * FPS
-
 // 每一关的敌方坦克总数
 const TOTAL_ENEMY = 20
 
@@ -70,21 +67,34 @@ export default class Game {
   constructor() {
     this.level = 1
     this.isPause = false
-    this.gameState = GAME_STATE_MENU
-    // this.gameState = GAME_STATE_INIT
+    // this.gameState = GAME_STATE_MENU
+    this.gameState = GAME_STATE_INIT
     // this.gameState = GAME_STATE_START
 
     this.restEnemy = TOTAL_ENEMY // 剩余敌方坦克数量
     this.appearEnemy = 0 // 正在显示的敌方坦克数量
     this.maxAppearEnemy = 5 // 屏幕上最多显示几个敌方坦克
 
+    this.addEnemyInterval = 2 // 2s产生一个敌坦克
     this.addEnemyFrames = 0 // 用于添加敌方坦克的计时
+
+    this.addRewardInterval = 15 // 15s可能产生一个奖励
+    this.addRewardFrames = 0 // 用于添加奖励的计时
+    this.addRewardProbability = 0.3 // 一次产生奖励的概率
 
     this.enemyTankStack = []
     this.codes = new Set()
     this.prepare()
     this.handleKeyboardEvent()
     this.prepareEnemyTanks()
+  }
+
+  get addEnemyFramesLimit() {
+    return this.addEnemyInterval * FPS
+  }
+
+  get addRewardFramesLimit() {
+    return this.addRewardInterval * FPS
   }
 
   get enemyArr() {
@@ -195,9 +205,14 @@ export default class Game {
   }
 
   addReward() {
-    if (Math.random() < 0.00001) {
+    this.addRewardFrames++
+    if (
+      this.addRewardFrames % this.addRewardFramesLimit === 0 &&
+      Math.random() < this.addRewardProbability
+    ) {
       const index = Math.floor(Math.random() * 6)
       new Reward(this.tankCtx, index).create(0, 0)
+      this.addRewardFrames = 0
     }
   }
 
@@ -206,7 +221,7 @@ export default class Game {
     if (enemyArrLen > this.maxAppearEnemy || this.restEnemy === 0) {
       return
     }
-    if (this.addEnemyFrames % ADD_ENEMY_INTERVAL === 0) {
+    if (this.addEnemyFrames % this.addEnemyFramesLimit === 0) {
       const enemyLocationLen = ENEMY_LOCATION.length
       const willAppearEnemy = Math.min(
         Math.ceil(Math.random() * enemyLocationLen),

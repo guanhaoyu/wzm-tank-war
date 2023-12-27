@@ -1,6 +1,7 @@
 import { POS } from '../const/IMAGE.js'
 import KEYBOARD, { keyDirectionMap } from '../const/KEYBOARD.js'
-import { BATTLE_FIELD, CAMP, DIRECTION, FPS, SPARK_TYPE } from '../const/WORLD.js'
+import { BATTLE_FIELD, CAMP, DIRECTION, FPS } from '../const/WORLD.js'
+import { createExplosion } from '../spark/Explosion.js'
 import Invincible from '../spark/Invincible.js'
 import Tank from './Tank.js'
 
@@ -15,7 +16,7 @@ export default class PlayerTank extends Tank {
     this.posY = POS[this.type][1]
     this.camp = CAMP.PLAYER
     this.invincible = new Invincible(context)
-    
+    this.coolDownTime = 1
     this.rebirth()
   }
 
@@ -25,6 +26,7 @@ export default class PlayerTank extends Tank {
 
   rebirth() {
     this.isProtected = true
+    this.shootable = true
     this.x = 129 + BATTLE_FIELD.OFFSET_X
     this.y = 389 + BATTLE_FIELD.OFFSET_Y
     this.direction = DIRECTION.UP
@@ -66,11 +68,11 @@ export default class PlayerTank extends Tank {
     this.invincible.isOver = !this.isProtected
     if (this.isProtected) {
       this.invincible.setLocation(this.x, this.y, this.width, this.height)
-    }
-    this.protectedFrames++
-    if (this.protectedFrames > this.protectedFramesLimit) {
-      this.isProtected = false
-      this.protectedFrames = 0
+      this.protectedFrames++
+      if (this.protectedFrames > this.protectedFramesLimit) {
+        this.isProtected = false
+        this.protectedFrames = 0
+      }
     }
   }
 
@@ -81,11 +83,14 @@ export default class PlayerTank extends Tank {
   }
 
   underAttack() {
-    this.lives--
-    if (this.lives === 0) {
-      this.destroy()
-    } else {
-      this.rebirth()
+    if (!this.isProtected) {
+      this.lives--
+      if (this.lives === 0) {
+        this.destroy()
+      } else {
+        createExplosion(this.ctx, 'tankBomb', this.x, this.y, this.width, this.height)
+        this.rebirth()
+      }
     }
   }
 }
