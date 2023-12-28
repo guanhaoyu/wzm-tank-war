@@ -2,7 +2,7 @@ import { POS, RESOURCE_IMAGE } from './const/IMAGE.js'
 import maps from './const/LEVEL.js'
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from './const/SCREEN.js'
 import { BATTLE_FIELD, FPS, OBSTACLE_TYPES, TILE_TYPE } from './const/WORLD.js'
-import { sparkManager } from './spark/Spark.js'
+import { rewardManager } from './spark/Reward.js'
 import interactiveManager from './utils/InteractiveManager.js'
 
 let currentMap = null
@@ -70,7 +70,7 @@ export default class BattleField {
     this.homeProtectTime = 5
     this.homeProtectFrames = 0
 
-    sparkManager.provide('protectHome', this.protectHome.bind(this))
+    rewardManager.provide('protectHome', this.protectHome.bind(this))
   }
 
   get homeProtectFramesLimit() {

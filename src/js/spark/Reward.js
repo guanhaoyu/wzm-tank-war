@@ -16,7 +16,7 @@ function stopEnemy() {
 }
 
 function makeGrid() {
-  sparkManager.consume('protectHome')
+  rewardManager.consume('protectHome')
 }
 
 function destroyAllEnemy() {
@@ -64,12 +64,52 @@ export default class Reward extends Spark {
   }
 }
 
-export function createReward(context) {
-  const reward = new Reward(context, Math.floor(Math.random() * rewards.length))
-  reward.create(
-    Math.floor(Math.random() * (BATTLE_FIELD.WIDTH - BRICK_SIZE)) + BATTLE_FIELD.OFFSET_X,
-    // 确保奖励出现在home上方
-    Math.floor(Math.random() * (BATTLE_FIELD.HEIGHT - BRICK_SIZE * 3)) + BATTLE_FIELD.OFFSET_Y
-  )
-  return reward
+class RewardManager {
+  constructor() {
+    this.addRewardInterval = 15 // 15s可能产生一个奖励
+    this.addRewardFrames = 0 // 用于添加奖励的计时
+    this.addRewardProbability = 0.4 // 一次产生奖励的概率
+    this.rewardApproaches = new Map()
+  }
+
+  get addRewardFramesLimit() {
+    return this.addRewardInterval * FPS
+  }
+
+  get existReward() {
+    return sparkManager.getReward()
+  }
+
+  addReward(context) {
+    this.addRewardFrames++
+    if (
+      this.addRewardFrames % this.addRewardFramesLimit === 0 &&
+      Math.random() < this.addRewardProbability &&
+      !this.existReward
+    ) {
+      this.createReward(context)
+      this.addRewardFrames = 0
+    }
+  }
+
+  createReward(context) {
+    const reward = new Reward(context, Math.floor(Math.random() * rewards.length))
+    reward.create(
+      Math.floor(Math.random() * (BATTLE_FIELD.WIDTH - BRICK_SIZE)) + BATTLE_FIELD.OFFSET_X,
+      // 确保奖励出现在home上方
+      Math.floor(Math.random() * (BATTLE_FIELD.HEIGHT - BRICK_SIZE * 3)) + BATTLE_FIELD.OFFSET_Y
+    )
+    return reward
+  }
+
+  provide(fnName, callback) {
+    this.rewardApproaches.set(fnName, callback)
+  }
+
+  consume(fnName) {
+    const callback = this.rewardApproaches.get(fnName)
+    return callback?.()
+  }
 }
+
+export const rewardManager = new RewardManager()

@@ -52,7 +52,6 @@ export default class Spark {
 class SparkManager {
   constructor() {
     this.arr = []
-    this.callbacks = new Map()
   }
   
   getReward() {
@@ -86,17 +85,6 @@ class SparkManager {
     this.arr.forEach(el => {
       el.draw()
     })
-  }
-
-  provide(name, callback) {
-    this.callbacks.set(name, callback)
-  }
-
-  consume(name) {
-    const callback = this.callbacks.get(name)
-    if (callback) {
-      callback()
-    }
   }
 }
 

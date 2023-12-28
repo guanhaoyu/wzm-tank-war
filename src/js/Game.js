@@ -16,7 +16,7 @@ import { Enemy1, Enemy2, Enemy3 } from './tank/EnemyTank.js'
 import { isCollision } from './utils/collision.js'
 import interactiveManager from './utils/InteractiveManager.js'
 import { sparkManager } from './spark/Spark.js'
-import { createReward } from './spark/Reward.js'
+import { rewardManager } from './spark/Reward.js'
 
 const gameStateToKeyboardEventMap = {
   [GAME_STATE_MENU](code) {
@@ -78,10 +78,6 @@ export default class Game {
     this.addEnemyInterval = 2 // 2s产生一个敌坦克
     this.addEnemyFrames = 0 // 用于添加敌方坦克的计时
 
-    this.addRewardInterval = 15 // 15s可能产生一个奖励
-    this.addRewardFrames = 0 // 用于添加奖励的计时
-    this.addRewardProbability = 0.4 // 一次产生奖励的概率
-
     this.enemyTankStack = []
     this.codes = new Set()
     this.prepare()
@@ -91,10 +87,6 @@ export default class Game {
 
   get addEnemyFramesLimit() {
     return this.addEnemyInterval * FPS
-  }
-
-  get addRewardFramesLimit() {
-    return this.addRewardInterval * FPS
   }
 
   get enemyArr() {
@@ -181,7 +173,7 @@ export default class Game {
           } else {
             this.battleField.draw()
             this.addEnemyTank()
-            this.addReward()
+            rewardManager.addReward(this.tankCtx)
             this.drawAll()
           }
           break
@@ -202,18 +194,6 @@ export default class Game {
       EnemyClass = Enemy3
     }
     return EnemyClass
-  }
-
-  addReward() {
-    this.addRewardFrames++
-    if (
-      this.addRewardFrames % this.addRewardFramesLimit === 0 &&
-      Math.random() < this.addRewardProbability &&
-      !sparkManager.getReward()
-    ) {
-      createReward(this.tankCtx)
-      this.addRewardFrames = 0
-    }
   }
 
   addEnemyTank() {
