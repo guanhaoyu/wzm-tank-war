@@ -27,15 +27,7 @@ const DIRECTION = {
   RIGHT: 3,
 }
 
-// 调试代码
 const ENEMY_LOCATION = [192, 0, 384] //相对于主游戏区
-
-/********************子弹类型********************/
-const BULLET_TYPE_PLAYER = 1
-const BULLET_TYPE_ENEMY = 2
-/********************爆炸类型********************/
-const CRACK_TYPE_TANK = 'tank'
-const CRACK_TYPE_BULLET = 'bullet'
 
 /********************战场几何信息********************/
 const BATTLE_FIELD = {

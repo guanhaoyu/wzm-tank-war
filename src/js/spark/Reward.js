@@ -1,6 +1,7 @@
 import { protectHome } from '../BattleField'
 import { POS } from '../const/IMAGE'
-import { FPS } from '../const/WORLD'
+import { BRICK_SIZE } from '../const/SCREEN'
+import { BATTLE_FIELD, FPS } from '../const/WORLD'
 import interactiveManager from '../utils/InteractiveManager'
 import { checkCollision } from '../utils/collision'
 import Spark, { sparkManager } from './Spark'
@@ -62,4 +63,14 @@ export default class Reward extends Spark {
       }
     }
   }
+}
+
+export function createReward(context) {
+  const reward = new Reward(context, Math.floor(Math.random() * rewards.length))
+  reward.create(
+    Math.floor(Math.random() * (BATTLE_FIELD.WIDTH - BRICK_SIZE)) + BATTLE_FIELD.OFFSET_X,
+    // 确保奖励出现在home上方
+    Math.floor(Math.random() * (BATTLE_FIELD.HEIGHT - BRICK_SIZE * 3)) + BATTLE_FIELD.OFFSET_Y
+  )
+  return reward
 }

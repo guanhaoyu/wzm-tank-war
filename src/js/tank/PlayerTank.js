@@ -9,27 +9,27 @@ export default class PlayerTank extends Tank {
   constructor(context) {
     super(context, 'player')
     this.lives = 3
-    this.speed = 2
     this.protectedTime = 20
     this.protectedFrames = 0
     this.posX = POS[this.type][0]
     this.posY = POS[this.type][1]
     this.camp = CAMP.PLAYER
     this.invincible = new Invincible(context)
-    this.coolDownTime = 1
-    this.rebirth()
+    this.birth()
   }
 
   get protectedFramesLimit() {
     return this.protectedTime * FPS
   }
 
-  rebirth() {
+  birth() {
     this.isProtected = true
     this.shootable = true
     this.x = 129 + BATTLE_FIELD.OFFSET_X
     this.y = 389 + BATTLE_FIELD.OFFSET_Y
     this.direction = DIRECTION.UP
+    this.speed = 2
+    this.coolDownTime = 1
   }
 
   create() {
@@ -37,7 +37,6 @@ export default class PlayerTank extends Tank {
     this.invincible.create()
   }
 
-  // 绘制
   draw(codes) {
     this.drawImage()
     this.protect()
@@ -89,7 +88,7 @@ export default class PlayerTank extends Tank {
         this.destroy()
       } else {
         createExplosion(this.ctx, 'tankBomb', this.x, this.y, this.width, this.height)
-        this.rebirth()
+        this.birth()
       }
     }
   }

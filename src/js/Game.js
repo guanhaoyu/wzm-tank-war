@@ -16,7 +16,7 @@ import { Enemy1, Enemy2, Enemy3 } from './tank/EnemyTank.js'
 import { isCollision } from './utils/collision.js'
 import interactiveManager from './utils/InteractiveManager.js'
 import { sparkManager } from './spark/Spark.js'
-import Reward from './spark/Reward.js'
+import { createReward } from './spark/Reward.js'
 
 const gameStateToKeyboardEventMap = {
   [GAME_STATE_MENU](code) {
@@ -208,10 +208,10 @@ export default class Game {
     this.addRewardFrames++
     if (
       this.addRewardFrames % this.addRewardFramesLimit === 0 &&
-      Math.random() < this.addRewardProbability
+      Math.random() < this.addRewardProbability &&
+      !sparkManager.getReward()
     ) {
-      const index = Math.floor(Math.random() * 6)
-      new Reward(this.tankCtx, index).create(32, 290)
+      createReward(this.tankCtx)
       this.addRewardFrames = 0
     }
   }
