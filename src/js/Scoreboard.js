@@ -15,32 +15,16 @@ export default class Scoreboard {
   init(level, enemyCount) {
     this.ctx.fillStyle = '#7f7f7f'
     this.ctx.fillRect(startX, 0, SCREEN_WIDTH - startX, SCREEN_HEIGHT)
-    this.ctx.drawImage(RESOURCE_IMAGE, this.posX, this.posY, 30, 32, 464, 256, 30, 32) //player1
+    // player1 生命值左边的坦克图标
+    this.ctx.drawImage(RESOURCE_IMAGE, this.posX, this.posY, 30, 32, 464, 256, 30, 32)
+    // player2 生命值左边的坦克图标
+    this.ctx.drawImage(RESOURCE_IMAGE, 30 + this.posX, this.posY, 30, 32, 464, 304, 30, 32)
 
-    this.ctx.drawImage(
-      RESOURCE_IMAGE,
-      30 + this.posX,
-      this.posY,
-      30,
-      32,
-      464,
-      304,
-      30,
-      32
-    ) //player2
-
-    //30,32旗帜的size, 464, 352旗帜在canvas中位置
-    this.ctx.drawImage(
-      RESOURCE_IMAGE,
-      60 + this.posX,
-      this.posY,
-      30,
-      32,
-      464,
-      352,
-      32,
-      30
-    ) //画旗帜
+    /**
+     * 画旗帜
+     * 30,32旗帜的size, 464, 352旗帜在canvas中位置
+     */
+    this.ctx.drawImage(RESOURCE_IMAGE, 60 + this.posX, this.posY, 30, 32, 464, 352, 32, 30)
 
     this.drawLevel(level)
     this.drawLives(0, 1)
@@ -54,7 +38,7 @@ export default class Scoreboard {
 
   /**
    * 画坦克的生命数
-   * @param {number} lives 生命数
+   * @param {Integer} lives 生命数
    * @param {1 | 2} which 1、代表玩家1  2、代表玩家2
    */
   drawLives(lives, which) {

@@ -175,6 +175,7 @@ export default class Game {
             this.addEnemyTank()
             rewardManager.addReward(this.tankCtx)
             this.drawAll()
+            this.scoreboard.drawLives(this.player1.lives, 1)
           }
           break
       }
