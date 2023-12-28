@@ -2,6 +2,7 @@ import { POS, RESOURCE_IMAGE } from './const/IMAGE.js'
 import maps from './const/LEVEL.js'
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from './const/SCREEN.js'
 import { BATTLE_FIELD, FPS, OBSTACLE_TYPES, TILE_TYPE } from './const/WORLD.js'
+import { sparkManager } from './spark/Spark.js'
 import interactiveManager from './utils/InteractiveManager.js'
 
 let currentMap = null
@@ -17,50 +18,34 @@ const homeBoundary = [
   [25, 14],
 ]
 
+/**
+ * 更新当前关卡的地图数组，该功能是独立的，和BattleField没有关系
+ * @param {[Integer, Integer]} arr
+ * @param {Integer} value
+ */
 export function updateCurrentMap([i, j], value = 0) {
   currentMap[i][j] = value
+  const id = `tile-${i}-${j}`
+  const target = interactiveManager.getAll().find(el => el.id === id)
+  /**
+   * 如果已经存于interactiveManager中且tileType发生了变化，则将旧的删除
+   * 新的会在BattleField的draw中添加
+   */
+  if (target && target.tileType !== value) {
+    interactiveManager.delete(id)
+  }
 }
 
-let homeIsProtected = false
-let homeProtectTime = 25
-let homeProtectFrames = 0
-
-function getHomeProtectFramesLimit() {
-  return homeProtectTime * FPS
+/**
+ * 改变地砖的类型
+ * @param {[Integer, Integer]} tiles 
+ * @param {Integer} tileType 
+ */
+function changeTypeOfTiles(tiles, tileType) {
+  tiles.forEach(tile => updateCurrentMap(tile, tileType))
 }
 
-export function protectHome(time = 25) {
-  homeProtectTime = time
-  homeProtectFrames = 0
-  homeIsProtected = true
-  homeBoundary.forEach(el => {
-    const target = interactiveManager.getAll().find(obstacle => {
-      const [tile, i, j] = obstacle.id.split('-')
-      return tile == TILE_TYPE.WALL && el[0] == i && el[1] == j
-    })
-    if (target?.id) {
-      interactiveManager.delete(target.id)
-    }
-    updateCurrentMap(el, TILE_TYPE.GRID)
-  })
-}
-
-function cancelProtectHome() {
-  homeIsProtected = false
-  homeProtectFrames = 0
-  homeBoundary.forEach(el => {
-    const target = interactiveManager.getAll().find(obstacle => {
-      const [tile, i, j] = obstacle.id.split('-')
-      return tile == TILE_TYPE.GRID && el[0] == i && el[1] == j
-    })
-    if (target?.id) {
-      interactiveManager.delete(target.id)
-    }
-    updateCurrentMap(el, TILE_TYPE.WALL)
-  })
-}
-
-const { WALL, GRASS, ICE, GRID, WATER, HOME, ANOTHREHOME } = TILE_TYPE
+const { WALL, GRASS, ICE, GRID, WATER, HOME, ANOTHERHOME } = TILE_TYPE
 export default class BattleField {
   wTileCount = 26 //主游戏区的宽度地图块数
   hTileCount = 26 //主游戏区的高度地图块数
@@ -80,6 +65,29 @@ export default class BattleField {
   constructor(wallCtx, grassCtx) {
     this.wallCtx = wallCtx
     this.grassCtx = grassCtx
+
+    this.isHomeProtected = false
+    this.homeProtectTime = 5
+    this.homeProtectFrames = 0
+
+    sparkManager.provide('protectHome', this.protectHome.bind(this))
+  }
+
+  get homeProtectFramesLimit() {
+    return this.homeProtectTime * FPS
+  }
+
+  protectHome(time) {
+    this.homeProtectTime = time || this.homeProtectTime
+    this.homeProtectFrames = 0
+    this.isHomeProtected = true
+    changeTypeOfTiles(homeBoundary, TILE_TYPE.GRID)
+  }
+
+  cancelProtectHome() {
+    this.isHomeProtected = false
+    this.homeProtectFrames = 0
+    changeTypeOfTiles(homeBoundary, TILE_TYPE.WALL)
   }
 
   setLevel(level = 1) {
@@ -88,10 +96,10 @@ export default class BattleField {
   }
 
   draw() {
-    if (homeIsProtected) {
-      homeProtectFrames++
-      if (homeProtectFrames > getHomeProtectFramesLimit()) {
-        cancelProtectHome()
+    if (this.isHomeProtected) {
+      this.homeProtectFrames++
+      if (this.homeProtectFrames > this.homeProtectFramesLimit) {
+        this.cancelProtectHome()
       }
     }
     this.wallCtx.fillStyle = '#7f7f7f'
@@ -103,12 +111,12 @@ export default class BattleField {
 
     for (let i = 0; i < this.hTileCount; i++) {
       for (let j = 0; j < this.wTileCount; j++) {
-        const current = currentMap[i][j]
-        const id = `${current}-${i}-${j}`
-        if (current === WALL || current === GRID || current === WATER || current === ICE) {
+        const tileType = currentMap[i][j]
+        const id = `tile-${i}-${j}`
+        if (tileType === WALL || tileType === GRID || tileType === WATER || tileType === ICE) {
           this.wallCtx.drawImage(
             RESOURCE_IMAGE,
-            this.tileSize * (current - 1) + this.mapPos[0],
+            this.tileSize * (tileType - 1) + this.mapPos[0],
             this.mapPos[1],
             this.tileSize,
             this.tileSize,
@@ -117,10 +125,10 @@ export default class BattleField {
             this.tileSize,
             this.tileSize
           )
-        } else if (current === GRASS) {
+        } else if (tileType === GRASS) {
           this.grassCtx.drawImage(
             RESOURCE_IMAGE,
-            this.tileSize * (current - 1) + this.mapPos[0],
+            this.tileSize * (tileType - 1) + this.mapPos[0],
             this.mapPos[1],
             this.tileSize,
             this.tileSize,
@@ -129,7 +137,7 @@ export default class BattleField {
             this.tileSize,
             this.tileSize
           )
-        } else if (current === HOME) {
+        } else if (tileType === HOME) {
           this.wallCtx.drawImage(
             RESOURCE_IMAGE,
             this.homePosX,
@@ -142,9 +150,10 @@ export default class BattleField {
             this.homeSize
           )
         }
-        if (OBSTACLE_TYPES.includes(current)) {
+        if (OBSTACLE_TYPES.includes(tileType)) {
           interactiveManager.add({
             id,
+            tileType,
             x: j * this.tileSize + this.offsetX,
             y: i * this.tileSize + this.offsetY,
             width: this.tileSize,

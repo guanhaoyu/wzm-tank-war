@@ -105,6 +105,7 @@ export default class Bullet extends Spirits {
   }
 
   onCollision(obstacle) {
+    // 子弹撞到障碍物，吸附到障碍物上再爆炸
     // if (this.direction === UP) {
     //   this.y = obstacle.y + obstacle.height
     // } else if (this.direction === DOWN) {
@@ -118,16 +119,15 @@ export default class Bullet extends Spirits {
     if (typeof obstacle.isShooted === 'function') {
       obstacle.isShooted(this.id)
     } else {
-      this.damage(obstacle.id)
+      this.damage(obstacle)
     }
   }
 
-  damage(id) {
-    if (id) {
-      const [tile, i, j] = id.split('-')
-      if (parseInt(tile) === TILE_TYPE.WALL) {
+  damage(tile) {
+    if (tile?.id) {
+      const [_, i, j] = tile.id.split('-')
+      if (tile.tileType === TILE_TYPE.WALL) {
         updateCurrentMap([i, j])
-        interactiveManager.delete(id)
       }
     }
   }

@@ -5,9 +5,9 @@ const GRASS = 3
 const WATER = 4
 const ICE = 5
 const HOME = 9
-const ANOTHREHOME = 8
+const ANOTHERHOME = 8
 
-const OBSTACLE_TYPES = [WALL, GRID, WATER, HOME, ANOTHREHOME]
+const OBSTACLE_TYPES = [WALL, GRID, WATER, HOME, ANOTHERHOME]
 
 const TILE_TYPE = {
   WALL,
@@ -16,7 +16,7 @@ const TILE_TYPE = {
   WATER,
   ICE,
   HOME,
-  ANOTHREHOME,
+  ANOTHERHOME,
 }
 
 /********************运动的四个方向********************/

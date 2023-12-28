@@ -1,4 +1,3 @@
-import { protectHome } from '../BattleField'
 import { POS } from '../const/IMAGE'
 import { BRICK_SIZE } from '../const/SCREEN'
 import { BATTLE_FIELD, FPS } from '../const/WORLD'
@@ -17,7 +16,7 @@ function stopEnemy() {
 }
 
 function makeGrid() {
-  protectHome()
+  sparkManager.consume('protectHome')
 }
 
 function destroyAllEnemy() {
