@@ -177,6 +177,7 @@ export default class Game {
   }
 
   drawAll(isAdded) {
+    // 调用顺序不能变，因为涉及清空画布的操作
     this.battleField.draw()
     if (isAdded) {
       this.scoreboard.drawEnemyCount(this.restEnemy, this.appearedEnemy)
@@ -201,9 +202,14 @@ export default class Game {
   }
 
   runAfterStart() {
-    const isAdded = this.addEnemyTank()
-    rewardManager.addReward(this.grassCtx)
-    this.drawAll(isAdded)
+    const enemyArrLen = this.enemyArr.length
+    if (this.restEnemy === 0 && enemyArrLen === 0) {
+      this.nextLevel()
+    } else {
+      const isAdded = this.addEnemyTank()
+      rewardManager.addReward(this.grassCtx)
+      this.drawAll(isAdded)
+    }
   }
 
   run() {

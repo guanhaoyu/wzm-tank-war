@@ -8,8 +8,8 @@ import Tank from './Tank.js'
 const type = 'player'
 export default class PlayerTank extends Tank {
   constructor(context) {
-    super(context, 'tank')
-    this.lives = 3
+    super(context, type)
+    this.lives = 30
     this.protectedTime = 20
     this.posX = POS[type][0]
     this.posY = POS[type][1]

@@ -28,11 +28,13 @@ class EnemyTank extends Tank {
     super.create()
     this.x = x
     this.y = y
-    // BATTLE_FIELD.OFFSET_Y是16，BATTLE_FIELD.OFFSET_X是32，值不一样，所以计算方式也不一样
-    this.blink.create(
-      Math.round(this.x / BRICK_SIZE) * BRICK_SIZE,
-      Math.round(this.y / BRICK_SIZE) * BRICK_SIZE - BATTLE_FIELD.OFFSET_Y
-    )
+    if (!this.isAppear) {
+      // BATTLE_FIELD.OFFSET_Y是16，BATTLE_FIELD.OFFSET_X是32，值不一样，所以计算方式也不一样
+      this.blink.create(
+        Math.round(this.x / BRICK_SIZE) * BRICK_SIZE,
+        Math.round(this.y / BRICK_SIZE) * BRICK_SIZE - BATTLE_FIELD.OFFSET_Y
+      )
+    }
   }
 
   shoot() {

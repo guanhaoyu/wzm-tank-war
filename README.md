@@ -17,9 +17,9 @@ TODO:
 
 - 游戏失败
 
-- 自动进入下一关
+- 自动进入下一关✅
 
-- 有些reward画出来一开始会闪烁一下不知道为什么
+- 有些reward画出来一开始会闪烁一下不知道为什么，有点像掉帧，因为如果把敌坦克isStop设为true的话，reward就不会闪烁
 
 - p1复活时可以二连发问题。✅原因：birth时coolDownFrames没有重置为0，导致birth时shootable为true，打出第一下，下一帧coolDownFrames等于limit，shootable又为true，又能开一炮
 
