@@ -42,11 +42,13 @@ export default class PlayerTank extends Tank {
   }
 
   draw(codes) {
-    this.drawImage()
-    this.protect()
-    this.move(codes)
-    this.shoot(codes)
-    this.coolDown()
+    if (!this.isDestroyed) {
+      this.drawImage()
+      this.protect()
+      this.move(codes)
+      this.shoot(codes)
+      this.coolDown()
+    }
   }
 
   move(codes = []) {
@@ -68,7 +70,7 @@ export default class PlayerTank extends Tank {
   }
 
   protect() {
-    this.invincible.isOver = !this.isProtected
+    this.invincible.isAppear = this.isProtected
     if (this.isProtected) {
       this.invincible.setLocation(this.x, this.y, this.width, this.height)
       this.protectedFrames++

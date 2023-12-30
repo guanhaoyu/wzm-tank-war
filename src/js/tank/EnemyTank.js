@@ -44,17 +44,19 @@ class EnemyTank extends Tank {
   }
 
   draw() {
-    if (this.isAppear) {
-      this.drawImage()
-      if (!this.isStop) {
-        this.move()
-        this.shoot()
+    if (!this.isDestroyed) {
+      if (this.isAppear) {
+        this.drawImage()
+        if (!this.isStop) {
+          this.move()
+          this.shoot()
+        }
+        this.coolDown()
+      } else {
+        this.isAppear = !this.blink.isAppear
       }
-      this.coolDown()
-    } else {
-      this.isAppear = this.blink.isOver
+      this.frames++
     }
-    this.frames++
   }
 
   onAccess() {

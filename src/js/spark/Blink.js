@@ -1,5 +1,5 @@
 import { FPS, SPARK_TYPE } from '../const/WORLD.js'
-import Spark, { sparkManager } from './Spark.js'
+import Spark from './Spark.js'
 
 const type = 'enemyBefore'
 export default class Blink extends Spark {
@@ -7,14 +7,15 @@ export default class Blink extends Spark {
     super(context, type)
     this.durationFrames = duration * FPS
     this.slowTimes = 5
-    this.isOver = false
   }
 
   draw() {
-    super.draw()
-    if (this.frames >= this.durationFrames && (this.tick === 0 || this.tick === this.ticks - 1)) {
-      this.isOver = true
-      sparkManager.delete(this.id)
+    if (this.isAppear) {
+      super.draw()
+      this.isAppear = !(
+        this.frames >= this.durationFrames &&
+        (this.tick === 0 || this.tick === this.ticks - 1)
+      )
     }
   }
 }

@@ -4,7 +4,6 @@ import Spark from "./Spark";
 export default class Invincible extends Spark {
   constructor(context) {
     super(context, 'protected')
-    this.isOver = false
     this.slowTimes = 9
   }
 
@@ -28,7 +27,7 @@ export default class Invincible extends Spark {
   }
 
   draw() {
-    if (!this.isOver) {
+    if (this.isAppear) {
       super.draw()
     }
   }

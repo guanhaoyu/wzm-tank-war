@@ -1,6 +1,6 @@
-import { FPS, SPARK_TYPE } from "../const/WORLD.js"
-import { calculateCenter } from "../utils/geometry.js"
-import Spark, { sparkManager } from "./Spark.js"
+import { FPS, SPARK_TYPE } from '../const/WORLD.js'
+import { calculateCenter } from '../utils/geometry.js'
+import Spark from './Spark.js'
 
 export default class Explosion extends Spark {
   constructor(context, type, duration) {
@@ -9,9 +9,9 @@ export default class Explosion extends Spark {
   }
 
   draw() {
-    super.draw()
-    if (this.frames >= this.durationFrames && this.tick === 0) {
-      sparkManager.delete(this.id)
+    if (this.isAppear) {
+      super.draw()
+      this.isAppear = !(this.frames >= this.durationFrames && this.tick === 0)
     }
   }
 }

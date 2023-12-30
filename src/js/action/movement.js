@@ -1,10 +1,6 @@
 import { DIRECTION } from '../const/WORLD.js'
-import interactiveManager from '../utils/InteractiveManager.js'
-import { isCollision } from '../utils/collision.js'
 
 const { UP, DOWN, RIGHT, LEFT } = DIRECTION
-
-const PLANCK = 0.5
 
 /**
  * 位移一次
@@ -31,26 +27,4 @@ export function step(direction, speed, [x, y]) {
       break
   }
   return [nextX, nextY]
-}
-
-export function move(onAccess, onCollision, afterMove) {
-  let voyage = 0
-  for (let i = 0; i < this.speed; i = i + PLANCK) {
-    const [x, y] = step(this.direction, PLANCK, [this.x, this.y])
-    const isCollisionResult = isCollision(
-      { x, y, width: this.width, height: this.height, id: this.id },
-      interactiveManager.getAll()
-    )
-    if (!isCollisionResult) {
-      this.x = x
-      this.y = y
-      voyage += PLANCK
-    } else {
-      onCollision?.()
-    }
-  }
-  if (voyage === this.speed) {
-    onAccess?.()
-  }
-  afterMove?.()
 }

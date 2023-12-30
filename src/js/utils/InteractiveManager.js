@@ -31,14 +31,19 @@ class InteractiveManager {
   }
 
   getAll() {
-    return this.arr
+    return this.arr.filter(el => !el.isDestroyed && el.tileType !== 0)
+  }
+
+  getAllWithoutBullet() {
+    return this.getAll().filter(el => el.type !== 'bullet')
   }
 
   getTanks(...args) {
+    const all = this.getAll()
     if (args.length === 0) {
-      return this.arr.filter(isTank)
+      return all.filter(isTank)
     }
-    return this.arr.filter(el =>
+    return all.filter(el =>
       args.reduce((prev, cur) => prev || el.type?.includes(cur), false)
     )
   }
@@ -51,19 +56,12 @@ class InteractiveManager {
     })
   }
 
-  delete(...ids) {
-    ids.forEach(id => {
-      const index = this.arr.findIndex(el => el.id === id)
-      if (index > -1) {
-        this.arr.splice(index, 1)
-      } else {
-        throw new Error('删除的元素不存在')
-      }
-    })
-  }
-
   clear() {
     this.arr = []
+  }
+
+  find(id) {
+    return this.arr.find(el => el.id === id)
   }
 
   handleEnemyStop() {

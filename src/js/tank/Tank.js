@@ -49,7 +49,6 @@ export default class Tank extends Spirit {
   destroy() {
     if (!this.isDestroyed) {
       this.isDestroyed = true
-      interactiveManager.delete(this.id)
       createExplosion(this.ctx, 'tankBomb', this.x, this.y, this.width, this.height)
     }
   }
@@ -93,7 +92,7 @@ export default class Tank extends Spirit {
       const [x, y] = step(this.direction, PLANCK_DISTANCE, [this.x, this.y])
       const isCollisionResult = isCollision(
         { ...this, x, y, width: this.width, height: this.height },
-        interactiveManager.getAll().filter(el => el.type !== 'bullet')
+        interactiveManager.getAllWithoutBullet()
       )
       if (isCollisionResult) {
         this.onCollision()
@@ -115,7 +114,7 @@ export default class Tank extends Spirit {
     const isCollisionResult = isCollision(
       // width和height得重新设置一下，因为声明了一个新对象，其上没有读取器
       { ...this, x, y, width: this.width, height: this.height },
-      interactiveManager.getAll().filter(el => el.type !== 'bullet')
+      interactiveManager.getAllWithoutBullet()
     )
     if (isCollisionResult) {
       this.onCollision()

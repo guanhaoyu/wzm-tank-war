@@ -26,13 +26,13 @@ const homeBoundary = [
 export function updateCurrentMap([i, j], value = 0) {
   currentMap[i][j] = value
   const id = `tile-${i}-${j}`
-  const target = interactiveManager.getAll().find(el => el.id === id)
+  const target = interactiveManager.find(id)
   /**
    * 如果已经存于interactiveManager中且tileType发生了变化，则将旧的删除
    * 新的会在BattleField的draw中添加
    */
-  if (target && target.tileType !== value) {
-    interactiveManager.delete(id)
+  if (target) {
+    target.tileType = value
   }
 }
 

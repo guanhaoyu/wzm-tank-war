@@ -79,8 +79,10 @@ export default class Bullet extends Spirits {
   }
 
   draw() {
-    this.drawImage()
-    this.move()
+    if (!this.isDestroyed) {
+      this.drawImage()
+      this.move()
+    }
   }
 
   move() {
@@ -134,7 +136,6 @@ export default class Bullet extends Spirits {
 
   destroy() {
     if (!this.isDestroyed) {
-      interactiveManager.delete(this.id)
       createExplosion(this.ctx, 'bulletBomb', this.x, this.y, this.width, this.height)
       this.isDestroyed = true
     }

@@ -22,6 +22,7 @@ export default class Spark {
   create(x, y) {
     this.x = x
     this.y = y
+    this.isAppear = true
     sparkManager.add(this)
   }
 
@@ -62,17 +63,6 @@ class SparkManager {
     args.forEach(arg => {
       if (!this.arr.find(el => el.id === arg.id)) {
         this.arr.push(arg)
-      }
-    })
-  }
-
-  delete(...ids) {
-    ids.forEach(id => {
-      const index = this.arr.findIndex(el => el.id === id)
-      if (index > -1) {
-        this.arr.splice(index, 1)
-      } else {
-        throw new Error('删除的元素不存在')
       }
     })
   }

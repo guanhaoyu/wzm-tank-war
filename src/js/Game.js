@@ -190,7 +190,9 @@ export default class Game {
 
   runBetweenInitAndStart() {
     this.gameState = GAME_STATE_START
+    this.addEnemyFrames = -1
     this.prepareEnemyTanks()
+    rewardManager.addRewardFrames = 0
     interactiveManager.clear()
     sparkManager.clear()
     this.player1?.create()
@@ -272,7 +274,7 @@ export default class Game {
             width: BRICK_SIZE,
             height: BRICK_SIZE,
           },
-          interactiveManager.getAll().filter(el => el.type !== 'bullet')
+          interactiveManager.getAllWithoutBullet()
         )
         if (isCollisionResult) {
           willNotAppearEnemy++

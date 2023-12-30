@@ -48,17 +48,19 @@ export default class Reward extends Spark {
   }
 
   draw() {
-    super.draw()
-    if (this.frames > this.durationFrames) {
-      sparkManager.delete(this.id)
-    } else {
-      const collisionResult = checkCollision(
-        { x: this.x, y: this.y, width: this.size, height: this.size, id: this.id },
-        interactiveManager.getTanks().filter(el => el.type?.includes('player'))
-      )
-      if (collisionResult) {
-        rewards[this.index](collisionResult)
-        sparkManager.delete(this.id)
+    if (this.isAppear) {
+      super.draw()
+      if (this.frames > this.durationFrames) {
+        this.isAppear = false
+      } else {
+        const collisionResult = checkCollision(
+          { x: this.x, y: this.y, width: this.size, height: this.size, id: this.id },
+          interactiveManager.getTanks().filter(el => el.type?.includes('player'))
+        )
+        if (collisionResult) {
+          rewards[this.index](collisionResult)
+          this.isAppear = false
+        }
       }
     }
   }
