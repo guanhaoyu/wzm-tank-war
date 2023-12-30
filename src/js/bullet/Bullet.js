@@ -93,7 +93,7 @@ export default class Bullet extends Spirits {
          * 1. 避免友军伤害
          * 2. 坦克刚开炮，下一帧先画的是坦克，由于坦克看不到子弹，就会前进，等到子弹碰撞检测时就会认为撞到了坦克
          */
-        interactiveManager.getAll().filter(el => el.camp !== this.camp)
+        interactiveManager.getAll().filter(el => el.camp !== this.camp && el.tileType !== TILE_TYPE.WATER),
       )
       if (collisionResult) {
         this.onCollision(collisionResult)

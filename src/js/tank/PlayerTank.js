@@ -5,13 +5,14 @@ import { createExplosion } from '../spark/Explosion.js'
 import Invincible from '../spark/Invincible.js'
 import Tank from './Tank.js'
 
+const type = 'player'
 export default class PlayerTank extends Tank {
   constructor(context) {
-    super(context, 'player')
+    super(context, 'tank')
     this.lives = 3
     this.protectedTime = 20
-    this.posX = POS[this.type][0]
-    this.posY = POS[this.type][1]
+    this.posX = POS[type][0]
+    this.posY = POS[type][1]
     this.camp = CAMP.PLAYER
     this.invincible = new Invincible(context)
   }

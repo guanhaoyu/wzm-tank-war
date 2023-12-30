@@ -114,11 +114,11 @@ export default class Game {
     })
     const stageCtx = stageCanvas.getContext('2d')
     const wallCtx = wallCanvas.getContext('2d')
-    const grassCtx = grassCanvas.getContext('2d')
+    this.grassCtx = grassCanvas.getContext('2d')
     const overCtx = overCanvas.getContext('2d')
     this.tankCtx = tankCanvas.getContext('2d')
     this.menu = new Menu(stageCtx)
-    this.battleField = new BattleField(wallCtx, grassCtx)
+    this.battleField = new BattleField(wallCtx, this.grassCtx)
     this.scoreboard = new Scoreboard(wallCtx)
     this.player1 = new PlayerTank(this.tankCtx)
   }
@@ -202,7 +202,7 @@ export default class Game {
 
   runAfterStart() {
     const isAdded = this.addEnemyTank()
-    rewardManager.addReward(this.tankCtx)
+    rewardManager.addReward(this.grassCtx)
     this.drawAll(isAdded)
   }
 
@@ -266,7 +266,7 @@ export default class Game {
             width: BRICK_SIZE,
             height: BRICK_SIZE,
           },
-          interactiveManager.getTanks()
+          interactiveManager.getAll().filter(el => el.type !== 'bullet')
         )
         if (isCollisionResult) {
           willNotAppearEnemy++

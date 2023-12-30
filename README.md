@@ -11,7 +11,15 @@ TODO:
 
 - 偶现一次p1凭空出现护盾问题
 
-- 雪地
+- 雪地可加效果
+
+- 水完善被子弹穿过的特性✅
+
+- 游戏失败
+
+- 自动进入下一关
+
+- 有些reward画出来一开始会闪烁一下不知道为什么
 
 - p1复活时可以二连发问题。✅原因：birth时coolDownFrames没有重置为0，导致birth时shootable为true，打出第一下，下一帧coolDownFrames等于limit，shootable又为true，又能开一炮
 
