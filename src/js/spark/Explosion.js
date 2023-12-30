@@ -8,11 +8,8 @@ export default class Explosion extends Spark {
     this.durationFrames = duration * FPS
   }
 
-  draw() {
-    if (this.isAppear) {
-      super.draw()
-      this.isAppear = !(this.frames >= this.durationFrames && this.tick === 0)
-    }
+  judgeIsAppeared() {
+    this.isAppeared = !(this.frames >= this.durationFrames && this.tick === 0)
   }
 }
 

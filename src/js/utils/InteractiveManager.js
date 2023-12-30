@@ -24,9 +24,9 @@ class InteractiveManager {
     this.enemyStopFrames = 0
   }
 
-  destroyAllEnemy() {
+  destroyAppearedEnemy() {
     this.arr
-      .filter(el => el.isAI && el.isAppear)
+      .filter(el => el.isAI && el.isAppeared)
       .forEach(el => el.destroy())
   }
 
@@ -68,7 +68,7 @@ class InteractiveManager {
     if (this.isEnemyStop) {
       this.arr.filter(el => el.isAI).forEach(el => (el.isStop = true))
       this.enemyStopFrames++
-      if (this.enemyStopFrames > this.enemyStopFramesLimit) {
+      if (this.enemyStopFrames >= this.enemyStopFramesLimit) {
         this.unStopEnemy()
       }
     }

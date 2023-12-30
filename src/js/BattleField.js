@@ -38,8 +38,8 @@ export function updateCurrentMap([i, j], value = 0) {
 
 /**
  * 改变地砖的类型
- * @param {[Integer, Integer]} tiles 
- * @param {Integer} tileType 
+ * @param {[Integer, Integer]} tiles
+ * @param {Integer} tileType
  */
 function changeTypeOfTiles(tiles, tileType) {
   tiles.forEach(tile => updateCurrentMap(tile, tileType))
@@ -98,7 +98,7 @@ export default class BattleField {
   draw() {
     if (this.isHomeProtected) {
       this.homeProtectFrames++
-      if (this.homeProtectFrames > this.homeProtectFramesLimit) {
+      if (this.homeProtectFrames >= this.homeProtectFramesLimit) {
         this.cancelProtectHome()
       }
     }

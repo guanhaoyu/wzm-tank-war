@@ -26,9 +26,5 @@ export default class Invincible extends Spark {
     )
   }
 
-  draw() {
-    if (this.isAppear) {
-      super.draw()
-    }
-  }
+  judgeIsAppeared() {}
 }

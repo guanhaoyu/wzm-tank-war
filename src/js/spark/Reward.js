@@ -20,7 +20,7 @@ function makeGrid() {
 }
 
 function destroyAllEnemy() {
-  interactiveManager.destroyAllEnemy()
+  interactiveManager.destroyAppearedEnemy()
 }
 
 function upgrade(target) {
@@ -47,20 +47,17 @@ export default class Reward extends Spark {
     return 0
   }
 
-  draw() {
-    if (this.isAppear) {
-      super.draw()
-      if (this.frames > this.durationFrames) {
-        this.isAppear = false
-      } else {
-        const collisionResult = checkCollision(
-          { x: this.x, y: this.y, width: this.size, height: this.size, id: this.id },
-          interactiveManager.getTanks().filter(el => el.type?.includes('player'))
-        )
-        if (collisionResult) {
-          rewards[this.index](collisionResult)
-          this.isAppear = false
-        }
+  judgeIsAppeared() {
+    if (this.frames >= this.durationFrames) {
+      this.isAppeared = false
+    } else {
+      const collisionTarget = checkCollision(
+        { x: this.x, y: this.y, width: this.size, height: this.size, id: this.id },
+        interactiveManager.getTanks().filter(el => el.type?.includes('player'))
+      )
+      if (collisionTarget) {
+        rewards[this.index](collisionTarget)
+        this.isAppeared = false
       }
     }
   }

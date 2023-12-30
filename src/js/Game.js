@@ -13,7 +13,7 @@ import BattleField from './BattleField.js'
 import Scoreboard from './Scoreboard.js'
 import PlayerTank from './tank/PlayerTank.js'
 import { Enemy1, Enemy2, Enemy3 } from './tank/EnemyTank.js'
-import { isCollision } from './utils/collision.js'
+import { isCollided } from './utils/collision.js'
 import interactiveManager from './utils/InteractiveManager.js'
 import { sparkManager } from './spark/Spark.js'
 import { rewardManager } from './spark/Reward.js'
@@ -41,7 +41,7 @@ const gameStateToKeyboardEventMap = {
       interactiveManager.stopEnemy(60)
     } else if (code == KEYBOARD.BACKSPACE) {
       // trick 按退格全灭敌人
-      interactiveManager.destroyAllEnemy()
+      interactiveManager.destroyAppearedEnemy()
     } else if (code === KEYBOARD.EQUAL) {
       this.nextLevel()
     } else if (code === KEYBOARD.MINUS) {
@@ -267,7 +267,7 @@ export default class Game {
       for (let i = 0; i < willAppearEnemy; i++) {
         const willAppearEnemyLocationX =
           ENEMY_LOCATION[Math.floor(Math.random() * enemyLocationLen)] + BRICK_SIZE
-        const isCollisionResult = isCollision(
+        const result = isCollided(
           {
             x: willAppearEnemyLocationX,
             y: BATTLE_FIELD.OFFSET_Y,
@@ -276,7 +276,7 @@ export default class Game {
           },
           interactiveManager.getAllWithoutBullet()
         )
-        if (isCollisionResult) {
+        if (result) {
           willNotAppearEnemy++
         } else {
           const enemy = this.enemyStack.pop()

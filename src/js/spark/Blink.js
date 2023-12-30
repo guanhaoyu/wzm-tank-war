@@ -9,13 +9,10 @@ export default class Blink extends Spark {
     this.slowTimes = 5
   }
 
-  draw() {
-    if (this.isAppear) {
-      super.draw()
-      this.isAppear = !(
-        this.frames >= this.durationFrames &&
-        (this.tick === 0 || this.tick === this.ticks - 1)
-      )
-    }
+  judgeIsAppeared() {
+    this.isAppeared = !(
+      this.frames >= this.durationFrames &&
+      (this.tick === 0 || this.tick === this.ticks - 1)
+    )
   }
 }

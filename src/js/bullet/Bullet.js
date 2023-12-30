@@ -88,7 +88,7 @@ export default class Bullet extends Spirits {
   move() {
     for (let i = 0; i < this.speed; i = i + PLANCK_DISTANCE) {
       const [x, y] = step(this.direction, PLANCK_DISTANCE, [this.x, this.y])
-      const collisionResult = checkCollision(
+      const collisionTarget = checkCollision(
         { x, y, width: this.width, height: this.height, id: this.id },
         /**
          * 过滤出不同阵营以解决以下2个问题：
@@ -97,8 +97,8 @@ export default class Bullet extends Spirits {
          */
         interactiveManager.getAll().filter(el => el.camp !== this.camp && el.tileType !== TILE_TYPE.WATER),
       )
-      if (collisionResult) {
-        this.onCollision(collisionResult)
+      if (collisionTarget) {
+        this.collide(collisionTarget)
       } else {
         this.x = x
         this.y = y
@@ -106,7 +106,7 @@ export default class Bullet extends Spirits {
     }
   }
 
-  onCollision(obstacle) {
+  collide(obstacle) {
     // 子弹撞到障碍物，吸附到障碍物上再爆炸
     // if (this.direction === UP) {
     //   this.y = obstacle.y + obstacle.height

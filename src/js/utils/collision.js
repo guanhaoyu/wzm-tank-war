@@ -24,7 +24,7 @@ function isOverlap([a, b], [c, d]) {
  * @param {{id: string, x: number, y: number, width: number, height: number, type?: string}[]} obstacles
  * @returns {boolean}
  */
-export function isCollision(
+export function isCollided(
   target,
   obstacles = [],
   boundary = {

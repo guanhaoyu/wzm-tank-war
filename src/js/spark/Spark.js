@@ -22,7 +22,7 @@ export default class Spark {
   create(x, y) {
     this.x = x
     this.y = y
-    this.isAppear = true
+    this.isAppeared = true
     sparkManager.add(this)
   }
 
@@ -45,8 +45,15 @@ export default class Spark {
   }
 
   draw() {
-    this.drawImage()
-    this.frames++
+    if (this.isAppeared) {
+      this.drawImage()
+      this.frames++
+      this.judgeIsAppeared()
+    }
+  }
+
+  judgeIsAppeared() {
+    this.isAppeared = false
   }
 }
 

@@ -6,7 +6,7 @@ import { FPS, PLANCK_DISTANCE } from '../const/WORLD.js'
 import { createExplosion } from '../spark/Explosion.js'
 import Spirit from '../spirit/Spirit.js'
 import interactiveManager from '../utils/InteractiveManager.js'
-import { isCollision } from '../utils/collision.js'
+import { isCollided } from '../utils/collision.js'
 import { calculateCenter } from '../utils/geometry.js'
 
 export default class Tank extends Spirit {
@@ -79,7 +79,7 @@ export default class Tank extends Spirit {
   coolDown() {
     if (!this.shootable) {
       this.coolDownFrames++
-      if (this.coolDownFrames > this.coolDownFramesLimit) {
+      if (this.coolDownFrames >= this.coolDownFramesLimit) {
         this.shootable = true
         this.coolDownFrames = 0
       }
@@ -90,12 +90,12 @@ export default class Tank extends Spirit {
     let voyage = 0
     for (let i = 0; i < this.speed; i = i + PLANCK_DISTANCE) {
       const [x, y] = step(this.direction, PLANCK_DISTANCE, [this.x, this.y])
-      const isCollisionResult = isCollision(
+      const result = isCollided(
         { ...this, x, y, width: this.width, height: this.height },
         interactiveManager.getAllWithoutBullet()
       )
-      if (isCollisionResult) {
-        this.onCollision()
+      if (result) {
+        this.collide()
         break
       } else {
         this.x = x
@@ -104,29 +104,30 @@ export default class Tank extends Spirit {
       }
     }
     if (voyage === this.speed) {
-      this.onAccess()
+      this.pass()
     }
   }
 
   directMove() {
     // 下一帧的位置
     const [x, y] = step(this.direction, this.speed, [this.x, this.y])
-    const isCollisionResult = isCollision(
+    const result = isCollided(
       // width和height得重新设置一下，因为声明了一个新对象，其上没有读取器
       { ...this, x, y, width: this.width, height: this.height },
       interactiveManager.getAllWithoutBullet()
     )
-    if (isCollisionResult) {
-      this.onCollision()
+    if (result) {
+      this.collide()
     } else {
       this.x = x
       this.y = y
+      this.pass()
     }
   }
 
-  onAccess() {}
+  pass() {}
 
-  onCollision() {}
+  collide() {}
 
   // 射击
   shoot() {

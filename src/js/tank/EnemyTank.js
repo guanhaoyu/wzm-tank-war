@@ -11,9 +11,8 @@ const appearDirections = [DOWN, LEFT, RIGHT]
 class EnemyTank extends Tank {
   constructor(context, type) {
     super(context, type)
-    this.isAppear = false
+    this.isAppeared = false
     this.direction = appearDirections[Math.floor(Math.random() * appearDirections.length)]
-    this.frames = 0
     this.isAI = true
     this.isStop = false
     // 射击的概率
@@ -22,13 +21,19 @@ class EnemyTank extends Tank {
     this.posY = POS[this.type][1]
     this.blink = new Blink(context)
     this.camp = CAMP.ENEMY
+    this.changeDirectionTime = 5
+    this.frames = 0
+  }
+
+  get changeDirectionFrames() {
+    return this.changeDirectionTime * FPS
   }
 
   create(x, y) {
     super.create()
     this.x = x
     this.y = y
-    if (!this.isAppear) {
+    if (!this.isAppeared) {
       // BATTLE_FIELD.OFFSET_Y是16，BATTLE_FIELD.OFFSET_X是32，值不一样，所以计算方式也不一样
       this.blink.create(
         Math.round(this.x / BRICK_SIZE) * BRICK_SIZE,
@@ -45,7 +50,7 @@ class EnemyTank extends Tank {
 
   draw() {
     if (!this.isDestroyed) {
-      if (this.isAppear) {
+      if (this.isAppeared) {
         this.drawImage()
         if (!this.isStop) {
           this.move()
@@ -53,19 +58,19 @@ class EnemyTank extends Tank {
         }
         this.coolDown()
       } else {
-        this.isAppear = !this.blink.isAppear
+        this.isAppeared = !this.blink.isAppeared
       }
       this.frames++
     }
   }
 
-  onAccess() {
-    if (this.frames % (FPS * 5) === 0) {
+  pass() {
+    if (this.frames % this.changeDirectionFrames === 0) {
       this.changeDirection()
     }
   }
 
-  onCollision() {
+  collide() {
     this.changeDirection()
   }
 
@@ -81,7 +86,7 @@ class EnemyTank extends Tank {
   onLivesDecrease() {}
 
   underAttack() {
-    if (this.isAppear) {
+    if (this.isAppeared) {
       this.lives--
       this.onLivesDecrease()
       if (this.lives === 0) {

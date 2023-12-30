@@ -70,11 +70,11 @@ export default class PlayerTank extends Tank {
   }
 
   protect() {
-    this.invincible.isAppear = this.isProtected
+    this.invincible.isAppeared = this.isProtected
     if (this.isProtected) {
       this.invincible.setLocation(this.x, this.y, this.width, this.height)
       this.protectedFrames++
-      if (this.protectedFrames > this.protectedFramesLimit) {
+      if (this.protectedFrames >= this.protectedFramesLimit) {
         this.isProtected = false
         this.protectedFrames = 0
       }
