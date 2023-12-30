@@ -17,6 +17,9 @@ import { isCollision } from './utils/collision.js'
 import interactiveManager from './utils/InteractiveManager.js'
 import { sparkManager } from './spark/Spark.js'
 import { rewardManager } from './spark/Reward.js'
+import levels from './const/LEVEL.js'
+
+const TOTAL_LEVEL = levels.length
 
 const gameStateToKeyboardEventMap = {
   [GAME_STATE_MENU](code) {
@@ -75,13 +78,13 @@ export default class Game {
     // this.gameState = GAME_STATE_START
 
     this.restEnemy = TOTAL_ENEMY // 剩余敌方坦克数量
-    this.appearEnemy = 0 // 正在显示的敌方坦克数量
-    this.maxAppearEnemy = 5 // 屏幕上最多显示几个敌方坦克
+    this.appearedEnemy = 0 // 已上过战场的敌方坦克数量
+    this.maxExistEnemy = 5 // 屏幕上最多显示几个敌方坦克
 
     this.addEnemyInterval = 2 // 2s产生一个敌坦克
-    this.addEnemyFrames = 0 // 用于添加敌方坦克的计时
+    this.addEnemyFrames = -1 // 用于添加敌方坦克的计时
 
-    this.enemyTankStack = []
+    this.enemyStack = []
     this.codes = new Set()
     this.prepare()
     this.handleKeyboardEvent()
@@ -121,10 +124,10 @@ export default class Game {
   }
 
   prepareEnemyTanks() {
-    this.enemyTankStack = []
+    this.enemyStack = []
     Array.from({ length: TOTAL_ENEMY }, () => {
       const EnemyClass = this.getEnemyClass()
-      this.enemyTankStack.push(new EnemyClass(this.tankCtx))
+      this.enemyStack.push(new EnemyClass(this.tankCtx))
     })
   }
 
@@ -150,13 +153,17 @@ export default class Game {
   }
 
   nextLevel() {
-    this.level++
-    this.gameState = GAME_STATE_INIT
+    if (this.level < TOTAL_LEVEL) {
+      this.level++
+      this.gameState = GAME_STATE_INIT
+    }
   }
 
   previousLevel() {
-    this.level--
-    this.gameState = GAME_STATE_INIT
+    if (this.level > 1) {
+      this.level--
+      this.gameState = GAME_STATE_INIT
+    }
   }
 
   drawLives() {
@@ -172,7 +179,7 @@ export default class Game {
   drawAll(isAdded) {
     this.battleField.draw()
     if (isAdded) {
-      this.scoreboard.drawEnemyCount(this.restEnemy, this.appearEnemy)
+      this.scoreboard.drawEnemyCount(this.restEnemy, this.appearedEnemy)
     }
     this.drawLives()
     this.tankCtx.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
@@ -188,7 +195,7 @@ export default class Game {
     this.player1?.create()
     this.player2?.create()
     this.restEnemy = TOTAL_ENEMY
-    this.appearEnemy = 0
+    this.appearedEnemy = 0
     this.drawLevel()
     this.drawAll(true)
   }
@@ -236,15 +243,17 @@ export default class Game {
 
   addEnemyTank() {
     const enemyArrLen = this.enemyArr.length
-    if (enemyArrLen > this.maxAppearEnemy || this.restEnemy === 0) {
+    if (enemyArrLen > this.maxExistEnemy || this.restEnemy === 0) {
       return false
     }
+    this.addEnemyFrames++
     if (this.addEnemyFrames % this.addEnemyFramesLimit === 0) {
+      this.addEnemyFrames = 0
       const enemyLocationLen = ENEMY_LOCATION.length
       const willAppearEnemy = Math.min(
         Math.ceil(Math.random() * enemyLocationLen),
         this.restEnemy,
-        this.maxAppearEnemy - enemyArrLen
+        this.maxExistEnemy - enemyArrLen
       )
       let willNotAppearEnemy = 0
       for (let i = 0; i < willAppearEnemy; i++) {
@@ -262,23 +271,18 @@ export default class Game {
         if (isCollisionResult) {
           willNotAppearEnemy++
         } else {
-          const enemy = this.enemyTankStack.pop()
+          const enemy = this.enemyStack.pop()
           enemy.create(
             willAppearEnemyLocationX + (BRICK_SIZE - enemy.width) / 2,
             BATTLE_FIELD.OFFSET_Y
           )
         }
       }
-      let prevAppearEnemy = this.appearEnemy
-      this.appearEnemy = this.appearEnemy + willAppearEnemy - willNotAppearEnemy
-      this.restEnemy = TOTAL_ENEMY - this.appearEnemy
-      if (prevAppearEnemy === this.appearEnemy) {
-        return false
-      }
-      this.addEnemyFrames = 0
-      return true
+      let prevAppearEnemy = this.appearedEnemy
+      this.appearedEnemy = this.appearedEnemy + willAppearEnemy - willNotAppearEnemy
+      this.restEnemy = TOTAL_ENEMY - this.appearedEnemy
+      return prevAppearEnemy < this.appearedEnemy
     }
-    this.addEnemyFrames++
     return false
   }
 

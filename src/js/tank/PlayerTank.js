@@ -9,7 +9,7 @@ export default class PlayerTank extends Tank {
   constructor(context) {
     super(context, 'player')
     this.lives = 3
-    this.protectedTime = 2
+    this.protectedTime = 20
     this.posX = POS[this.type][0]
     this.posY = POS[this.type][1]
     this.camp = CAMP.PLAYER
