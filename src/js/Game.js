@@ -29,17 +29,20 @@ const gameStateToKeyboardEventMap = {
       this.menu.next(code)
     }
   },
+  [GAME_STATE_INIT](code) {},
   [GAME_STATE_START](code) {
     if (code == KEYBOARD.P) {
       this.pause()
-    }
-    // trick 按T定住敌人
-    if (code == KEYBOARD.T) {
+    } else if (code == KEYBOARD.T) {
+      // trick 按T定住敌人
       interactiveManager.stopEnemy(60)
-    }
-    // trick 按退格全灭敌人
-    if (code == KEYBOARD.BACKSPACE) {
+    } else if (code == KEYBOARD.BACKSPACE) {
+      // trick 按退格全灭敌人
       interactiveManager.destroyAllEnemy()
+    } else if (code === KEYBOARD.EQUAL) {
+      this.nextLevel()
+    } else if (code === KEYBOARD.MINUS) {
+      this.previousLevel()
     }
   },
 }
@@ -67,8 +70,8 @@ export default class Game {
   constructor() {
     this.level = 1
     this.isPause = false
-    // this.gameState = GAME_STATE_MENU
-    this.gameState = GAME_STATE_INIT
+    this.gameState = GAME_STATE_MENU
+    // this.gameState = GAME_STATE_INIT
     // this.gameState = GAME_STATE_START
 
     this.restEnemy = TOTAL_ENEMY // 剩余敌方坦克数量
@@ -82,7 +85,6 @@ export default class Game {
     this.codes = new Set()
     this.prepare()
     this.handleKeyboardEvent()
-    this.prepareEnemyTanks()
   }
 
   get addEnemyFramesLimit() {
@@ -116,10 +118,10 @@ export default class Game {
     this.battleField = new BattleField(wallCtx, grassCtx)
     this.scoreboard = new Scoreboard(wallCtx)
     this.player1 = new PlayerTank(this.tankCtx)
-    this.player1.create()
   }
 
   prepareEnemyTanks() {
+    this.enemyTankStack = []
     Array.from({ length: TOTAL_ENEMY }, () => {
       const EnemyClass = this.getEnemyClass()
       this.enemyTankStack.push(new EnemyClass(this.tankCtx))
@@ -147,10 +149,54 @@ export default class Game {
     })
   }
 
-  drawAll() {
+  nextLevel() {
+    this.level++
+    this.gameState = GAME_STATE_INIT
+  }
+
+  previousLevel() {
+    this.level--
+    this.gameState = GAME_STATE_INIT
+  }
+
+  drawLives() {
+    this.scoreboard.drawLives(this.player1.lives, 1)
+    this.scoreboard.drawLives(0, 2)
+  }
+
+  drawLevel() {
+    this.battleField.setLevel(this.level)
+    this.scoreboard.init(this.level)
+  }
+
+  drawAll(isAdded) {
+    this.battleField.draw()
+    if (isAdded) {
+      this.scoreboard.drawEnemyCount(this.restEnemy, this.appearEnemy)
+    }
+    this.drawLives()
     this.tankCtx.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
     interactiveManager.drawSpirits(Array.from(this.codes))
     sparkManager.draw()
+  }
+
+  runBetweenInitAndStart() {
+    this.gameState = GAME_STATE_START
+    this.prepareEnemyTanks()
+    interactiveManager.clear()
+    sparkManager.clear()
+    this.player1?.create()
+    this.player2?.create()
+    this.restEnemy = TOTAL_ENEMY
+    this.appearEnemy = 0
+    this.drawLevel()
+    this.drawAll(true)
+  }
+
+  runAfterStart() {
+    const isAdded = this.addEnemyTank()
+    rewardManager.addReward(this.tankCtx)
+    this.drawAll(isAdded)
   }
 
   run() {
@@ -160,22 +206,13 @@ export default class Game {
           this.menu.draw()
           break
         case GAME_STATE_INIT:
-          this.menu.drawLevel(this.level, () => {
-            this.battleField.setLevel(this.level)
-            this.battleField.draw()
-            this.scoreboard.init(this.level, this.restEnemy)
-            this.gameState = GAME_STATE_START
-          })
+          this.menu.drawLevel(this.level, this.runBetweenInitAndStart.bind(this))
           break
         case GAME_STATE_START:
           if (this.menu.isClearable) {
             this.menu.clear()
           } else {
-            this.battleField.draw()
-            this.addEnemyTank()
-            rewardManager.addReward(this.tankCtx)
-            this.drawAll()
-            this.scoreboard.drawLives(this.player1.lives, 1)
+            this.runAfterStart()
           }
           break
       }
@@ -200,7 +237,7 @@ export default class Game {
   addEnemyTank() {
     const enemyArrLen = this.enemyArr.length
     if (enemyArrLen > this.maxAppearEnemy || this.restEnemy === 0) {
-      return
+      return false
     }
     if (this.addEnemyFrames % this.addEnemyFramesLimit === 0) {
       const enemyLocationLen = ENEMY_LOCATION.length
@@ -232,14 +269,17 @@ export default class Game {
           )
         }
       }
+      let prevAppearEnemy = this.appearEnemy
       this.appearEnemy = this.appearEnemy + willAppearEnemy - willNotAppearEnemy
       this.restEnemy = TOTAL_ENEMY - this.appearEnemy
-
-      //更新地图右侧坦克数
-      this.scoreboard.drawEnemyCount(this.restEnemy, this.appearEnemy)
+      if (prevAppearEnemy === this.appearEnemy) {
+        return false
+      }
       this.addEnemyFrames = 0
+      return true
     }
     this.addEnemyFrames++
+    return false
   }
 
   pause() {

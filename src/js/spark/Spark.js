@@ -82,9 +82,7 @@ class SparkManager {
   }
 
   draw() {
-    this.arr.forEach(el => {
-      el.draw()
-    })
+    this.arr.forEach(el => el.draw())
   }
 }
 

@@ -12,24 +12,19 @@ export default class Scoreboard {
     this.posY = POS['score'][1]
   }
 
-  init(level, enemyCount) {
+  init(level) {
     this.ctx.fillStyle = '#7f7f7f'
     this.ctx.fillRect(startX, 0, SCREEN_WIDTH - startX, SCREEN_HEIGHT)
     // player1 生命值左边的坦克图标
     this.ctx.drawImage(RESOURCE_IMAGE, this.posX, this.posY, 30, 32, 464, 256, 30, 32)
     // player2 生命值左边的坦克图标
     this.ctx.drawImage(RESOURCE_IMAGE, 30 + this.posX, this.posY, 30, 32, 464, 304, 30, 32)
-
     /**
      * 画旗帜
      * 30,32旗帜的size, 464, 352旗帜在canvas中位置
      */
     this.ctx.drawImage(RESOURCE_IMAGE, 60 + this.posX, this.posY, 30, 32, 464, 352, 32, 30)
-
     this.drawLevel(level)
-    this.drawLives(0, 1)
-    this.drawLives(0, 2)
-    this.drawEnemyCount(enemyCount)
   }
 
   drawLevel(level) {
