@@ -24,11 +24,12 @@ export default class PlayerTank extends Tank {
     this.isProtected = true
     this.protectedFrames = 0
     this.shootable = true
+    this.coolDownFrames = 0
+    this.coolDownTime = 1
     this.x = 129 + BATTLE_FIELD.OFFSET_X
     this.y = 389 + BATTLE_FIELD.OFFSET_Y
     this.direction = DIRECTION.UP
     this.speed = 2
-    this.coolDownTime = 1
   }
 
   create() {

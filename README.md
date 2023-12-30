@@ -9,7 +9,7 @@ TODO:
 
 - 偶现敌坦克和右侧数量不匹配问题，偶现一次p1凭空出现护盾问题
 
-- p1复活时可以二连发问题
+- p1复活时可以二连发问题。✅原因：birth时coolDownFrames没有重置为0，导致birth时shootable为true，打出第一下，下一帧coolDownFrames等于limit，shootable又为true，又能开一炮
 
 - 考虑敌方坦克管理器
 
