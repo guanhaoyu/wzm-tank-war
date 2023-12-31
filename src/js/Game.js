@@ -9,7 +9,7 @@ import KEYBOARD from './const/KEYBOARD.js'
 import { BRICK_SIZE, SCREEN_HEIGHT, SCREEN_WIDTH } from './const/SCREEN.js'
 import { BATTLE_FIELD, ENEMY_LOCATION, FPS } from './const/WORLD.js'
 import Menu from './layer/Menu.js'
-import BattleField from './BattleField.js'
+import BattleField, { updateCurrentMap } from './BattleField.js'
 import Scoreboard from './Scoreboard.js'
 import PlayerTank from './tank/PlayerTank.js'
 import { Enemy1, Enemy2, Enemy3 } from './tank/EnemyTank.js'
@@ -100,6 +100,8 @@ export default class Game {
     this.codes = new Set()
     this.prepare()
     this.handleKeyboardEvent()
+
+    this.isWinAlerted = false
   }
 
   get addEnemyFramesLimit() {
@@ -133,7 +135,7 @@ export default class Game {
     this.battleField = new BattleField(wallCtx, this.grassCtx)
     this.scoreboard = new Scoreboard(wallCtx)
     this.player1 = new PlayerTank(this.tankCtx)
-    this.base = new Base(this.tankCtx, this.fail.bind(this))
+    this.base = new Base(this.tankCtx, this.loseHome.bind(this))
     this.gameOver = new GameOver(overCtx)
   }
 
@@ -166,7 +168,23 @@ export default class Game {
     })
   }
 
+  loseHome(
+    homeTiles = [
+      [24, 12],
+      [24, 13],
+      [25, 12],
+      [25, 13],
+    ]
+  ) {
+    this.fail()
+    homeTiles.forEach(([i, j]) => {
+      updateCurrentMap([i, j])
+    })
+  }
+
   fail() {
+    this.player1.destroy()
+    this.player2?.destroy()
     this.gameState = GAME_STATE_OVER
   }
 
@@ -227,8 +245,12 @@ export default class Game {
   }
 
   runAfterStart() {
-    if (this.player1.lives === 0) {
-      return this.fail()
+    if (this.gameState === GAME_STATE_WIN && !this.isWinAlerted) {
+      this.isWinAlerted = true
+      alert('💐恭喜您赢得了胜利✌🏻')
+    }
+    if (this.player1.lives === 0 && this.gameState !== GAME_STATE_OVER) {
+      this.fail()
     }
     const enemyArrLen = this.enemyArr.length
     if (this.restEnemy === 0 && enemyArrLen === 0) {
@@ -244,6 +266,7 @@ export default class Game {
     if (!this.isPause) {
       switch (this.gameState) {
         case GAME_STATE_MENU:
+          this.isWinAlerted = false
           this.gameOver.init()
           this.menu.draw()
           break
@@ -259,9 +282,10 @@ export default class Game {
           break
         case GAME_STATE_OVER:
           this.gameOver.draw()
+          this.runAfterStart()
           break
         default:
-          alert('💐恭喜胜利✌🏻')
+          this.runAfterStart()
       }
     }
     requestAnimationFrame(this.run.bind(this))

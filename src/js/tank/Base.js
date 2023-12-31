@@ -3,7 +3,7 @@ import Tank from "./Tank";
 
 export default class Base extends Tank {
   constructor(context, task) {
-    super(context, 'player')
+    super(context)
     this.task = task
   }
 
@@ -28,7 +28,7 @@ export default class Base extends Tank {
 
   underAttack() {
     this.destroy()
-    setTimeout(this.task, 500);
+    this.task()
   }
 
   draw() {

@@ -12,7 +12,6 @@ const BIRTH_COORDINATE = [
 export default class PlayerTank extends Tank {
   constructor(context) {
     super(context, 'player')
-    this.lives = 3
     this.protectedTime = 20
     this.camp = CAMP.PLAYER
     this.invincible = new Invincible(context)
@@ -36,11 +35,10 @@ export default class PlayerTank extends Tank {
   }
 
   create() {
-    if (this.lives) {
-      super.create()
-      this.birth()
-      this.invincible.create()
-    }
+    super.create()
+    this.birth()
+    this.invincible.create()
+    this.lives = 3
   }
 
   draw(codes) {
@@ -87,6 +85,13 @@ export default class PlayerTank extends Tank {
     if (!this.isProtected) {
       super.isShooted(bullet)
     }
+  }
+
+  destroy() {
+    this.isProtected = false
+    this.protectedFrames = 0
+    this.invincible.isAppeared = this.isProtected
+    super.destroy()
   }
 
   underAttack() {
