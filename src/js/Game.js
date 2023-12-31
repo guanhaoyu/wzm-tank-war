@@ -25,7 +25,7 @@ const TOTAL_LEVEL = levels.length
 
 const gameStateToKeyboardEventMap = {
   [GAME_STATE_MENU](code) {
-    if (code == KEYBOARD.ENTER) {
+    if (code == KEYBOARD.ENTER || code == KEYBOARD.SPACE) {
       this.gameState = GAME_STATE_INIT
       // fixme 只有一个玩家
       if (this.menu.numberOfPlayers == 1) {

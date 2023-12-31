@@ -4,11 +4,14 @@
 }
 
 .container {
-  /* background-color: #000; */
   margin: 0 auto;
   position: relative;
 }
 
 .container canvas {
   position: absolute;
+}
+
+.description {
+  text-align: center;
 }
