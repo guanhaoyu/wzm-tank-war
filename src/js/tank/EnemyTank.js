@@ -17,8 +17,6 @@ class EnemyTank extends Tank {
     this.isStop = false
     // 射击的概率
     this.probabilityOfShoot = 0.6
-    this.posX = POS[this.type][0]
-    this.posY = POS[this.type][1]
     this.blink = new Blink(context)
     this.camp = CAMP.ENEMY
     this.changeDirectionTime = 5

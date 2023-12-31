@@ -5,8 +5,6 @@ import interactiveManager from '../utils/InteractiveManager'
 import { checkCollision } from '../utils/collision'
 import Spark, { sparkManager } from './Spark'
 
-const type = 'prop'
-
 function addLives(target, count = 1) {
   target.lives += count
 }
@@ -36,10 +34,10 @@ const rewards = [addLives, stopEnemy, makeGrid, destroyAllEnemy, upgrade, protec
 
 export default class Reward extends Spark {
   constructor(context, index, duration = 30) {
-    super(context, type)
+    super(context, 'prop')
     this.durationFrames = duration * FPS
-    this.posX = POS[type][0] + index * this.size
-    this.posY = POS[type][1]
+    this.posX = POS[this.type][0] + index * this.size
+    this.posY = POS[this.type][1]
     this.index = index
   }
 

@@ -17,6 +17,7 @@ const KEYBOARD = {
   W: 'KeyW',
 
   T: 'KeyT',
+  H: 'KeyH',
   BACKSPACE: 'Backspace',
   MINUS: 'Minus',
   EQUAL: 'Equal'

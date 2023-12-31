@@ -46,6 +46,8 @@ const gameStateToKeyboardEventMap = {
       this.nextLevel()
     } else if (code === KEYBOARD.MINUS) {
       this.previousLevel()
+    } else if (code === KEYBOARD.H) {
+      rewardManager.consume('protectHome')
     }
   },
 }

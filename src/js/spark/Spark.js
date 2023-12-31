@@ -1,5 +1,5 @@
 import { POS, RESOURCE_IMAGE } from "../const/IMAGE.js"
-import { SPARK_TYPE, FPS } from "../const/WORLD.js"
+import { SPARK_TYPE } from "../const/WORLD.js"
 
 let id = 0
 

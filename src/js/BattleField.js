@@ -1,9 +1,10 @@
 import { POS, RESOURCE_IMAGE } from './const/IMAGE.js'
 import maps from './const/LEVEL.js'
-import { SCREEN_HEIGHT, SCREEN_WIDTH } from './const/SCREEN.js'
+import { BRICK_SIZE, SCREEN_HEIGHT, SCREEN_WIDTH } from './const/SCREEN.js'
 import { BATTLE_FIELD, FPS, OBSTACLE_TYPES, TILE_TYPE } from './const/WORLD.js'
 import { rewardManager } from './spark/Reward.js'
 import interactiveManager from './utils/InteractiveManager.js'
+import { isCollided } from './utils/collision.js'
 
 let currentMap = null
 
@@ -77,11 +78,29 @@ export default class BattleField {
     return this.homeProtectTime * FPS
   }
 
+  get homeBoundaryCoordinates() {
+    const first = homeBoundary[0]
+    const last = homeBoundary[homeBoundary.length - 1]
+    const width = (last[1] - first[1]) * BRICK_SIZE
+    const height = (last[0] - first[0]) * BRICK_SIZE
+    const [x, y] = this.positionToCoordinates(first[0], first[1])
+    return { x, y, width, height }
+  }
+
   protectHome(time) {
-    this.homeProtectTime = time || this.homeProtectTime
-    this.homeProtectFrames = 0
-    this.isHomeProtected = true
-    changeTypeOfTiles(homeBoundary, TILE_TYPE.GRID)
+    const result = interactiveManager.getTanks().some(tank => isCollided(tank, [this.homeBoundaryCoordinates]))
+    if (result) {
+      requestAnimationFrame(this.protectHome.bind(this, time))
+    } else {
+      this.homeProtectTime = time || this.homeProtectTime
+      this.homeProtectFrames = 0
+      this.isHomeProtected = true
+      changeTypeOfTiles(homeBoundary, TILE_TYPE.GRID)
+    }
+  }
+
+  positionToCoordinates(i, j) {
+    return [j * this.tileSize + this.offsetX, i * this.tileSize + this.offsetY]
   }
 
   cancelProtectHome() {

@@ -1,22 +1,20 @@
 import { updateCurrentMap } from '../BattleField.js'
 import { step } from '../action/movement.js'
-import { POS, RESOURCE_IMAGE } from '../const/IMAGE.js'
+import { RESOURCE_IMAGE } from '../const/IMAGE.js'
 import { DIRECTION, PLANCK_DISTANCE, TILE_TYPE } from '../const/WORLD.js'
 import { createExplosion } from '../spark/Explosion.js'
-import Spirits from '../spirit/Spirit.js'
+import Spirit from '../spirit/Spirit.js'
 import interactiveManager from '../utils/InteractiveManager.js'
 import { checkCollision } from '../utils/collision.js'
 
 const { UP, DOWN, LEFT, RIGHT } = DIRECTION
 // 不同阵营的子弹可以对撞，也属于障碍物
-export default class Bullet extends Spirits {
+export default class Bullet extends Spirit {
   constructor(context, camp) {
     super(context, 'bullet')
     // 不能超过16，否则有能打穿2个墙
     this.speed = 10
     this.camp = camp
-    this.posX = POS[this.type][0]
-    this.posY = POS[this.type][1]
     // 避免多次调用destroy方法
     this.isDestroyed = false
   }

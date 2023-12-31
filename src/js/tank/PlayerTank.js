@@ -3,16 +3,19 @@ import KEYBOARD, { keyDirectionMap } from '../const/KEYBOARD.js'
 import { BATTLE_FIELD, CAMP, DIRECTION, FPS } from '../const/WORLD.js'
 import { createExplosion } from '../spark/Explosion.js'
 import Invincible from '../spark/Invincible.js'
+import interactiveManager from '../utils/InteractiveManager.js'
+import { isCollided } from '../utils/collision.js'
 import Tank from './Tank.js'
 
-const type = 'player'
+const BIRTH_COORDINATE = [
+  129 + BATTLE_FIELD.OFFSET_X,
+  389 + BATTLE_FIELD.OFFSET_Y
+]
 export default class PlayerTank extends Tank {
   constructor(context) {
-    super(context, type)
+    super(context, 'player')
     this.lives = 30
     this.protectedTime = 20
-    this.posX = POS[type][0]
-    this.posY = POS[type][1]
     this.camp = CAMP.PLAYER
     this.invincible = new Invincible(context)
   }
@@ -22,13 +25,14 @@ export default class PlayerTank extends Tank {
   }
 
   birth() {
+    this.isDestroyed = false
     this.isProtected = true
     this.protectedFrames = 0
     this.shootable = true
     this.coolDownFrames = 0
     this.coolDownTime = 1
-    this.x = 129 + BATTLE_FIELD.OFFSET_X
-    this.y = 389 + BATTLE_FIELD.OFFSET_Y
+    this.x = BIRTH_COORDINATE[0]
+    this.y = BIRTH_COORDINATE[1]
     this.direction = DIRECTION.UP
     this.speed = 2
   }
@@ -90,11 +94,19 @@ export default class PlayerTank extends Tank {
   underAttack() {
     if (!this.isProtected) {
       this.lives--
-      if (this.lives === 0) {
-        this.destroy()
-      } else {
-        createExplosion(this.ctx, 'tankBomb', this.x, this.y, this.width, this.height)
-        this.birth()
+      this.destroy()
+      if (this.lives > 0) {
+        const result = interactiveManager.getTanks().some(tank => isCollided(tank, [{
+          x: BIRTH_COORDINATE[0],
+          y: BIRTH_COORDINATE[1],
+          width: this.width,
+          height: this.height
+        }]))
+        if (result) {
+          requestAnimationFrame(this.birth.bind(this))
+        } else {
+          this.birth()
+        }
       }
     }
   }

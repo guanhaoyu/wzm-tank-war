@@ -7,6 +7,8 @@ export default class Digital {
     this.size = 14
     // 在图片中的位置
     this.type = 'num'
+    this.posX = POS[this.type][0]
+    this.posY = POS[this.type][1]
   }
 
   /**
@@ -17,8 +19,6 @@ export default class Digital {
    */
   draw(num, x, y) {
     let n = num
-    const type = this.type
-    const size = this.size
     const arr = []
     if (n === 0) {
       arr.push(0)
@@ -31,14 +31,14 @@ export default class Digital {
     for (let i = arr.length - 1; i >= 0; i--) {
       this.ctx.drawImage(
         RESOURCE_IMAGE,
-        POS[type][0] + arr[i] * size,
-        POS[type][1],
-        size,
-        size,
-        x + (arr.length - i - 1) * size,
+        this.posX + arr[i] * this.size,
+        this.posY,
+        this.size,
+        this.size,
+        x + (arr.length - i - 1) * this.size,
         y,
-        size,
-        size
+        this.size,
+        this.size
       )
     }
   }
