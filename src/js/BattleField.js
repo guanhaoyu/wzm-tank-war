@@ -68,7 +68,7 @@ export default class BattleField {
     this.grassCtx = grassCtx
 
     this.isHomeProtected = false
-    this.homeProtectTime = 5
+    this.homeProtectTime = 25
     this.homeProtectFrames = 0
 
     rewardManager.provide('protectHome', this.protectHome.bind(this))
@@ -111,7 +111,7 @@ export default class BattleField {
 
   setLevel(level = 1) {
     this.level = level
-    currentMap = maps[Math.max(level - 1, 0)]
+    currentMap = JSON.parse(JSON.stringify(maps[Math.max(level - 1, 0)]))
   }
 
   draw() {

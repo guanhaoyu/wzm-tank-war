@@ -12,8 +12,8 @@ export default class Spirit {
   constructor(context, type) {
     this.ctx = context
     this.type = type
-    this.posX = POS[this.type][0]
-    this.posY = POS[this.type][1]
+    this.posX = POS[type]?.[0]
+    this.posY = POS[type]?.[1]
     // 速度
     this.speed = 0
     this.x = 0

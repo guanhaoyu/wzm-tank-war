@@ -1,7 +1,5 @@
-import { POS } from '../const/IMAGE.js'
 import KEYBOARD, { keyDirectionMap } from '../const/KEYBOARD.js'
 import { BATTLE_FIELD, CAMP, DIRECTION, FPS } from '../const/WORLD.js'
-import { createExplosion } from '../spark/Explosion.js'
 import Invincible from '../spark/Invincible.js'
 import interactiveManager from '../utils/InteractiveManager.js'
 import { isCollided } from '../utils/collision.js'
@@ -14,7 +12,7 @@ const BIRTH_COORDINATE = [
 export default class PlayerTank extends Tank {
   constructor(context) {
     super(context, 'player')
-    this.lives = 30
+    this.lives = 3
     this.protectedTime = 20
     this.camp = CAMP.PLAYER
     this.invincible = new Invincible(context)

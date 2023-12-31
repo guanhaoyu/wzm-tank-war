@@ -9,34 +9,39 @@ export default class Menu {
   constructor(context) {
     this.ctx = context
     this.x = 0
-    this.y = SCREEN_HEIGHT
     this.selectTank = new SelectTank(context)
     // 选择游戏人数
     this.numberOfPlayers = 1
-
+    this.enterSpeed = 10
     this.curtain = new Curtain(context)
+    this.init()
   }
 
   get isClearable() {
     return this.curtain.alreadyDrawHeight > 0
   }
 
-  // 画菜单
-  draw() {
+  init() {
+    this.y = SCREEN_HEIGHT
+  }
+
+  enter() {
     // 从下往上飞入动效
     if (this.y <= 0) {
       this.y = 0
     } else {
-      this.y -= 5
+      this.y -= this.enterSpeed
     }
-    this.ctx.save()
+  }
+
+  // 画菜单
+  draw() {
+    this.enter()
     this.ctx.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
     this.ctx.drawImage(MENU_IMAGE, this.x, this.y)
-
     if (this.y === 0) {
       this.selectTank.draw()
     }
-    this.ctx.restore()
   }
 
   /**
@@ -58,5 +63,6 @@ export default class Menu {
 
   clear() {
     this.curtain.unfold()
+    this.init()
   }
 }

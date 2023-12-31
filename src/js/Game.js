@@ -18,6 +18,8 @@ import interactiveManager from './utils/InteractiveManager.js'
 import { sparkManager } from './spark/Spark.js'
 import { rewardManager } from './spark/Reward.js'
 import levels from './const/LEVEL.js'
+import GameOver from './layer/GameOver.js'
+import Base from './tank/Base.js'
 
 const TOTAL_LEVEL = levels.length
 
@@ -49,6 +51,14 @@ const gameStateToKeyboardEventMap = {
     } else if (code === KEYBOARD.H) {
       rewardManager.consume('protectHome')
     }
+  },
+  [GAME_STATE_OVER]() {
+    if (this.gameOver.isOver) {
+      this.gameState = GAME_STATE_MENU
+    }
+  },
+  [GAME_STATE_WIN]() {
+    this.gameState = GAME_STATE_MENU
   },
 }
 
@@ -123,6 +133,8 @@ export default class Game {
     this.battleField = new BattleField(wallCtx, this.grassCtx)
     this.scoreboard = new Scoreboard(wallCtx)
     this.player1 = new PlayerTank(this.tankCtx)
+    this.base = new Base(this.tankCtx, this.fail.bind(this))
+    this.gameOver = new GameOver(overCtx)
   }
 
   prepareEnemyTanks() {
@@ -154,10 +166,16 @@ export default class Game {
     })
   }
 
+  fail() {
+    this.gameState = GAME_STATE_OVER
+  }
+
   nextLevel() {
     if (this.level < TOTAL_LEVEL) {
       this.level++
       this.gameState = GAME_STATE_INIT
+    } else {
+      this.gameState = GAME_STATE_WIN
     }
   }
 
@@ -165,6 +183,8 @@ export default class Game {
     if (this.level > 1) {
       this.level--
       this.gameState = GAME_STATE_INIT
+    } else {
+      this.fail()
     }
   }
 
@@ -199,6 +219,7 @@ export default class Game {
     sparkManager.clear()
     this.player1?.create()
     this.player2?.create()
+    this.base.create()
     this.restEnemy = TOTAL_ENEMY
     this.appearedEnemy = 0
     this.drawLevel()
@@ -206,6 +227,9 @@ export default class Game {
   }
 
   runAfterStart() {
+    if (this.player1.lives === 0) {
+      return this.fail()
+    }
     const enemyArrLen = this.enemyArr.length
     if (this.restEnemy === 0 && enemyArrLen === 0) {
       this.nextLevel()
@@ -220,6 +244,7 @@ export default class Game {
     if (!this.isPause) {
       switch (this.gameState) {
         case GAME_STATE_MENU:
+          this.gameOver.init()
           this.menu.draw()
           break
         case GAME_STATE_INIT:
@@ -232,6 +257,11 @@ export default class Game {
             this.runAfterStart()
           }
           break
+        case GAME_STATE_OVER:
+          this.gameOver.draw()
+          break
+        default:
+          alert('💐恭喜胜利✌🏻')
       }
     }
     requestAnimationFrame(this.run.bind(this))
