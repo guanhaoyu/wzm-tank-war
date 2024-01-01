@@ -176,8 +176,9 @@ export default class Game {
   }
 
   fail() {
+    // fixme 只有一个玩家
     this.player1.destroy()
-    this.player2?.destroy()
+    this.player1.lives = 0
     this.gameState = GAME_STATE_OVER
   }
 
