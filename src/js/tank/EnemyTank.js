@@ -81,12 +81,9 @@ class EnemyTank extends Tank {
       ]
   }
 
-  onLivesDecrease() {}
-
   underAttack() {
     if (this.isAppeared) {
       this.lives--
-      this.onLivesDecrease()
       if (this.lives === 0) {
         this.destroy()
       }
@@ -149,6 +146,7 @@ export class Enemy2 extends EnemyTank {
 export class Enemy3 extends EnemyTank {
   constructor(context) {
     super(context, 'enemy3')
+    this.originalLives = 3
     this.lives = 3
     this.speed = 0.5
     this.probabilityOfShoot = 0.7
@@ -177,9 +175,10 @@ export class Enemy3 extends EnemyTank {
       offsetX = 1
       offsetY = 1
     }
+    const posX = this.posX + (this.originalLives - this.lives) * BRICK_SIZE * DIRECTION_LENGTH
     this.ctx.drawImage(
       RESOURCE_IMAGE,
-      this.posX + this.direction * BRICK_SIZE - offsetX,
+      posX + this.direction * BRICK_SIZE - offsetX,
       this.posY + offsetY,
       this.width,
       this.height,
@@ -188,9 +187,5 @@ export class Enemy3 extends EnemyTank {
       this.width,
       this.height
     )
-  }
-
-  onLivesDecrease() {
-    this.posX += BRICK_SIZE * DIRECTION_LENGTH
   }
 }

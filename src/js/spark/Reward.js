@@ -1,3 +1,4 @@
+import { REWARD_AUDIO } from '../const/AUDIO'
 import { POS } from '../const/IMAGE'
 import { BRICK_SIZE } from '../const/SCREEN'
 import { BATTLE_FIELD, FPS } from '../const/WORLD'
@@ -54,6 +55,7 @@ export default class Reward extends Spark {
         interactiveManager.getTanks().filter(el => el.type?.includes('player'))
       )
       if (collisionTarget) {
+        REWARD_AUDIO.play()
         rewards[this.index](collisionTarget)
         this.isAppeared = false
       }

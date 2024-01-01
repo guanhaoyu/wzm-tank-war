@@ -7,7 +7,7 @@ import {
 } from './const/GAMESTATE.js'
 import KEYBOARD from './const/KEYBOARD.js'
 import { BRICK_SIZE, SCREEN_HEIGHT, SCREEN_WIDTH } from './const/SCREEN.js'
-import { BATTLE_FIELD, ENEMY_LOCATION, FPS } from './const/WORLD.js'
+import { BATTLE_FIELD, ENEMY_LOCATION, FPS, TILE_TYPE } from './const/WORLD.js'
 import Menu from './layer/Menu.js'
 import BattleField, { updateCurrentMap } from './BattleField.js'
 import Scoreboard from './Scoreboard.js'
@@ -20,6 +20,7 @@ import { rewardManager } from './spark/Reward.js'
 import levels from './const/LEVEL.js'
 import GameOver from './layer/GameOver.js'
 import Base from './tank/Base.js'
+import { PLAYER_DESTROY_AUDIO, START_AUDIO } from './const/AUDIO.js'
 
 const TOTAL_LEVEL = levels.length
 
@@ -27,6 +28,7 @@ const gameStateToKeyboardEventMap = {
   [GAME_STATE_MENU](code) {
     if (code == KEYBOARD.ENTER || code == KEYBOARD.SPACE) {
       this.gameState = GAME_STATE_INIT
+      START_AUDIO.play()
       // fixme 只有一个玩家
       if (this.menu.numberOfPlayers == 1) {
       }
@@ -34,7 +36,6 @@ const gameStateToKeyboardEventMap = {
       this.menu.next(code)
     }
   },
-  [GAME_STATE_INIT](code) {},
   [GAME_STATE_START](code) {
     if (code == KEYBOARD.P) {
       this.pause()
@@ -168,18 +169,10 @@ export default class Game {
     })
   }
 
-  loseHome(
-    homeTiles = [
-      [24, 12],
-      [24, 13],
-      [25, 12],
-      [25, 13],
-    ]
-  ) {
+  loseHome() {
     this.fail()
-    homeTiles.forEach(([i, j]) => {
-      updateCurrentMap([i, j])
-    })
+    PLAYER_DESTROY_AUDIO.play()
+    updateCurrentMap([24, 12], TILE_TYPE.FLAG)
   }
 
   fail() {
@@ -288,7 +281,9 @@ export default class Game {
           this.runAfterStart()
       }
     }
-    requestAnimationFrame(this.run.bind(this))
+    // 不同显示器的帧率不一样，不一定都是60
+    // requestAnimationFrame(this.run.bind(this))
+    setTimeout(this.run.bind(this), 1000 / FPS)
   }
 
   getEnemyClass() {

@@ -17,9 +17,8 @@ export default class Explosion extends Spark {
  * 创建💥
  * @param {'tankBomb' | 'bulletBomb'} type
  */
-export function createExplosion(ctx, type, x, y, width, height) {
-  const { size, duration } = SPARK_TYPE[type]
+export function createExplosion(ctx, type, x, y, width, height, duration) {
   const [cx, cy] = calculateCenter(x, y, width, height)
-  const halfSize = size / 2
+  const halfSize = SPARK_TYPE[type].size / 2
   new Explosion(ctx, type, duration).create(cx - halfSize, cy - halfSize)
 }

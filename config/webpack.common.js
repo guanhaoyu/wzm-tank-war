@@ -16,7 +16,7 @@ const commonConfig = {
         use: 'babel-loader'
       },
       {
-        test: /\.(png|jpe?g|svg|gif)$/,
+        test: /\.(png|jpe?g|svg|gif|mp3)$/,
         type: 'asset',
         generator: {
           filename: 'img/[name].[contenthash:6][ext]',

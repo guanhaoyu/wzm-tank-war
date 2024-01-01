@@ -1,7 +1,8 @@
 import { updateCurrentMap } from '../BattleField.js'
 import { step } from '../action/movement.js'
+import { BULLET_DESTROY_AUDIO } from '../const/AUDIO.js'
 import { RESOURCE_IMAGE } from '../const/IMAGE.js'
-import { DIRECTION, PLANCK_DISTANCE, TILE_TYPE } from '../const/WORLD.js'
+import { CAMP, DIRECTION, PLANCK_DISTANCE, TILE_TYPE } from '../const/WORLD.js'
 import { createExplosion } from '../spark/Explosion.js'
 import Spirit from '../spirit/Spirit.js'
 import interactiveManager from '../utils/InteractiveManager.js'
@@ -134,8 +135,11 @@ export default class Bullet extends Spirit {
 
   destroy() {
     if (!this.isDestroyed) {
-      createExplosion(this.ctx, 'bulletBomb', this.x, this.y, this.width, this.height)
+      createExplosion(this.ctx, 'bulletBomb', this.x, this.y, this.width, this.height, BULLET_DESTROY_AUDIO.duration)
       this.isDestroyed = true
+      if (this.camp === CAMP.PLAYER) {
+        BULLET_DESTROY_AUDIO.play()
+      }
     }
   }
 

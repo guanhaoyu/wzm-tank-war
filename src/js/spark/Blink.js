@@ -1,10 +1,10 @@
-import { FPS, SPARK_TYPE } from '../const/WORLD.js'
+import { FPS } from '../const/WORLD.js'
 import Spark from './Spark.js'
 
 export default class Blink extends Spark {
-  constructor(context, duration) {
+  constructor(context, duration = 0.68) {
     super(context, 'enemyBefore')
-    this.durationFrames = (duration || SPARK_TYPE[this.type].duration) * FPS
+    this.durationFrames = duration * FPS
     this.slowTimes = 5
   }
 

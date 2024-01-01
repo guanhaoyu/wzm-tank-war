@@ -1,5 +1,6 @@
 import { step } from '../action/movement.js'
 import Bullet from '../bullet/Bullet.js'
+import { TANK_DESTROY_AUDIO } from '../const/AUDIO.js'
 import { RESOURCE_IMAGE } from '../const/IMAGE.js'
 import { BRICK_SIZE } from '../const/SCREEN.js'
 import { FPS, PLANCK_DISTANCE } from '../const/WORLD.js'
@@ -46,11 +47,16 @@ export default class Tank extends Spirit {
     interactiveManager.add(this)
   }
 
-  destroy() {
+  destroy(duration = TANK_DESTROY_AUDIO.duration) {
     if (!this.isDestroyed) {
       this.isDestroyed = true
-      createExplosion(this.ctx, 'tankBomb', this.x, this.y, this.width, this.height)
+      createExplosion(this.ctx, 'tankBomb', this.x, this.y, this.width, this.height, duration)
+      this.playDestroySound()
     }
+  }
+
+  playDestroySound() {
+    TANK_DESTROY_AUDIO.play()
   }
 
   underAttack() {}
@@ -137,7 +143,10 @@ export default class Tank extends Spirit {
         this.width,
         this.height,
       ])
+      this.playAttackSound()
       this.shootable = false
     }
   }
+
+  playAttackSound() {}
 }

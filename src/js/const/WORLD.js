@@ -4,6 +4,7 @@ const GRID = 2
 const GRASS = 3
 const WATER = 4
 const ICE = 5
+const FLAG = 6
 const HOME = 9
 const ANOTHERHOME = 8
 
@@ -17,6 +18,7 @@ const TILE_TYPE = {
   ICE,
   HOME,
   ANOTHERHOME,
+  FLAG
 }
 
 /********************运动的四个方向********************/
@@ -47,28 +49,23 @@ const PLANCK_DISTANCE = 0.5
 const SPARK_TYPE = {
   bulletBomb: {
     size: 32,
-    ticks: 3,
-    duration: 0.2,
+    ticks: 3
   },
   tankBomb: {
     size: 66,
-    ticks: 4,
-    duration: 0.5,
+    ticks: 4
   },
   enemyBefore: {
     size: 32,
-    ticks: 7,
-    duration: 1.5,
+    ticks: 7
   },
   protected: {
     size: 32,
-    ticks: 2,
-    duration: 25,
+    ticks: 2
   },
   prop: {
     size: 30,
-    ticks: 1,
-    duration: 30
+    ticks: 1
   }
 }
 

@@ -1,5 +1,6 @@
-import { BRICK_SIZE } from "../const/SCREEN";
-import Tank from "./Tank";
+import { PLAYER_DESTROY_AUDIO } from '../const/AUDIO.js'
+import { BRICK_SIZE } from '../const/SCREEN.js'
+import Tank from './Tank.js'
 
 export default class Base extends Tank {
   constructor(context, task) {
@@ -27,11 +28,15 @@ export default class Base extends Tank {
   shoot() {}
 
   underAttack() {
-    this.destroy()
+    this.destroy(PLAYER_DESTROY_AUDIO.duration)
     this.task()
   }
 
   draw() {
     this.drawImage()
+  }
+
+  playDestroySound() {
+    PLAYER_DESTROY_AUDIO.play()
   }
 }

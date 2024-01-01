@@ -46,7 +46,7 @@ function changeTypeOfTiles(tiles, tileType) {
   tiles.forEach(tile => updateCurrentMap(tile, tileType))
 }
 
-const { WALL, GRASS, ICE, GRID, WATER, HOME, ANOTHERHOME } = TILE_TYPE
+const { WALL, GRASS, ICE, GRID, WATER, HOME, FLAG } = TILE_TYPE
 export default class BattleField {
   wTileCount = 26 //主游戏区的宽度地图块数
   hTileCount = 26 //主游戏区的高度地图块数
@@ -160,6 +160,18 @@ export default class BattleField {
           this.wallCtx.drawImage(
             RESOURCE_IMAGE,
             this.homePosX,
+            this.homePosY,
+            this.homeSize,
+            this.homeSize,
+            j * this.tileSize + this.offsetX,
+            i * this.tileSize + this.offsetY,
+            this.homeSize,
+            this.homeSize
+          )
+        } else if (tileType === FLAG) {
+          this.wallCtx.drawImage(
+            RESOURCE_IMAGE,
+            this.homePosX + this.homeSize,
             this.homePosY,
             this.homeSize,
             this.homeSize,
