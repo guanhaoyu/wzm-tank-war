@@ -11,6 +11,8 @@ TODO:
 
 - 偶现一次p1凭空出现护盾问题
 
+- 偶现一次p1重生时和敌坦克发生重叠的情况，调试思路：只生成一个敌坦克，消灭p1后瞬移到复活点🖋
+
 - 雪地可加效果
 
 - 单机双人模式
@@ -33,7 +35,7 @@ TODO:
 
 - 自动进入下一关✅
 
-- 有些reward画出来一开始会闪烁一下不知道为什么，有点像掉帧，因为如果把敌坦克isStop设为true的话，reward就不会闪烁。✅原因：可能是sparkManager.delete性能太差导致的掉帧，改为不使用delete也确实好了，但是却也无法解释为什么用setTimeout 100还是会出现一闪的情况，可以解释，setTimeout只是降低了画布更新频率，帧率还是没变，该掉帧还是掉帧
+- 有些reward画出来一开始会闪烁一下不知道为什么，有点像掉帧，因为如果把敌坦克isStop设为true的话，reward就不会闪烁。✅原因：可能是sparkManager.delete性能太差导致的掉帧，改为不使用delete也确实好了，但是却也无法解释为什么用setTimeout 100还是会出现一闪的情况。————可以解释，setTimeout只是降低了画布更新频率，帧率还是没变，该掉帧还是掉帧。————存疑：应该不是掉帧
 
 - p1复活时可以二连发问题。✅原因：birth时coolDownFrames没有重置为0，导致birth时shootable为true，打出第一下，下一帧coolDownFrames等于limit，shootable又为true，又能开一炮
 
