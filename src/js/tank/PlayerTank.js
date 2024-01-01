@@ -30,6 +30,7 @@ export default class PlayerTank extends Tank {
     this.y = BIRTH_COORDINATE[1]
     this.direction = DIRECTION.UP
     this.speed = 2
+    this.explosion = null
   }
 
   create() {
@@ -40,12 +41,34 @@ export default class PlayerTank extends Tank {
   }
 
   draw(codes) {
-    if (!this.isDestroyed) {
+    if (this.isDestroyed) {
+      this.rebirth()
+    } else {
       this.drawImage()
       this.protect()
       this.move(codes)
       this.shoot(codes)
       this.coolDown()
+    }
+  }
+
+  rebirth() {
+    if (this.lives > 0 && this.explosion && !this.explosion.isAppeared) {
+      const result = interactiveManager.getTanks().some(tank =>
+        isCollided(tank, [
+          {
+            x: BIRTH_COORDINATE[0],
+            y: BIRTH_COORDINATE[1],
+            width: this.width,
+            height: this.height,
+          },
+        ])
+      )
+      if (result) {
+        requestAnimationFrame(this.birth.bind(this))
+      } else {
+        this.birth()
+      }
     }
   }
 
@@ -106,29 +129,14 @@ export default class PlayerTank extends Tank {
     PLAYER_DESTROY_AUDIO.play()
   }
 
+  embraceExplosion(explosion) {
+    this.explosion = explosion
+  }
+
   underAttack() {
     if (!this.isProtected) {
       this.lives--
-      this.destroy()
-      if (this.lives > 0) {
-        setTimeout(() => {
-          const result = interactiveManager.getTanks().some(tank =>
-            isCollided(tank, [
-              {
-                x: BIRTH_COORDINATE[0],
-                y: BIRTH_COORDINATE[1],
-                width: this.width,
-                height: this.height,
-              },
-            ])
-          )
-          if (result) {
-            requestAnimationFrame(this.birth.bind(this))
-          } else {
-            this.birth()
-          }
-        }, PLAYER_DESTROY_AUDIO.duration * 1000)
-      }
+      this.destroy(explosion => (this.explosion = explosion))
     }
   }
 

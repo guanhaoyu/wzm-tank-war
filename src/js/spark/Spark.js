@@ -52,9 +52,7 @@ export default class Spark {
     }
   }
 
-  judgeIsAppeared() {
-    this.isAppeared = false
-  }
+  judgeIsAppeared() {}
 }
 
 class SparkManager {

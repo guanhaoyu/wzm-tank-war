@@ -50,10 +50,13 @@ export default class Tank extends Spirit {
   destroy(duration = TANK_DESTROY_AUDIO.duration) {
     if (!this.isDestroyed) {
       this.isDestroyed = true
-      createExplosion(this.ctx, 'tankBomb', this.x, this.y, this.width, this.height, duration)
+      const explosion = createExplosion(this.ctx, 'tankBomb', this.x, this.y, this.width, this.height, duration)
       this.playDestroySound()
+      this.embraceExplosion(explosion)
     }
   }
+
+  embraceExplosion(explosion) {}
 
   playDestroySound() {
     TANK_DESTROY_AUDIO.play()

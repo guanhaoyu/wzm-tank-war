@@ -20,5 +20,7 @@ export default class Explosion extends Spark {
 export function createExplosion(ctx, type, x, y, width, height, duration) {
   const [cx, cy] = calculateCenter(x, y, width, height)
   const halfSize = SPARK_TYPE[type].size / 2
-  new Explosion(ctx, type, duration).create(cx - halfSize, cy - halfSize)
+  const explosion = new Explosion(ctx, type, duration)
+  explosion.create(cx - halfSize, cy - halfSize)
+  return explosion
 }
