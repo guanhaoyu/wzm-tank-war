@@ -13,11 +13,8 @@ import { calculateCenter } from '../utils/geometry.js'
 export default class Tank extends Spirit {
   constructor(context, type) {
     super(context, type)
-    // 敌方坦克切换方向的时间？
-    this.frame = 0
+    // 阵营
     this.camp = null
-    // 是否碰到坦克或者墙
-    this.hit = false
     // 是否自动
     this.isAI = false
     // 避免多次调用destroy方法
@@ -26,6 +23,7 @@ export default class Tank extends Spirit {
 
     this.coolDownTime = 1.5
     this.coolDownFrames = 0
+    // 是否可以射击
     this.shootable = true
     // 击中坦克的子弹
     this.bullets = new Set()
@@ -100,7 +98,7 @@ export default class Tank extends Spirit {
     for (let i = 0; i < this.speed; i = i + PLANCK_DISTANCE) {
       const [x, y] = step(this.direction, PLANCK_DISTANCE, [this.x, this.y])
       const result = isCollided(
-        { ...this, x, y, width: this.width, height: this.height },
+        { id: this.id, type: this.type, x, y, width: this.width, height: this.height },
         interactiveManager.getAllWithoutBullet()
       )
       if (result) {

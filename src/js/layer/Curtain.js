@@ -13,21 +13,21 @@ export default class Curtain {
     // 停留的帧数
     this.stayFrames = FPS * STAY_TIME
     // 已停留的帧数
-    this.frame = 0
+    this.frames = 0
   }
 
   fold(level, cb) {
     if (this.alreadyDrawHeight === SCREEN_HEIGHT) {
       // 停留
-      if (this.frame < this.stayFrames) {
-        this.frame ++
+      if (this.frames < this.stayFrames) {
+        this.frames ++
         const label = new Label(this.ctx)
         label.draw()
         const digital = new Digital(this.ctx)
         digital.draw(level, 308, 208)
       } else {
         cb()
-        this.frame = 0
+        this.frames = 0
       }
     } else {
       this.alreadyDrawHeight += this.step
