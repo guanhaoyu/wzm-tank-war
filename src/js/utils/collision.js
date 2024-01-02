@@ -1,4 +1,4 @@
-import { BATTLE_FIELD } from '../const/WORLD.js'
+import { BATTLE_FIELD } from '../BattleField.js'
 import { isTank } from './InteractiveManager.js'
 
 /**

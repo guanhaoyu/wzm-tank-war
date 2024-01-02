@@ -1,6 +1,6 @@
-import { POS, RESOURCE_IMAGE } from '../const/IMAGE'
-import { BRICK_SIZE, SCREEN_HEIGHT, SCREEN_WIDTH } from '../const/SCREEN'
-import { BATTLE_FIELD } from '../const/WORLD'
+import { BATTLE_FIELD } from '../BattleField.js'
+import { POS, RESOURCE_IMAGE } from '../const/IMAGE.js'
+import { BRICK_SIZE, SCREEN_HEIGHT, SCREEN_WIDTH } from '../const/SCREEN.js'
 
 const type = 'over'
 export default class GameOver {

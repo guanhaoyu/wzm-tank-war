@@ -7,12 +7,12 @@ import {
 } from './const/GAMESTATE.js'
 import KEYBOARD from './const/KEYBOARD.js'
 import { BRICK_SIZE, SCREEN_HEIGHT, SCREEN_WIDTH } from './const/SCREEN.js'
-import { BATTLE_FIELD, ENEMY_LOCATION, FPS, TILE_TYPE } from './const/WORLD.js'
+import { FPS, TILE_TYPE } from './const/WORLD.js'
 import Menu from './layer/Menu.js'
-import BattleField, { updateCurrentMap } from './BattleField.js'
+import BattleField, { BATTLE_FIELD, updateCurrentMap } from './BattleField.js'
 import Scoreboard from './Scoreboard.js'
 import PlayerTank from './tank/PlayerTank.js'
-import { Enemy1, Enemy2, Enemy3 } from './tank/EnemyTank.js'
+import { ENEMY_LOCATION, Enemy1, Enemy2, Enemy3 } from './tank/EnemyTank.js'
 import { isCollided } from './utils/collision.js'
 import interactiveManager from './utils/InteractiveManager.js'
 import { sparkManager } from './spark/Spark.js'
@@ -45,11 +45,16 @@ const gameStateToKeyboardEventMap = {
     } else if (code == KEYBOARD.BACKSPACE) {
       // trick 按退格全灭敌人
       interactiveManager.destroyAppearedEnemy()
+    } else if (code == KEYBOARD.B) {
+      // trick 按B无敌
+      this.player1.isProtected = true
+      this.player1.protectedFrames = 0
     } else if (code === KEYBOARD.EQUAL) {
       this.nextLevel()
     } else if (code === KEYBOARD.MINUS) {
       this.previousLevel()
     } else if (code === KEYBOARD.H) {
+      // trick 按H保护基地
       rewardManager.consume('protectHome')
     }
   },
@@ -87,8 +92,6 @@ export default class Game {
     this.level = 1
     this.isPause = false
     this.gameState = GAME_STATE_MENU
-    // this.gameState = GAME_STATE_INIT
-    // this.gameState = GAME_STATE_START
 
     this.restEnemy = TOTAL_ENEMY // 剩余敌方坦克数量
     this.appearedEnemy = 0 // 已上过战场的敌方坦克数量
@@ -319,10 +322,11 @@ export default class Game {
       for (let i = 0; i < willAppearEnemy; i++) {
         const willAppearEnemyLocationX =
           ENEMY_LOCATION[Math.floor(Math.random() * enemyLocationLen)] + BRICK_SIZE
+        const willAppearEnemyLocationY = BATTLE_FIELD.OFFSET_Y
         const result = isCollided(
           {
             x: willAppearEnemyLocationX,
-            y: BATTLE_FIELD.OFFSET_Y,
+            y: willAppearEnemyLocationY,
             width: BRICK_SIZE,
             height: BRICK_SIZE,
           },
@@ -334,7 +338,7 @@ export default class Game {
           const enemy = this.enemyStack.pop()
           enemy.create(
             willAppearEnemyLocationX + (BRICK_SIZE - enemy.width) / 2,
-            BATTLE_FIELD.OFFSET_Y
+            willAppearEnemyLocationY
           )
         }
       }

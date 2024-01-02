@@ -1,6 +1,7 @@
+import { BATTLE_FIELD } from '../BattleField.js'
 import { ATTACK_AUDIO, MOVE_AUDIO, PLAYER_DESTROY_AUDIO } from '../const/AUDIO.js'
 import KEYBOARD, { keyDirectionMap } from '../const/KEYBOARD.js'
-import { BATTLE_FIELD, CAMP, DIRECTION, FPS } from '../const/WORLD.js'
+import { CAMP, DIRECTION, FPS } from '../const/WORLD.js'
 import Invincible from '../spark/Invincible.js'
 import interactiveManager from '../utils/InteractiveManager.js'
 import { isCollided } from '../utils/collision.js'
@@ -64,9 +65,7 @@ export default class PlayerTank extends Tank {
           },
         ])
       )
-      if (result) {
-        requestAnimationFrame(this.birth.bind(this))
-      } else {
+      if (!result) {
         this.birth()
       }
     }

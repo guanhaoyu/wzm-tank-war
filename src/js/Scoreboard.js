@@ -1,6 +1,6 @@
+import { BATTLE_FIELD } from './BattleField.js'
 import { POS, RESOURCE_IMAGE } from './const/IMAGE.js'
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from './const/SCREEN.js'
-import { BATTLE_FIELD } from './const/WORLD.js'
 import Digital from './other/Digital.js'
 
 const startX = BATTLE_FIELD.OFFSET_X + BATTLE_FIELD.WIDTH

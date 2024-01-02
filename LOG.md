@@ -11,7 +11,7 @@ war of tanks develope by weizaomao
 
 - 偶现一次p1凭空出现护盾问题
 
-- 偶现一次p1重生时和敌坦克发生重叠的情况，调试思路：只生成一个敌坦克，消灭p1后瞬移到复活点🖋
+- 偶现一次p1重生时和敌坦克发生重叠的情况，调试思路：只生成一个敌坦克，消灭p1后瞬移到复活点。✅原因：从birth中抽出rebirth时，requestAnimationFrame里调的还是birth，导致在下一帧直接复活了，没有再次判断复活点有无障碍；但是不可以在此处调raf，在复活点始终有障碍物的情况下会爆栈，因为此处的raf意味着在每次更新画布时让js栈内rebirth函数增加一个，越往后随着画布更新次数增多每一帧要重复执行的rebirth也增加得越来越多，爆栈。更新动作不管是setTimeout还是raf都应该在最顶层且只有一个，故把BattleField里的protectHome中的raf也删掉
 
 ### feature: 
 

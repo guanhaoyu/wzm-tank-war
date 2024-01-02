@@ -1,10 +1,11 @@
-import { REWARD_AUDIO } from '../const/AUDIO'
-import { POS } from '../const/IMAGE'
-import { BRICK_SIZE } from '../const/SCREEN'
-import { BATTLE_FIELD, FPS } from '../const/WORLD'
-import interactiveManager from '../utils/InteractiveManager'
-import { checkCollision } from '../utils/collision'
-import Spark, { sparkManager } from './Spark'
+import { BATTLE_FIELD } from '../BattleField.js'
+import { REWARD_AUDIO } from '../const/AUDIO.js'
+import { POS } from '../const/IMAGE.js'
+import { BRICK_SIZE } from '../const/SCREEN.js'
+import { FPS } from '../const/WORLD.js'
+import interactiveManager from '../utils/InteractiveManager.js'
+import { checkCollision } from '../utils/collision.js'
+import Spark, { sparkManager } from './Spark.js'
 
 function addLives(target, count = 1) {
   target.lives += count

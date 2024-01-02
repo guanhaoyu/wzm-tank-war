@@ -29,16 +29,6 @@ const DIRECTION = {
   RIGHT: 3,
 }
 
-const ENEMY_LOCATION = [192, 0, 384] //相对于主游戏区
-
-/********************战场几何信息********************/
-const BATTLE_FIELD = {
-  WIDTH: 416,
-  HEIGHT: 416,
-  OFFSET_X: 32,
-  OFFSET_Y: 16,
-}
-
 /********************每秒帧数********************/
 const FPS = 60
 
@@ -81,8 +71,6 @@ export {
   DIRECTION,
   TILE_TYPE,
   FPS,
-  ENEMY_LOCATION,
-  BATTLE_FIELD,
   PLANCK_DISTANCE,
   CAMP
 }

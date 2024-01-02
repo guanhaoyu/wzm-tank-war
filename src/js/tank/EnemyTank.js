@@ -1,6 +1,7 @@
+import { BATTLE_FIELD } from '../BattleField.js'
 import { POS, RESOURCE_IMAGE } from '../const/IMAGE.js'
 import { BRICK_SIZE } from '../const/SCREEN.js'
-import { BATTLE_FIELD, CAMP, DIRECTION, FPS } from '../const/WORLD.js'
+import { CAMP, DIRECTION, FPS } from '../const/WORLD.js'
 import Blink from '../spark/Blink.js'
 import Tank from './Tank.js'
 
@@ -8,6 +9,9 @@ const { DOWN, LEFT, RIGHT } = DIRECTION
 const DIRECTION_LENGTH = Object.keys(DIRECTION).length
 
 const appearDirections = [DOWN, LEFT, RIGHT]
+
+export const ENEMY_LOCATION = [192, 0, 384] //相对于主游戏区
+
 class EnemyTank extends Tank {
   constructor(context, type) {
     super(context, type)
