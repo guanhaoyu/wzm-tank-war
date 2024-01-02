@@ -15,13 +15,13 @@ war of tanks develope by weizaomao
 
 ### feature: 
 
-- 雪地可加效果
+- 兼容性处理
 
-- 单机双人模式
+- 雪地可加效果
 
 - 联网多人模式
 
-- 兼容性处理
+- 单机双人模式✅
 
 - 毁灭后的家✅
 

@@ -1,19 +1,21 @@
-import { BATTLE_FIELD } from '../BattleField.js'
 import { ATTACK_AUDIO, MOVE_AUDIO, PLAYER_DESTROY_AUDIO } from '../const/AUDIO.js'
-import KEYBOARD, { keyDirectionMap } from '../const/KEYBOARD.js'
+import KEYBOARD from '../const/KEYBOARD.js'
 import { CAMP, DIRECTION, FPS } from '../const/WORLD.js'
 import Invincible from '../spark/Invincible.js'
 import interactiveManager from '../utils/InteractiveManager.js'
 import { isCollided } from '../utils/collision.js'
 import Tank from './Tank.js'
 
-const BIRTH_COORDINATE = [129 + BATTLE_FIELD.OFFSET_X, 389 + BATTLE_FIELD.OFFSET_Y]
 export default class PlayerTank extends Tank {
-  constructor(context) {
-    super(context, 'player')
+  constructor(context, type = 'player1') {
+    super(context, type)
+    this.lives = 0
     this.protectedTime = 25
     this.camp = CAMP.PLAYER
     this.invincible = new Invincible(context)
+    this.keyDirectionMap = {}
+    this.fireKey = null
+    this.birth_coordinate = []
   }
 
   get protectedFramesLimit() {
@@ -27,8 +29,8 @@ export default class PlayerTank extends Tank {
     this.shootable = true
     this.coolDownFrames = 0
     this.coolDownTime = 1
-    this.x = BIRTH_COORDINATE[0]
-    this.y = BIRTH_COORDINATE[1]
+    this.x = this.birth_coordinate[0]
+    this.y = this.birth_coordinate[1]
     this.direction = DIRECTION.UP
     this.speed = 2
     this.explosion = null
@@ -58,8 +60,8 @@ export default class PlayerTank extends Tank {
       const result = interactiveManager.getTanks().some(tank =>
         isCollided(tank, [
           {
-            x: BIRTH_COORDINATE[0],
-            y: BIRTH_COORDINATE[1],
+            x: this.birth_coordinate[0],
+            y: this.birth_coordinate[1],
             width: this.width,
             height: this.height,
           },
@@ -75,7 +77,7 @@ export default class PlayerTank extends Tank {
     let isStop = true
     for (let i = codes.length - 1; i >= 0; i--) {
       const code = codes[i]
-      const direction = keyDirectionMap.get(code)
+      const direction = this.keyDirectionMap[code]
       if (direction !== undefined) {
         this.direction = direction
         MOVE_AUDIO.play()
@@ -90,7 +92,7 @@ export default class PlayerTank extends Tank {
   }
 
   shoot(codes = []) {
-    if (codes.includes(KEYBOARD.SPACE)) {
+    if (codes.includes(this.fireKey)) {
       super.shoot()
     }
   }
@@ -135,12 +137,41 @@ export default class PlayerTank extends Tank {
   underAttack() {
     if (!this.isProtected) {
       this.lives--
-      this.destroy(explosion => (this.explosion = explosion))
+      this.destroy()
     }
   }
 
   upgrade() {
     this.coolDownTime = 0.9
     this.speed = 2.2
+  }
+}
+
+export class Player1 extends PlayerTank {
+  constructor(context) {
+    super(context, 'player1')
+    this.birth_coordinate = [161, 405]
+    this.keyDirectionMap = {
+      [KEYBOARD.W]: DIRECTION.UP,
+      [KEYBOARD.S]: DIRECTION.DOWN,
+      [KEYBOARD.A]: DIRECTION.LEFT,
+      [KEYBOARD.D]: DIRECTION.RIGHT,
+    }
+    this.fireKey = KEYBOARD.SPACE
+  }
+}
+
+export class Player2 extends PlayerTank {
+  constructor(context) {
+    super(context, 'player2')
+    this.birth_coordinate = [289, 405]
+    this.keyDirectionMap = {
+      [KEYBOARD.UP]: DIRECTION.UP,
+      [KEYBOARD.DOWN]: DIRECTION.DOWN,
+      [KEYBOARD.LEFT]: DIRECTION.LEFT,
+      [KEYBOARD.RIGHT]: DIRECTION.RIGHT,
+    }
+    this.fireKey = KEYBOARD.ENTER
+    this.protectedTime = 0
   }
 }

@@ -11,7 +11,7 @@ import { FPS, TILE_TYPE } from './const/WORLD.js'
 import Menu from './layer/Menu.js'
 import BattleField, { BATTLE_FIELD, updateCurrentMap } from './BattleField.js'
 import Scoreboard from './Scoreboard.js'
-import PlayerTank from './tank/PlayerTank.js'
+import { Player1, Player2 } from './tank/PlayerTank.js'
 import { ENEMY_LOCATION, Enemy1, Enemy2, Enemy3 } from './tank/EnemyTank.js'
 import { isCollided } from './utils/collision.js'
 import interactiveManager from './utils/InteractiveManager.js'
@@ -23,50 +23,6 @@ import Base from './tank/Base.js'
 import { PLAYER_DESTROY_AUDIO, START_AUDIO } from './const/AUDIO.js'
 
 const TOTAL_LEVEL = levels.length
-
-const gameStateToKeyboardEventMap = {
-  [GAME_STATE_MENU](code) {
-    if (code == KEYBOARD.ENTER || code == KEYBOARD.SPACE) {
-      this.gameState = GAME_STATE_INIT
-      START_AUDIO.play()
-      // fixme 只有一个玩家
-      if (this.menu.numberOfPlayers == 1) {
-      }
-    } else {
-      this.menu.next(code)
-    }
-  },
-  [GAME_STATE_START](code) {
-    if (code == KEYBOARD.P) {
-      this.pause()
-    } else if (code == KEYBOARD.T) {
-      // trick 按T定住敌人
-      interactiveManager.stopEnemy(60)
-    } else if (code == KEYBOARD.BACKSPACE) {
-      // trick 按退格全灭敌人
-      interactiveManager.destroyAppearedEnemy()
-    } else if (code == KEYBOARD.B) {
-      // trick 按B无敌
-      this.player1.isProtected = true
-      this.player1.protectedFrames = 0
-    } else if (code === KEYBOARD.EQUAL) {
-      this.nextLevel()
-    } else if (code === KEYBOARD.MINUS) {
-      this.previousLevel()
-    } else if (code === KEYBOARD.H) {
-      // trick 按H保护基地
-      rewardManager.consume('protectHome')
-    }
-  },
-  [GAME_STATE_OVER]() {
-    if (this.gameOver.isOver) {
-      this.gameState = GAME_STATE_MENU
-    }
-  },
-  [GAME_STATE_WIN]() {
-    this.gameState = GAME_STATE_MENU
-  },
-}
 
 /**
  * 设置元素宽高尺寸
@@ -116,6 +72,10 @@ export default class Game {
     return interactiveManager.getTanks('enemy')
   }
 
+  get hasPlayer2 () {
+    return this.menu.numberOfPlayers > 1
+  }
+
   prepare() {
     const container = document.querySelector('.container')
     container.style.width = `${SCREEN_WIDTH}px`
@@ -138,9 +98,53 @@ export default class Game {
     this.menu = new Menu(stageCtx)
     this.battleField = new BattleField(wallCtx, this.grassCtx)
     this.scoreboard = new Scoreboard(wallCtx)
-    this.player1 = new PlayerTank(this.tankCtx)
+    this.player1 = new Player1(this.tankCtx)
+    this.player2 = new Player2(this.tankCtx)
     this.base = new Base(this.tankCtx, this.loseHome.bind(this))
     this.gameOver = new GameOver(overCtx)
+
+    this.gameStateToKeyboardEventMap = {
+      [GAME_STATE_MENU]: code => {
+        if (code == KEYBOARD.ENTER || code == KEYBOARD.SPACE) {
+          this.gameState = GAME_STATE_INIT
+          START_AUDIO.play()
+        } else {
+          this.menu.next(code)
+        }
+      },
+      [GAME_STATE_START]: code => {
+        if (code == KEYBOARD.P) {
+          this.pause()
+        } else if (code == KEYBOARD.T) {
+          // trick 按T定住敌人
+          interactiveManager.stopEnemy(60)
+        } else if (code == KEYBOARD.BACKSPACE) {
+          // trick 按退格全灭敌人
+          interactiveManager.destroyAppearedEnemy()
+        } else if (code == KEYBOARD.B) {
+          // trick 按B无敌
+          this.player1.isProtected = true
+          this.player1.protectedFrames = 0
+          this.player2.isProtected = true
+          this.player2.protectedFrames = 0
+        } else if (code === KEYBOARD.EQUAL) {
+          // this.nextLevel()
+        } else if (code === KEYBOARD.MINUS) {
+          // this.previousLevel()
+        } else if (code === KEYBOARD.H) {
+          // trick 按H保护基地
+          rewardManager.consume('protectHome')
+        }
+      },
+      [GAME_STATE_OVER]: () => {
+        if (this.gameOver.isOver) {
+          this.gameState = GAME_STATE_MENU
+        }
+      },
+      [GAME_STATE_WIN]: () => {
+        this.gameState = GAME_STATE_MENU
+      },
+    }
   }
 
   prepareEnemyTanks() {
@@ -151,21 +155,10 @@ export default class Game {
     })
   }
 
-  handleKeydownOnMenu(code) {
-    if (code == KEYBOARD.ENTER) {
-      this.gameState = GAME_STATE_INIT
-      // fixme 只有一个玩家
-      if (this.menu.numberOfPlayers == 1) {
-      }
-    } else {
-      this.menu.next(code)
-    }
-  }
-
   handleKeyboardEvent() {
     document.addEventListener('keydown', ({ code }) => {
       this.codes.add(code)
-      gameStateToKeyboardEventMap[this.gameState]?.call(this, code)
+      this.gameStateToKeyboardEventMap[this.gameState]?.(code)
     })
     document.addEventListener('keyup', ({ code }) => {
       this.codes.delete(code)
@@ -179,9 +172,12 @@ export default class Game {
   }
 
   fail() {
-    // fixme 只有一个玩家
     this.player1.destroy()
     this.player1.lives = 0
+    if (this.hasPlayer2) {
+      this.player2.destroy()
+      this.player2.lives = 0
+    }
     this.gameState = GAME_STATE_OVER
   }
 
@@ -205,7 +201,7 @@ export default class Game {
 
   drawLives() {
     this.scoreboard.drawLives(this.player1.lives, 1)
-    this.scoreboard.drawLives(0, 2)
+    this.scoreboard.drawLives(this.player2.lives, 2)
   }
 
   drawLevel() {
@@ -232,8 +228,10 @@ export default class Game {
     rewardManager.addRewardFrames = 0
     interactiveManager.clear()
     sparkManager.clear()
-    this.player1?.create()
-    this.player2?.create()
+    this.player1.create()
+    if (this.hasPlayer2) {
+      this.player2.create()
+    }
     this.base.create()
     this.restEnemy = TOTAL_ENEMY
     this.appearedEnemy = 0
@@ -246,9 +244,17 @@ export default class Game {
       this.isWinAlerted = true
       alert('💐恭喜您赢得了胜利✌🏻')
     }
-    if (this.player1.lives === 0 && this.gameState !== GAME_STATE_OVER) {
-      this.fail()
+
+    if (this.gameState !== GAME_STATE_OVER) {
+      if (this.hasPlayer2 && this.player1.lives === 0 && this.player2.lives === 0) {
+        this.fail()
+      } else {
+        if (this.player1.lives === 0) {
+          this.fail()
+        }
+      }
     }
+
     const enemyArrLen = this.enemyArr.length
     if (this.restEnemy === 0 && enemyArrLen === 0) {
       this.nextLevel()
