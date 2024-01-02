@@ -62,9 +62,9 @@ export default class Menu {
    * @param {number} keyCode
    */
   next(keyCode) {
-    if (keyCode === KEYBOARD.DOWN || KEYBOARD.S) {
+    if ([KEYBOARD.DOWN, KEYBOARD.S].includes(keyCode)) {
       this.numberOfPlayers = 2
-    } else if (keyCode === KEYBOARD.UP || KEYBOARD.W) {
+    } else if ([KEYBOARD.UP, KEYBOARD.W].includes(keyCode)) {
       this.numberOfPlayers = 1
     }
     this.selectTank.move(keyDirectionMap.get(keyCode))

@@ -172,6 +172,5 @@ export class Player2 extends PlayerTank {
       [KEYBOARD.RIGHT]: DIRECTION.RIGHT,
     }
     this.fireKey = KEYBOARD.ENTER
-    this.protectedTime = 0
   }
 }

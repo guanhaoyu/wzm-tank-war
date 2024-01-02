@@ -128,9 +128,9 @@ export default class Game {
           this.player2.isProtected = true
           this.player2.protectedFrames = 0
         } else if (code === KEYBOARD.EQUAL) {
-          // this.nextLevel()
+          this.nextLevel()
         } else if (code === KEYBOARD.MINUS) {
-          // this.previousLevel()
+          this.previousLevel()
         } else if (code === KEYBOARD.H) {
           // trick 按H保护基地
           rewardManager.consume('protectHome')
