@@ -33,7 +33,7 @@ const DIRECTION = {
 const FPS = 60
 
 /********************最小距离********************/
-const PLANCK_DISTANCE = 0.5
+const PLANCK_LENGTH = 0.1
 
 /********************星火类型********************/
 const SPARK_TYPE = {
@@ -71,6 +71,6 @@ export {
   DIRECTION,
   TILE_TYPE,
   FPS,
-  PLANCK_DISTANCE,
+  PLANCK_LENGTH,
   CAMP
 }

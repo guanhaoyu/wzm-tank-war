@@ -1,6 +1,6 @@
 # 煨灶猫的坦克大战
 
-[在线体验点这里](https://github.com/guanhaoyu/wzm-tank-war)
+[PC在线体验点这里](https://github.com/guanhaoyu/wzm-tank-war)
 
 操作说明：
 

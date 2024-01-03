@@ -2,7 +2,7 @@ import { updateCurrentMap } from '../BattleField.js'
 import { step } from '../action/movement.js'
 import { BULLET_DESTROY_AUDIO } from '../const/AUDIO.js'
 import { RESOURCE_IMAGE } from '../const/IMAGE.js'
-import { CAMP, DIRECTION, PLANCK_DISTANCE, TILE_TYPE } from '../const/WORLD.js'
+import { CAMP, DIRECTION, PLANCK_LENGTH, TILE_TYPE } from '../const/WORLD.js'
 import { createExplosion } from '../spark/Explosion.js'
 import Spirit from '../spirit/Spirit.js'
 import interactiveManager from '../utils/InteractiveManager.js'
@@ -13,8 +13,8 @@ const { UP, DOWN, LEFT, RIGHT } = DIRECTION
 export default class Bullet extends Spirit {
   constructor(context, camp) {
     super(context, 'bullet')
-    // 不能超过16，否则有能打穿2个墙
-    this.speed = 10
+    // 不能超过16，否则能打穿2个墙
+    this.speed = 6
     this.camp = camp
     // 避免多次调用destroy方法
     this.isDestroyed = false
@@ -85,8 +85,8 @@ export default class Bullet extends Spirit {
   }
 
   move() {
-    for (let i = 0; i < this.speed; i = i + PLANCK_DISTANCE) {
-      const [x, y] = step(this.direction, PLANCK_DISTANCE, [this.x, this.y])
+    for (let i = 0; i < this.speed; i = i + PLANCK_LENGTH) {
+      const [x, y] = step(this.direction, PLANCK_LENGTH, [this.x, this.y])
       const collisionTarget = checkCollision(
         { x, y, width: this.width, height: this.height, id: this.id },
         /**

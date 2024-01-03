@@ -3,7 +3,7 @@ import Bullet from '../bullet/Bullet.js'
 import { TANK_DESTROY_AUDIO } from '../const/AUDIO.js'
 import { RESOURCE_IMAGE } from '../const/IMAGE.js'
 import { BRICK_SIZE } from '../const/SCREEN.js'
-import { FPS, PLANCK_DISTANCE } from '../const/WORLD.js'
+import { FPS, PLANCK_LENGTH } from '../const/WORLD.js'
 import { createExplosion } from '../spark/Explosion.js'
 import Spirit from '../spirit/Spirit.js'
 import interactiveManager from '../utils/InteractiveManager.js'
@@ -54,7 +54,7 @@ export default class Tank extends Spirit {
     }
   }
 
-  embraceExplosion(explosion) {}
+  embraceExplosion() {}
 
   playDestroySound() {
     TANK_DESTROY_AUDIO.play()
@@ -94,9 +94,9 @@ export default class Tank extends Spirit {
   }
 
   move() {
-    let voyage = 0
-    for (let i = 0; i < this.speed; i = i + PLANCK_DISTANCE) {
-      const [x, y] = step(this.direction, PLANCK_DISTANCE, [this.x, this.y])
+    let voyage
+    for (voyage = 0; voyage < this.speed; voyage += PLANCK_LENGTH) {
+      const [x, y] = step(this.direction, PLANCK_LENGTH, [this.x, this.y])
       const result = isCollided(
         { id: this.id, type: this.type, x, y, width: this.width, height: this.height },
         interactiveManager.getAllWithoutBullet()
@@ -107,7 +107,6 @@ export default class Tank extends Spirit {
       } else {
         this.x = x
         this.y = y
-        voyage += PLANCK_DISTANCE
       }
     }
     if (voyage === this.speed) {
