@@ -1,5 +1,5 @@
 function getPrecision(...args) {
-  args.reduce((prev, cur) => {
+  return args.reduce((prev, cur) => {
     if (typeof cur === 'number') {
       const [_, float] = cur.toString().split('.')
       if (float) {

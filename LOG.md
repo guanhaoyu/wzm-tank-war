@@ -67,6 +67,8 @@ war of tanks develope by weizaomao
 
 ### 已知bug
 
+- 修复基地爆炸后move音效一直存在的bug✅
+
 - 处理敌坦克move时的里程精度丢失问题✅
 
 - 普朗克长度太大导致速度不精确，导致e3不会自动转向✅

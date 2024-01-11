@@ -20,7 +20,7 @@ import { rewardManager } from './spark/Reward.js'
 import levels from './const/LEVEL.js'
 import GameOver from './layer/GameOver.js'
 import Base from './tank/Base.js'
-import { PLAYER_DESTROY_AUDIO, START_AUDIO } from './const/AUDIO.js'
+import { MOVE_AUDIO, PLAYER_DESTROY_AUDIO, START_AUDIO } from './const/AUDIO.js'
 
 const TOTAL_LEVEL = levels.length
 
@@ -167,6 +167,7 @@ export default class Game {
 
   loseHome() {
     this.fail()
+    MOVE_AUDIO.pause()
     PLAYER_DESTROY_AUDIO.play()
     updateCurrentMap([24, 12], TILE_TYPE.FLAG)
   }
