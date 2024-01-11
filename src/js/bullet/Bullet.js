@@ -7,6 +7,7 @@ import { createExplosion } from '../spark/Explosion.js'
 import Spirit from '../spirit/Spirit.js'
 import interactiveManager from '../utils/InteractiveManager.js'
 import { checkCollision } from '../utils/collision.js'
+import { add, sub } from '../utils/decimal.js'
 
 const { UP, DOWN, LEFT, RIGHT } = DIRECTION
 // 不同阵营的子弹可以对撞，也属于障碍物
@@ -23,17 +24,17 @@ export default class Bullet extends Spirit {
   create([x, y], direction, [width, height] = [0, 0]) {
     this.direction = direction
     if (direction === UP) {
-      this.x = x - this.width / 2
-      this.y = y - height / 2 - this.height
+      this.x = sub(x, this.width / 2)
+      this.y = sub(y, this.height / 2, this.height)
     } else if (direction === DOWN) {
-      this.x = x - this.width / 2
-      this.y = y + height / 2
+      this.x = sub(x, this.width / 2)
+      this.y = add(y, height / 2)
     } else if (direction === LEFT) {
-      this.x = x - width / 2 - this.width
-      this.y = y - this.height / 2
+      this.x = sub(x, width / 2, this.width)
+      this.y = sub(y, this.height / 2)
     } else {
-      this.x = x + width / 2
-      this.y = y - this.height / 2
+      this.x = add(x, width / 2)
+      this.y = sub(y, this.height / 2)
     }
     interactiveManager.add(this)
   }
@@ -87,7 +88,7 @@ export default class Bullet extends Spirit {
   move() {
     for (let i = 0; i < this.speed; i = i + PLANCK_LENGTH) {
       const [x, y] = step(this.direction, PLANCK_LENGTH, [this.x, this.y])
-      const collisionTarget = checkCollision(
+      const collisionTargets = checkCollision(
         { x, y, width: this.width, height: this.height, id: this.id },
         /**
          * 过滤出不同阵营以解决以下2个问题：
@@ -96,8 +97,8 @@ export default class Bullet extends Spirit {
          */
         interactiveManager.getAll().filter(el => el.camp !== this.camp && el.tileType !== TILE_TYPE.WATER),
       )
-      if (collisionTarget) {
-        this.collide(collisionTarget)
+      if (collisionTargets.length) {
+        this.collide(collisionTargets)
       } else {
         this.x = x
         this.y = y
@@ -105,7 +106,7 @@ export default class Bullet extends Spirit {
     }
   }
 
-  collide(obstacle) {
+  collide(obstacles) {
     // 子弹撞到障碍物，吸附到障碍物上再爆炸
     // if (this.direction === UP) {
     //   this.y = obstacle.y + obstacle.height
@@ -117,11 +118,13 @@ export default class Bullet extends Spirit {
     //   this.x = obstacle.x
     // }
     this.destroy()
-    if (typeof obstacle.isShooted === 'function') {
-      obstacle.isShooted(this.id)
-    } else {
-      this.damage(obstacle)
-    }
+    obstacles.forEach(obstacle => {
+      if (typeof obstacle.isShooted === 'function') {
+        obstacle.isShooted(this.id)
+      } else {
+        this.damage(obstacle)
+      }
+    })
   }
 
   damage(tile) {

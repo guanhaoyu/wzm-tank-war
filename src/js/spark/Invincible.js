@@ -1,4 +1,5 @@
 import { RESOURCE_IMAGE } from "../const/IMAGE";
+import { sub } from "../utils/decimal";
 import Spark from "./Spark";
 
 export default class Invincible extends Spark {
@@ -8,8 +9,8 @@ export default class Invincible extends Spark {
   }
 
   setLocation(x, y, width, height) {
-    this.x = x - (this.size - width) / 2
-    this.y = y - (this.size - height) / 2
+    this.x = sub(x, sub(this.size, width) / 2)
+    this.y = sub(y, sub(this.size, height) / 2)
   }
 
   drawImage() {

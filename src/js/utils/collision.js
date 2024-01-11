@@ -18,6 +18,29 @@ function isOverlap([a, b], [c, d]) {
   return result
 }
 
+export function overlap(a, b, c, d) {
+  // 计算两条线段的起点和终点
+  let start1 = a
+  let end1 = b
+  let start2 = c
+  let end2 = d
+
+  // 对起点和终点排序,便于计算
+  if (start1 > end1) {
+    ;[start1, end1] = [end1, start1]
+  }
+  if (start2 > end2) {
+    ;[start2, end2] = [end2, start2]
+  }
+
+  // 计算重叠长度
+  let overlap = 0
+  if (end1 >= start2 && end2 >= start1) {
+    overlap = Math.min(end1, end2) - Math.max(start1, start2)
+  }
+  return overlap
+}
+
 /**
  * 碰撞检测V2
  * @param {{id?: string, x: number, y: number, width: number, height: number, type?: string}} target
@@ -46,12 +69,9 @@ export function isCollided(
           tWidth = tHeight = Math.max(tWidth, tHeight)
           oWidth = oHeight = Math.max(oWidth, oHeight)
         }
-        
-        const resultX = isOverlap([target.x, target.x + tWidth], [obstacle.x, obstacle.x + oWidth])
-        const resultY = isOverlap(
-          [target.y, target.y + tHeight],
-          [obstacle.y, obstacle.y + oHeight]
-        )
+
+        const resultX = overlap(target.x, target.x + tWidth, obstacle.x, obstacle.x + oWidth)
+        const resultY = overlap(target.y, target.y + tHeight, obstacle.y, obstacle.y + oHeight)
         return resultX && resultY
       }) || !isInBoundary(target, boundary)
   )
@@ -73,20 +93,21 @@ export function checkCollision(
     height: BATTLE_FIELD.HEIGHT,
   }
 ) {
+  let collisionTargets = []
   const obstaclesBeyondItself = obstacles.filter(obstacle => obstacle.id !== target.id)
   for (const obstacle of obstaclesBeyondItself) {
     if (
-      isOverlap([target.x, target.x + target.width], [obstacle.x, obstacle.x + obstacle.width]) &&
-      isOverlap([target.y, target.y + target.height], [obstacle.y, obstacle.y + obstacle.height])
+      overlap(target.x, target.x + target.width, obstacle.x, obstacle.x + obstacle.width) &&
+      overlap(target.y, target.y + target.height, obstacle.y, obstacle.y + obstacle.height)
     ) {
-      return obstacle
-    }
-    const collisionBoundary = checkCollisionBoundary(target, boundary)
-    if (collisionBoundary) {
-      return collisionBoundary
+      collisionTargets.push(obstacle)
     }
   }
-  return null
+  const collisionBoundary = checkCollisionBoundary(target, boundary)
+  if (collisionBoundary) {
+    collisionTargets.push(collisionBoundary)
+  }
+  return collisionTargets
 }
 
 /**

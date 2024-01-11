@@ -23,6 +23,8 @@ war of tanks develope by weizaomao
 
 - 联网多人模式
 
+- 坦克遇到静物碰撞检测修正✅
+
 - 单机双人模式✅
 
 - 毁灭后的家✅
@@ -64,6 +66,8 @@ war of tanks develope by weizaomao
 - 发射CD✅
 
 ### 已知bug
+
+- 处理敌坦克move时的里程精度丢失问题✅
 
 - 普朗克长度太大导致速度不精确，导致e3不会自动转向✅
 

@@ -3,11 +3,12 @@ import Bullet from '../bullet/Bullet.js'
 import { TANK_DESTROY_AUDIO } from '../const/AUDIO.js'
 import { RESOURCE_IMAGE } from '../const/IMAGE.js'
 import { BRICK_SIZE } from '../const/SCREEN.js'
-import { FPS, PLANCK_LENGTH } from '../const/WORLD.js'
+import { ALLOW_COLLISION_LENGTH, DIRECTION, FPS, PLANCK_LENGTH } from '../const/WORLD.js'
 import { createExplosion } from '../spark/Explosion.js'
 import Spirit from '../spirit/Spirit.js'
 import interactiveManager from '../utils/InteractiveManager.js'
-import { isCollided } from '../utils/collision.js'
+import { checkCollision, isCollided, overlap } from '../utils/collision.js'
+import { add } from '../utils/decimal.js'
 import { calculateCenter } from '../utils/geometry.js'
 
 export default class Tank extends Spirit {
@@ -95,15 +96,83 @@ export default class Tank extends Spirit {
 
   move() {
     let voyage
-    for (voyage = 0; voyage < this.speed; voyage += PLANCK_LENGTH) {
+    for (voyage = 0; voyage < this.speed; voyage = add(voyage, PLANCK_LENGTH)) {
       const [x, y] = step(this.direction, PLANCK_LENGTH, [this.x, this.y])
-      const result = isCollided(
-        { id: this.id, type: this.type, x, y, width: this.width, height: this.height },
-        interactiveManager.getAllWithoutBullet()
+      const interactiveList = interactiveManager.getAllWithoutBullet()
+      const collisionTargets = checkCollision(
+        { ...this, x, y, width: this.width, height: this.height },
+        interactiveList
       )
-      if (result) {
+      const collisionCount = collisionTargets.length
+      if (collisionCount > 1) {
         this.collide()
         break
+      } else if (collisionCount === 1) {
+        const collisionTarget = collisionTargets[0]
+        if ([DIRECTION.DOWN, DIRECTION.UP].includes(this.direction)) {
+          const x1 = x + this.width
+          const cx = collisionTarget.x
+          const cx1 = cx + collisionTarget.width
+          if (overlap(x, x1, cx, cx1) < ALLOW_COLLISION_LENGTH) {
+            let nextX = null
+            // 判断左右关系，坦克在右
+            if (x < cx1 && x1 > cx1) {
+              nextX = cx1
+            } else if (x < cx && x1 > cx) {
+              nextX = cx - this.width
+            } else {
+              this.collide()
+              break
+            }
+            if (nextX !== null) {
+              const collisionTargets = checkCollision(
+                { ...this, x: nextX, y, width: this.width, height: this.height },
+                interactiveList
+              )
+              if (collisionTargets.length === 0) {
+                this.x = nextX
+                this.y = y
+              } else {
+                this.collide()
+                break
+              }
+            }
+          } else {
+            this.collide()
+            break
+          }
+        } else {
+          const y1 = y + this.height
+          const cy = collisionTarget.y
+          const cy1 = cy + collisionTarget.height
+          if (overlap(y, y1, cy, cy1) < ALLOW_COLLISION_LENGTH) {
+            let nextY = null
+            if (y < cy1 && y1 > cy1) {
+              nextY = cy1
+            } else if (y < cy && y1 > cy) {
+              nextY = cy - this.height
+            } else {
+              this.collide()
+              break
+            }
+            if (nextY !== null) {
+              const collisionTargets = checkCollision(
+                { ...this, x, y: nextY, width: this.width, height: this.height },
+                interactiveList
+              )
+              if (collisionTargets.length === 0) {
+                this.x = x
+                this.y = nextY
+              } else {
+                this.collide()
+                break
+              }
+            }
+          } else {
+            this.collide()
+            break
+          }
+        }
       } else {
         this.x = x
         this.y = y

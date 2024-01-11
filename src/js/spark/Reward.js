@@ -51,13 +51,15 @@ export default class Reward extends Spark {
     if (this.frames >= this.durationFrames) {
       this.isAppeared = false
     } else {
-      const collisionTarget = checkCollision(
+      const collisionTargets = checkCollision(
         { x: this.x, y: this.y, width: this.size, height: this.size, id: this.id },
         interactiveManager.getTanks().filter(el => el.type?.includes('player'))
       )
-      if (collisionTarget) {
+      if (collisionTargets.length) {
         REWARD_AUDIO.play()
-        rewards[this.index](collisionTarget)
+        collisionTargets.forEach(collisionTarget => {
+          rewards[this.index](collisionTarget)
+        })
         this.isAppeared = false
       }
     }

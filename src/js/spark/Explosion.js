@@ -1,4 +1,5 @@
 import { FPS, SPARK_TYPE } from '../const/WORLD.js'
+import { sub } from '../utils/decimal.js'
 import { calculateCenter } from '../utils/geometry.js'
 import Spark from './Spark.js'
 
@@ -21,6 +22,6 @@ export function createExplosion(ctx, type, x, y, width, height, duration) {
   const [cx, cy] = calculateCenter(x, y, width, height)
   const halfSize = SPARK_TYPE[type].size / 2
   const explosion = new Explosion(ctx, type, duration)
-  explosion.create(cx - halfSize, cy - halfSize)
+  explosion.create(sub(cx, halfSize), sub(cy, halfSize))
   return explosion
 }

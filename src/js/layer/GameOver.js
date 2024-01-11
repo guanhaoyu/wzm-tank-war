@@ -1,13 +1,14 @@
 import { BATTLE_FIELD } from '../BattleField.js'
 import { POS, RESOURCE_IMAGE } from '../const/IMAGE.js'
 import { BRICK_SIZE, SCREEN_HEIGHT, SCREEN_WIDTH } from '../const/SCREEN.js'
+import { sub } from '../utils/decimal.js'
 
 const type = 'over'
 export default class GameOver {
   constructor(context) {
     this.ctx = context
     this.x = 176
-    this.finalY = SCREEN_HEIGHT / 2 - BRICK_SIZE / 2
+    this.finalY = sub(SCREEN_HEIGHT / 2, BRICK_SIZE / 2)
     this.posX = POS[type][0]
     this.posY = POS[type][1]
     this.enterSpeed = 4

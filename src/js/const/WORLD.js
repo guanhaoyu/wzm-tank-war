@@ -29,6 +29,9 @@ const DIRECTION = {
   RIGHT: 3,
 }
 
+/******************允许碰撞长度******************/
+const ALLOW_COLLISION_LENGTH = 5
+
 /********************每秒帧数********************/
 const FPS = 60
 
@@ -72,5 +75,6 @@ export {
   TILE_TYPE,
   FPS,
   PLANCK_LENGTH,
-  CAMP
+  CAMP,
+  ALLOW_COLLISION_LENGTH,
 }
