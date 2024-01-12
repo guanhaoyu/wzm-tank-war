@@ -1,7 +1,7 @@
-import { FPS, SPARK_TYPE } from '../const/WORLD.js'
-import { sub } from '../utils/decimal.js'
-import { calculateCenter } from '../utils/geometry.js'
-import Spark from './Spark.js'
+import { FPS, SPARK_TYPE } from '../const/WORLD'
+import { sub } from '../utils/decimal'
+import { calculateCenter } from '../utils/geometry'
+import Spark from './Spark'
 
 export default class Explosion extends Spark {
   constructor(context, type, duration) {

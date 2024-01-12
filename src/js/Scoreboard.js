@@ -1,7 +1,7 @@
-import { BATTLE_FIELD } from './BattleField.js'
-import { POS, RESOURCE_IMAGE } from './const/IMAGE.js'
-import { SCREEN_HEIGHT, SCREEN_WIDTH } from './const/SCREEN.js'
-import Digital from './other/Digital.js'
+import { BATTLE_FIELD } from './BattleField'
+import { POS, RESOURCE_IMAGE } from './const/IMAGE'
+import { SCREEN_HEIGHT, SCREEN_WIDTH } from './const/SCREEN'
+import Digital from './other/Digital'
 
 const startX = BATTLE_FIELD.OFFSET_X + BATTLE_FIELD.WIDTH
 export default class Scoreboard {

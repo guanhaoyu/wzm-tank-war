@@ -1,5 +1,5 @@
-import Game from './js/Game.js'
-import { MENU_IMAGE, RESOURCE_IMAGE } from './js/const/IMAGE.js'
+import Game from './js/Game'
+import { MENU_IMAGE, RESOURCE_IMAGE } from './js/const/IMAGE'
 import './css/index.css'
 import {
   ATTACK_AUDIO,
@@ -8,8 +8,8 @@ import {
   PLAYER_DESTROY_AUDIO,
   START_AUDIO,
   TANK_DESTROY_AUDIO,
-} from './js/const/AUDIO.js'
-import { SPARK_TYPE } from './js/const/WORLD.js'
+} from './js/const/AUDIO'
+import { SPARK_TYPE } from './js/const/WORLD'
 
 const IMAGES = [RESOURCE_IMAGE, MENU_IMAGE]
 const AUDIO = [

@@ -1,10 +1,10 @@
-import { ATTACK_AUDIO, MOVE_AUDIO, PLAYER_DESTROY_AUDIO } from '../const/AUDIO.js'
-import KEYBOARD from '../const/KEYBOARD.js'
-import { CAMP, DIRECTION, FPS } from '../const/WORLD.js'
-import Invincible from '../spark/Invincible.js'
-import interactiveManager from '../utils/InteractiveManager.js'
-import { isCollided } from '../utils/collision.js'
-import Tank from './Tank.js'
+import { ATTACK_AUDIO, MOVE_AUDIO, PLAYER_DESTROY_AUDIO } from '../const/AUDIO'
+import KEYBOARD from '../const/KEYBOARD'
+import { CAMP, DIRECTION, FPS } from '../const/WORLD'
+import Invincible from '../spark/Invincible'
+import interactiveManager from '../helper/InteractiveManager'
+import { getCollisions } from '../utils/collision'
+import Tank from './Tank'
 
 export default class PlayerTank extends Tank {
   constructor(context, type = 'player1') {
@@ -57,17 +57,18 @@ export default class PlayerTank extends Tank {
 
   rebirth() {
     if (this.lives > 0 && this.explosion && !this.explosion.isAppeared) {
-      const result = interactiveManager.getTanks().some(tank =>
-        isCollided(tank, [
-          {
-            x: this.birth_coordinate[0],
-            y: this.birth_coordinate[1],
-            width: this.width,
-            height: this.height,
-          },
-        ])
+      const isTankHere = interactiveManager.getTanks().some(
+        tank =>
+          getCollisions(tank, [
+            {
+              x: this.birth_coordinate[0],
+              y: this.birth_coordinate[1],
+              width: this.width,
+              height: this.height,
+            },
+          ]).length
       )
-      if (!result) {
+      if (!isTankHere) {
         this.birth()
       }
     }

@@ -1,10 +1,10 @@
-import { POS, RESOURCE_IMAGE } from './const/IMAGE.js'
-import maps from './const/LEVEL.js'
-import { BRICK_SIZE, SCREEN_HEIGHT, SCREEN_WIDTH } from './const/SCREEN.js'
-import { FPS, OBSTACLE_TYPES, TILE_TYPE } from './const/WORLD.js'
-import { rewardManager } from './spark/Reward.js'
-import interactiveManager from './utils/InteractiveManager.js'
-import { isCollided } from './utils/collision.js'
+import { POS, RESOURCE_IMAGE } from './const/IMAGE'
+import maps from './const/LEVEL'
+import { BRICK_SIZE, SCREEN_HEIGHT, SCREEN_WIDTH } from './const/SCREEN'
+import { FPS, OBSTACLE_TYPES, TILE_TYPE } from './const/WORLD'
+import interactiveManager from './helper/InteractiveManager'
+import rewardManager from './helper/RewardManager'
+import { getCollisions } from './utils/collision'
 
 /********************战场几何信息********************/
 export const BATTLE_FIELD = {
@@ -96,8 +96,10 @@ export default class BattleField {
   }
 
   protectHome() {
-    const result = interactiveManager.getTanks().some(tank => isCollided(tank, [this.homeBoundaryCoordinates]))
-    if (result) {
+    const isTankHere = interactiveManager
+      .getTanks()
+      .some(tank => getCollisions(tank, [this.homeBoundaryCoordinates]).length)
+    if (isTankHere) {
       this.isProtectHomeSuccess = false
     } else {
       this.homeProtectFrames = 0

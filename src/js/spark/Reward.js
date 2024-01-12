@@ -1,38 +1,10 @@
-import { BATTLE_FIELD } from '../BattleField.js'
-import { REWARD_AUDIO } from '../const/AUDIO.js'
-import { POS } from '../const/IMAGE.js'
-import { BRICK_SIZE } from '../const/SCREEN.js'
-import { FPS } from '../const/WORLD.js'
-import interactiveManager from '../utils/InteractiveManager.js'
-import { checkCollision } from '../utils/collision.js'
-import Spark, { sparkManager } from './Spark.js'
-
-function addLives(target, count = 1) {
-  target.lives += count
-}
-
-function stopEnemy() {
-  interactiveManager.stopEnemy()
-}
-
-function makeGrid() {
-  rewardManager.consume('protectHome')
-}
-
-function destroyAllEnemy() {
-  interactiveManager.destroyAppearedEnemy()
-}
-
-function upgrade(target) {
-  target.upgrade()
-}
-
-function protect(target) {
-  target.isProtected = true
-  target.protectedFrames = 0
-}
-
-const rewards = [addLives, stopEnemy, makeGrid, destroyAllEnemy, upgrade, protect]
+import { REWARD_AUDIO } from '../const/AUDIO'
+import { POS } from '../const/IMAGE'
+import { FPS } from '../const/WORLD'
+import interactiveManager from '../helper/InteractiveManager'
+import { rewards } from '../helper/RewardManager'
+import { getCollisions } from '../utils/collision'
+import Spark from './Spark'
 
 export default class Reward extends Spark {
   constructor(context, index, duration = 30) {
@@ -51,67 +23,17 @@ export default class Reward extends Spark {
     if (this.frames >= this.durationFrames) {
       this.isAppeared = false
     } else {
-      const collisionTargets = checkCollision(
+      const collisions = getCollisions(
         { x: this.x, y: this.y, width: this.size, height: this.size, id: this.id },
-        interactiveManager.getTanks().filter(el => el.type?.includes('player'))
+        interactiveManager.getTanks('player')
       )
-      if (collisionTargets.length) {
+      if (collisions.length) {
         REWARD_AUDIO.play()
-        collisionTargets.forEach(collisionTarget => {
-          rewards[this.index](collisionTarget)
+        collisions.forEach(collision => {
+          rewards[this.index](collision)
         })
         this.isAppeared = false
       }
     }
   }
 }
-
-class RewardManager {
-  constructor() {
-    this.addRewardInterval = 15 // 15s可能产生一个奖励
-    this.addRewardFrames = 0 // 用于添加奖励的计时
-    this.addRewardProbability = 0.4 // 一次产生奖励的概率
-    this.rewardApproaches = new Map()
-  }
-
-  get addRewardFramesLimit() {
-    return this.addRewardInterval * FPS
-  }
-
-  get existReward() {
-    return sparkManager.getReward()
-  }
-
-  addReward(context) {
-    this.addRewardFrames++
-    if (
-      this.addRewardFrames % this.addRewardFramesLimit === 0 &&
-      Math.random() < this.addRewardProbability &&
-      !this.existReward
-    ) {
-      this.createReward(context)
-      this.addRewardFrames = 0
-    }
-  }
-
-  createReward(context) {
-    const reward = new Reward(context, Math.floor(Math.random() * rewards.length))
-    reward.create(
-      Math.floor(Math.random() * (BATTLE_FIELD.WIDTH - BRICK_SIZE)) + BATTLE_FIELD.OFFSET_X,
-      // 确保奖励出现在home上方
-      Math.floor(Math.random() * (BATTLE_FIELD.HEIGHT - BRICK_SIZE * 3)) + BATTLE_FIELD.OFFSET_Y
-    )
-    return reward
-  }
-
-  provide(fnName, callback) {
-    this.rewardApproaches.set(fnName, callback)
-  }
-
-  consume(fnName) {
-    const callback = this.rewardApproaches.get(fnName)
-    return callback?.()
-  }
-}
-
-export const rewardManager = new RewardManager()

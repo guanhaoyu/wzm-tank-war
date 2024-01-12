@@ -1,9 +1,9 @@
-import { BATTLE_FIELD } from '../BattleField.js'
-import { POS, RESOURCE_IMAGE } from '../const/IMAGE.js'
-import { BRICK_SIZE } from '../const/SCREEN.js'
-import { CAMP, DIRECTION, FPS } from '../const/WORLD.js'
-import Blink from '../spark/Blink.js'
-import Tank from './Tank.js'
+import { BATTLE_FIELD } from '../BattleField'
+import { POS, RESOURCE_IMAGE } from '../const/IMAGE'
+import { BRICK_SIZE } from '../const/SCREEN'
+import { CAMP, DIRECTION, FPS } from '../const/WORLD'
+import Blink from '../spark/Blink'
+import Tank from './Tank'
 
 const { DOWN, LEFT, RIGHT } = DIRECTION
 const DIRECTION_LENGTH = Object.keys(DIRECTION).length

@@ -1,4 +1,4 @@
-import { POS, RESOURCE_IMAGE } from '../const/IMAGE.js'
+import { POS, RESOURCE_IMAGE } from '../const/IMAGE'
 
 export default class Digital {
   constructor(context) {

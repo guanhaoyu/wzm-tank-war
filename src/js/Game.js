@@ -1,26 +1,26 @@
+import BattleField, { BATTLE_FIELD, updateCurrentMap } from './BattleField'
+import Scoreboard from './Scoreboard'
+import { MOVE_AUDIO, PLAYER_DESTROY_AUDIO, START_AUDIO } from './const/AUDIO'
 import {
-  GAME_STATE_MENU,
   GAME_STATE_INIT,
-  GAME_STATE_START,
+  GAME_STATE_MENU,
   GAME_STATE_OVER,
+  GAME_STATE_START,
   GAME_STATE_WIN,
-} from './const/GAMESTATE.js'
-import KEYBOARD from './const/KEYBOARD.js'
-import { BRICK_SIZE, SCREEN_HEIGHT, SCREEN_WIDTH } from './const/SCREEN.js'
-import { FPS, TILE_TYPE } from './const/WORLD.js'
-import Menu from './layer/Menu.js'
-import BattleField, { BATTLE_FIELD, updateCurrentMap } from './BattleField.js'
-import Scoreboard from './Scoreboard.js'
-import { Player1, Player2 } from './tank/PlayerTank.js'
-import { ENEMY_LOCATION, Enemy1, Enemy2, Enemy3 } from './tank/EnemyTank.js'
-import { isCollided } from './utils/collision.js'
-import interactiveManager from './utils/InteractiveManager.js'
-import { sparkManager } from './spark/Spark.js'
-import { rewardManager } from './spark/Reward.js'
-import levels from './const/LEVEL.js'
-import GameOver from './layer/GameOver.js'
-import Base from './tank/Base.js'
-import { MOVE_AUDIO, PLAYER_DESTROY_AUDIO, START_AUDIO } from './const/AUDIO.js'
+} from './const/GAMESTATE'
+import KEYBOARD from './const/KEYBOARD'
+import levels from './const/LEVEL'
+import { BRICK_SIZE, SCREEN_HEIGHT, SCREEN_WIDTH } from './const/SCREEN'
+import { FPS, TILE_TYPE } from './const/WORLD'
+import GameOver from './layer/GameOver'
+import Menu from './layer/Menu'
+import HomeTank from './tank/HomeTank'
+import { ENEMY_LOCATION, Enemy1, Enemy2, Enemy3 } from './tank/EnemyTank'
+import { Player1, Player2 } from './tank/PlayerTank'
+import interactiveManager from './helper/InteractiveManager'
+import { getCollisions } from './utils/collision'
+import sparkManager from './helper/SparkManager'
+import rewardManager from './helper/RewardManager'
 
 const TOTAL_LEVEL = levels.length
 
@@ -68,8 +68,12 @@ export default class Game {
     return this.addEnemyInterval * FPS
   }
 
-  get enemyArr() {
+  get enemyTanks() {
     return interactiveManager.getTanks('enemy')
+  }
+
+  get enemyTanksCount() {
+    return this.enemyTanks.length
   }
 
   get hasPlayer2 () {
@@ -100,7 +104,7 @@ export default class Game {
     this.scoreboard = new Scoreboard(wallCtx)
     this.player1 = new Player1(this.tankCtx)
     this.player2 = new Player2(this.tankCtx)
-    this.base = new Base(this.tankCtx, this.loseHome.bind(this))
+    this.homeTank = new HomeTank(this.tankCtx, this.loseHome.bind(this))
     this.gameOver = new GameOver(overCtx)
 
     this.gameStateToKeyboardEventMap = {
@@ -233,7 +237,7 @@ export default class Game {
     if (this.hasPlayer2) {
       this.player2.create()
     }
-    this.base.create()
+    this.homeTank.create()
     this.restEnemy = TOTAL_ENEMY
     this.appearedEnemy = 0
     this.drawLevel()
@@ -245,7 +249,6 @@ export default class Game {
       this.isWinAlerted = true
       alert('💐恭喜您赢得了胜利✌🏻')
     }
-
     if (this.gameState !== GAME_STATE_OVER) {
       if (this.hasPlayer2 && this.player1.lives === 0 && this.player2.lives === 0) {
         this.fail()
@@ -255,9 +258,7 @@ export default class Game {
         }
       }
     }
-
-    const enemyArrLen = this.enemyArr.length
-    if (this.restEnemy === 0 && enemyArrLen === 0) {
+    if (this.restEnemy === 0 && this.enemyTanksCount === 0) {
       this.nextLevel()
     } else {
       const isAdded = this.addEnemyTank()
@@ -312,8 +313,7 @@ export default class Game {
   }
 
   addEnemyTank() {
-    const enemyArrLen = this.enemyArr.length
-    if (enemyArrLen > this.maxExistEnemy || this.restEnemy === 0) {
+    if (this.enemyTanksCount > this.maxExistEnemy || this.restEnemy === 0) {
       return false
     }
     this.addEnemyFrames++
@@ -323,23 +323,23 @@ export default class Game {
       const willAppearEnemy = Math.min(
         Math.ceil(Math.random() * enemyLocationLen),
         this.restEnemy,
-        this.maxExistEnemy - enemyArrLen
+        this.maxExistEnemy - this.enemyTanksCount
       )
       let willNotAppearEnemy = 0
       for (let i = 0; i < willAppearEnemy; i++) {
         const willAppearEnemyLocationX =
           ENEMY_LOCATION[Math.floor(Math.random() * enemyLocationLen)] + BRICK_SIZE
         const willAppearEnemyLocationY = BATTLE_FIELD.OFFSET_Y
-        const result = isCollided(
+        const isCollided = getCollisions(
           {
             x: willAppearEnemyLocationX,
             y: willAppearEnemyLocationY,
             width: BRICK_SIZE,
             height: BRICK_SIZE,
           },
-          interactiveManager.getAllWithoutBullet()
-        )
-        if (result) {
+          interactiveManager.getListWithoutBullet()
+        ).length > 0
+        if (isCollided) {
           willNotAppearEnemy++
         } else {
           const enemy = this.enemyStack.pop()

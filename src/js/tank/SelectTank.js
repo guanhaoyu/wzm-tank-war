@@ -1,7 +1,7 @@
-import Tank from './Tank.js'
-import { DIRECTION } from '../const/WORLD.js'
-import { POS, RESOURCE_IMAGE } from '../const/IMAGE.js'
-import { step } from '../action/movement.js'
+import { RESOURCE_IMAGE } from '../const/IMAGE'
+import { DIRECTION } from '../const/WORLD'
+import { step } from '../utils/geometry'
+import Tank from './Tank'
 
 const { UP, DOWN, RIGHT, LEFT } = DIRECTION
 

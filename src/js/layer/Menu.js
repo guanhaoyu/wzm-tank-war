@@ -1,9 +1,9 @@
-import { SCREEN_HEIGHT, SCREEN_WIDTH } from '../const/SCREEN.js'
-import { MENU_IMAGE } from '../const/IMAGE.js'
-import SelectTank from '../tank/SelectTank.js'
-import KEYBOARD from '../const/KEYBOARD.js'
-import Curtain from './Curtain.js'
-import { DIRECTION } from '../const/WORLD.js'
+import { SCREEN_HEIGHT, SCREEN_WIDTH } from '../const/SCREEN'
+import { MENU_IMAGE } from '../const/IMAGE'
+import SelectTank from '../tank/SelectTank'
+import KEYBOARD from '../const/KEYBOARD'
+import Curtain from './Curtain'
+import { DIRECTION } from '../const/WORLD'
 
 
 // 按键到方向的映射

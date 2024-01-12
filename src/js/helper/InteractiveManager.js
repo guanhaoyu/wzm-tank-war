@@ -2,7 +2,7 @@ import { FPS } from '../const/WORLD'
 
 class InteractiveManager {
   constructor() {
-    this.arr = []
+    this.list = []
 
     this.isEnemyStop = false
     this.enemyStopTime = 30
@@ -19,54 +19,56 @@ class InteractiveManager {
   }
 
   unStopEnemy() {
-    this.arr.filter(el => el.isAI).forEach(el => (el.isStop = false))
+    this.list.filter(el => el.isAI).forEach(el => (el.isStop = false))
     this.isEnemyStop = false
     this.enemyStopFrames = 0
   }
 
   destroyAppearedEnemy() {
-    this.arr
-      .filter(el => el.isAI && el.isAppeared)
-      .forEach(el => el.destroy())
+    this.list.filter(el => el.isAI && el.isAppeared).forEach(el => el.destroy())
   }
 
-  getAll() {
-    return this.arr.filter(el => !el.isDestroyed && el.tileType !== 0)
+  getList(filter) {
+    const list = this.list.filter(el => !el.isDestroyed && el.tileType !== 0)
+    if (typeof filter === 'function') {
+      return list.filter(filter)
+    }
+    return list
   }
 
-  getAllWithoutBullet() {
-    return this.getAll().filter(el => el.type !== 'bullet')
+  getListWithoutBullet() {
+    return this.getList(el => el.type !== 'bullet')
   }
 
   getTanks(...args) {
-    const all = this.getAll()
+    const list = this.getList(isTank)
     if (args.length === 0) {
-      return all.filter(isTank)
+      return list
     }
-    return all.filter(el =>
-      args.reduce((prev, cur) => prev || el.type?.includes(cur), false)
+    return list.filter(tank =>
+      args.reduce((prev, type) => prev || tank.type?.includes(type), false)
     )
   }
 
   add(...args) {
     args.forEach(arg => {
-      if (!this.arr.find(el => el.id === arg.id)) {
-        this.arr.push(arg)
+      if (!this.list.find(el => el.id === arg.id)) {
+        this.list.push(arg)
       }
     })
   }
 
   clear() {
-    this.arr = []
+    this.list = []
   }
 
   find(id) {
-    return this.arr.find(el => el.id === id)
+    return this.list.find(el => el.id === id)
   }
 
   handleEnemyStop() {
     if (this.isEnemyStop) {
-      this.arr.filter(el => el.isAI).forEach(el => (el.isStop = true))
+      this.list.filter(el => el.isAI).forEach(el => (el.isStop = true))
       this.enemyStopFrames++
       if (this.enemyStopFrames >= this.enemyStopFramesLimit) {
         this.unStopEnemy()
@@ -76,9 +78,7 @@ class InteractiveManager {
 
   drawSpirits(...args) {
     this.handleEnemyStop()
-    this.arr
-      .filter(el => el.id?.includes('spirit'))
-      .forEach(el => el.draw(...args))
+    this.list.filter(el => el.id?.includes('spirit')).forEach(el => el.draw(...args))
   }
 }
 
@@ -87,5 +87,4 @@ export function isTank(target) {
 }
 
 const interactiveManager = new InteractiveManager()
-
 export default interactiveManager

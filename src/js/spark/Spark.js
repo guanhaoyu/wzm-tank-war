@@ -1,5 +1,6 @@
 import { POS, RESOURCE_IMAGE } from "../const/IMAGE.js"
 import { SPARK_TYPE } from "../const/WORLD.js"
+import sparkManager from "../helper/SparkManager.js"
 
 let id = 0
 
@@ -55,30 +56,3 @@ export default class Spark {
   judgeIsAppeared() {}
 }
 
-class SparkManager {
-  constructor() {
-    this.arr = []
-  }
-  
-  getReward() {
-    return this.arr.find(el => el.type === 'prop')
-  }
-
-  add(...args) {
-    args.forEach(arg => {
-      if (!this.arr.find(el => el.id === arg.id)) {
-        this.arr.push(arg)
-      }
-    })
-  }
-
-  clear() {
-    this.arr = []
-  }
-
-  draw() {
-    this.arr.forEach(el => el.draw())
-  }
-}
-
-export const sparkManager = new SparkManager()

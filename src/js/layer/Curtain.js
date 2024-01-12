@@ -1,7 +1,7 @@
-import Digital from '../other/Digital.js'
-import { SCREEN_HEIGHT, SCREEN_WIDTH } from '../const/SCREEN.js'
-import Label from '../other/Label.js'
-import { FPS } from '../const/WORLD.js'
+import Digital from '../other/Digital'
+import { SCREEN_HEIGHT, SCREEN_WIDTH } from '../const/SCREEN'
+import Label from '../other/Label'
+import { FPS } from '../const/WORLD'
 
 export default class Curtain {
   constructor(context) {

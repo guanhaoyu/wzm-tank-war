@@ -1,8 +1,8 @@
-import { PLAYER_DESTROY_AUDIO } from '../const/AUDIO.js'
-import { BRICK_SIZE } from '../const/SCREEN.js'
-import Tank from './Tank.js'
+import { PLAYER_DESTROY_AUDIO } from '../const/AUDIO'
+import { BRICK_SIZE } from '../const/SCREEN'
+import Tank from './Tank'
 
-export default class Base extends Tank {
+export default class HomeTank extends Tank {
   constructor(context, task) {
     super(context)
     this.task = task
