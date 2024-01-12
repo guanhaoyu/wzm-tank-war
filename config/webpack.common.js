@@ -19,7 +19,7 @@ const commonConfig = {
         test: /\.(png|jpe?g|svg|gif|mp3)$/,
         type: 'asset',
         generator: {
-          filename: 'img/[name].[contenthash:6][ext]',
+          filename: 'asset/[name].[contenthash:6][ext]',
         },
         parser: {
           dataUrlCondition: {
