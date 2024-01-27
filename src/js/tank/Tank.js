@@ -212,13 +212,16 @@ export default class Tank extends Spirit {
   collide() {}
 
   // 射击
-  shoot() {
+  shoot(bulletSpeed, canPierceGrid) {
     if (this.shootable) {
       this.bullet = new Bullet(this.ctx, this.camp)
-      this.bullet.create(calculateCenter(this.x, this.y, this.width, this.height), this.direction, [
-        this.width,
-        this.height,
-      ])
+      this.bullet.create(
+        calculateCenter(this.x, this.y, this.width, this.height),
+        this.direction,
+        [this.width, this.height],
+        bulletSpeed,
+        canPierceGrid
+      )
       this.playAttackSound()
       this.shootable = false
     }

@@ -5,7 +5,7 @@ class SparkManager {
   }
   
   getReward() {
-    return this.sparks.find(spark => spark.type === 'prop')
+    return this.sparks.find(spark => spark.type === 'prop' && spark.isAppeared)
   }
 
   add(...args) {

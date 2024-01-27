@@ -34,6 +34,9 @@ export default class PlayerTank extends Tank {
     this.direction = DIRECTION.UP
     this.speed = 2
     this.explosion = null
+    this.level = 0
+    this.bulletSpeed = 6
+    this.canPierceGrid = false
   }
 
   create() {
@@ -94,7 +97,7 @@ export default class PlayerTank extends Tank {
 
   shoot(codes = []) {
     if (codes.includes(this.fireKey)) {
-      super.shoot()
+      super.shoot(this.bulletSpeed, this.canPierceGrid)
     }
   }
 
@@ -143,8 +146,16 @@ export default class PlayerTank extends Tank {
   }
 
   upgrade() {
-    this.coolDownTime = 0.9
-    this.speed = 2.2
+    if (this.level < 3) {
+      this.level++
+      if (this.level === 1) {
+        this.bulletSpeed = 12
+      } else if (this.level === 2) {
+        this.coolDownTime = 0.5
+      } else if (this.level === 3) {
+        this.canPierceGrid = true
+      }
+    }
   }
 }
 

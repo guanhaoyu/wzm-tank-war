@@ -3,7 +3,7 @@ function getPrecision(...args) {
     if (typeof cur === 'number') {
       const [_, float] = cur.toString().split('.')
       if (float) {
-        return Math.max(prev, 10^(float.length))
+        return Math.max(prev, 10 ** (float.length))
       }
       return prev
     } else {

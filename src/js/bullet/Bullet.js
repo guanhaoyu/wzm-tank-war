@@ -14,18 +14,18 @@ const { UP, DOWN, LEFT, RIGHT } = DIRECTION
 export default class Bullet extends Spirit {
   constructor(context, camp) {
     super(context, 'bullet')
-    // 不能超过16，否则能打穿2个墙
     this.speed = 6
     this.camp = camp
+    this.canPierceGrid = false
     // 避免多次调用destroy方法
     this.isDestroyed = false
   }
   // 此处[x, y]是发射器的中心点
-  create([x, y], direction, [width, height] = [0, 0]) {
+  create([x, y], direction, [width, height] = [0, 0], speed = this.speed, canPierceGrid = false) {
     this.direction = direction
     if (direction === UP) {
       this.x = sub(x, this.width / 2)
-      this.y = sub(y, this.height / 2, this.height)
+      this.y = sub(y, height / 2, this.height)
     } else if (direction === DOWN) {
       this.x = sub(x, this.width / 2)
       this.y = add(y, height / 2)
@@ -36,6 +36,8 @@ export default class Bullet extends Spirit {
       this.x = add(x, width / 2)
       this.y = sub(y, this.height / 2)
     }
+    this.speed = speed
+    this.canPierceGrid = canPierceGrid
     interactiveManager.add(this)
   }
 
@@ -86,7 +88,7 @@ export default class Bullet extends Spirit {
   }
 
   move() {
-    for (let i = 0; i < this.speed; i = i + PLANCK_LENGTH) {
+    for (let i = 0; i < this.speed; i = add(i + PLANCK_LENGTH)) {
       const [x, y] = step(this.direction, PLANCK_LENGTH, [this.x, this.y])
       const collisions = getCollisions(
         { x, y, width: this.width, height: this.height, id: this.id },
@@ -99,6 +101,7 @@ export default class Bullet extends Spirit {
       )
       if (collisions.length) {
         this.collide(collisions)
+        break
       } else {
         this.x = x
         this.y = y
@@ -130,7 +133,7 @@ export default class Bullet extends Spirit {
   damage(tile) {
     if (tile?.id) {
       const [_, i, j] = tile.id.split('-')
-      if (tile.tileType === TILE_TYPE.WALL) {
+      if (tile.tileType === TILE_TYPE.WALL || (this.canPierceGrid && tile.tileType === TILE_TYPE.GRID)) {
         updateCurrentMap([i, j])
       }
     }

@@ -26,6 +26,4 @@ export default class Invincible extends Spark {
       this.size
     )
   }
-
-  judgeIsAppeared() {}
 }
