@@ -2,6 +2,7 @@ import { BATTLE_FIELD } from "../BattleField"
 import { BRICK_SIZE } from "../const/SCREEN"
 import { FPS } from "../const/WORLD"
 import Reward from "../spark/Reward"
+import interactiveManager from "./InteractiveManager"
 import sparkManager from "./SparkManager"
 
 function addLives(target, count = 1) {
