@@ -1,6 +1,22 @@
 # wzm-tank-war
 war of tanks develope by weizaomao
 
+node版本为16
+
+### V2 TODO：
+
+- 引入typescript✅
+
+- 驱动方式由setTimeout改回raf，并实现固定帧率✅
+
+- 引入时间系统，把计帧改为真正的计时```performance.now()```
+
+- 状态改变和渲染分离
+
+- 删除普朗克长度，简化碰撞检测
+
+- 实现一个资源加载的调度器，参考up主远方os
+
 ### TIP:
 
 - type -> drawImage
