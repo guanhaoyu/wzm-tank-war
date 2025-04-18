@@ -11,7 +11,7 @@ import {
 import KEYBOARD from './const/KEYBOARD'
 import levels from './const/LEVEL'
 import { BRICK_SIZE, SCREEN_HEIGHT, SCREEN_WIDTH } from './const/SCREEN'
-import { FPS, TILE_TYPE } from './const/WORLD'
+import { FPS, MIN_FRAME_TIME, TILE_TYPE } from './const/WORLD'
 import GameOver from './layer/GameOver'
 import Menu from './layer/Menu'
 import HomeTank from './tank/HomeTank'
@@ -62,6 +62,8 @@ export default class Game {
     this.handleKeyboardEvent()
 
     this.isWinAlerted = false
+
+    this.lastRunTime = 0;
   }
 
   get addEnemyFramesLimit() {
@@ -244,6 +246,7 @@ export default class Game {
     this.drawAll(true)
   }
 
+  // TODO 最好事件和渲染分离
   runAfterStart() {
     if (this.gameState === GAME_STATE_WIN && !this.isWinAlerted) {
       this.isWinAlerted = true
@@ -293,9 +296,23 @@ export default class Game {
           this.runAfterStart()
       }
     }
-    // 不同显示器的帧率不一样，不一定都是60
-    // requestAnimationFrame(this.run.bind(this))
-    setTimeout(this.run.bind(this), 1000 / FPS)
+  }
+
+  loop(timestamp) {
+    const deltaTime = timestamp - this.lastRunTime; // 当前帧与上一帧的时间差
+ 
+    if (deltaTime >= MIN_FRAME_TIME) {
+        this.lastRunTime = timestamp - (deltaTime % MIN_FRAME_TIME); // 修正上一帧时间，避免累计误差
+        // 执行动画逻辑
+        this.run();
+    }
+ 
+    // 继续下一帧
+    requestAnimationFrame(this.loop.bind(this));
+  }
+
+  init() {
+    requestAnimationFrame(this.loop.bind(this));
   }
 
   getEnemyClass() {

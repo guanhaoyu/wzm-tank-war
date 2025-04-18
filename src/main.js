@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
       SPARK_TYPE.tankBomb.duration = TANK_DESTROY_AUDIO.duration
       SPARK_TYPE.bulletBomb.duration = BULLET_DESTROY_AUDIO.duration
       const game = new Game()
-      game.run()
+      game.init()
     }
   }
   IMAGES.forEach(el => {

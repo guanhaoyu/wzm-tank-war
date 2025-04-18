@@ -84,6 +84,7 @@ export default class PlayerTank extends Tank {
       const direction = this.keyDirectionMap[code]
       if (direction !== undefined) {
         this.direction = direction
+        // TODO 每次draw都播放MOVE_AUDIO频率太高
         MOVE_AUDIO.play()
         super.move()
         isStop = false

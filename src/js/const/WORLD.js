@@ -29,6 +29,9 @@ const DIRECTION = {
   RIGHT: 3,
 }
 
+/********************每帧最短时长*****************/
+const MIN_FRAME_TIME = Math.floor(1000 / 60)
+
 /******************允许碰撞长度******************/
 const ALLOW_COLLISION_LENGTH = 5
 
@@ -77,4 +80,5 @@ export {
   PLANCK_LENGTH,
   CAMP,
   ALLOW_COLLISION_LENGTH,
+  MIN_FRAME_TIME
 }
