@@ -5,6 +5,7 @@ import Invincible from '../spark/Invincible'
 import interactiveManager from '../helper/InteractiveManager'
 import { getCollisions } from '../utils/collision'
 import Tank from './Tank'
+import shadowManager from '../helper/ShadowManager'
 
 export default class PlayerTank extends Tank {
   constructor(context, type = 'player1') {
@@ -28,11 +29,11 @@ export default class PlayerTank extends Tank {
     this.protectedFrames = 0
     this.shootable = true
     this.coolDownFrames = 0
-    this.coolDownTime = 1
+    this.coolDownTime = 1 * 0.2
     this.x = this.birth_coordinate[0]
     this.y = this.birth_coordinate[1]
     this.direction = DIRECTION.UP
-    this.speed = 2
+    this.speed = 2 * 3
     this.explosion = null
     this.level = 0
     this.bulletSpeed = 6
@@ -87,6 +88,7 @@ export default class PlayerTank extends Tank {
         MOVE_AUDIO.play()
         super.move()
         isStop = false
+        shadowManager.add(this.ctx, this.type, this.x, this.y, this.width, this.height, this.direction)
         break
       }
     }

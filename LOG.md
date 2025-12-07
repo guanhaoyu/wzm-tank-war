@@ -15,6 +15,8 @@ war of tanks develope by weizaomao
 
 ### feature: 
 
+- 添加移动模糊效果
+
 - 雪地可加打滑效果，加速且不可转向
 
 - 禁止子弹穿过多个墙✅

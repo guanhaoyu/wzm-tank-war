@@ -21,6 +21,7 @@ import interactiveManager from './helper/InteractiveManager'
 import { getCollisions } from './utils/collision'
 import sparkManager from './helper/SparkManager'
 import rewardManager from './helper/RewardManager'
+import shadowManager from './helper/ShadowManager'
 
 const TOTAL_LEVEL = levels.length
 
@@ -224,6 +225,7 @@ export default class Game {
     this.tankCtx.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
     interactiveManager.drawSpirits(Array.from(this.codes))
     sparkManager.draw()
+    shadowManager.draw()
   }
 
   runBetweenInitAndStart() {
@@ -231,6 +233,7 @@ export default class Game {
     this.addEnemyFrames = -1
     this.prepareEnemyTanks()
     rewardManager.addRewardFrames = 0
+    shadowManager.clear()
     interactiveManager.clear()
     sparkManager.clear()
     this.player1.create()
